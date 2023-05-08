@@ -34,17 +34,29 @@ QVariant Game::data(const QModelIndex & modelIndex, int role) const
     int y = index/8;
     int x = index%8;
     Spot spot = board.getBox(x,y);
-    Piece piece = spot.getPiece();
-    int type;
-    type = piece.getType();
-    switch (role)
+    if(spot.havePiece())
     {
+        Piece piece = spot.getPiece();
+        int type;
+        type = piece.getType();
+        switch (role)
+        {
         case Roles::Side     : return piece.isWhite();
         case Roles::Type     : return type;
         case Roles::PositionX: return spot.getX();
         case Roles::PositionY: return spot.getY();
+        }
     }
-
+    else
+    {
+        switch (role)
+        {
+        case Roles::Side     : return true;
+        case Roles::Type     : return 6;
+        case Roles::PositionX: return spot.getX();
+        case Roles::PositionY: return spot.getY();
+        }
+    }
     return (QVariant());
 }
 

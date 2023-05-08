@@ -14,21 +14,23 @@ ApplicationWindow
 
     property var images: [
         [
-            {'imgPath' : "/images/white_pawn.svg"},
-            {'imgPath' : "/images/white_rook.svg"},
-            {'imgPath' : "/images/white_bishop.svg"},
-            {'imgPath' : "/images/white_knight.svg"},
-            {'imgPath' : "/images/white_queen.svg"},
-            {'imgPath' : "/images/white_king.svg"}
+            "/images/white_pawn.svg",
+            "/images/white_rook.svg",
+            "/images/white_bishop.svg",
+            "/images/white_knight.svg",
+            "/images/white_queen.svg",
+            "/images/white_king.svg",
+            ""
         ],
 
         [
-            {'imgPath' : "/images/black_pawn.svg"},
-            {'imgPath' : "/images/black_rook.svg"},
-            {'imgPath' : "/images/black_bishop.svg"},
-            {'imgPath' : "/images/black_knight.svg"},
-            {'imgPath' : "/images/black_queen.svg"},
-            {'imgPath' : "/images/black_king.svg"}
+            "/images/black_pawn.svg",
+            "/images/black_rook.svg",
+            "/images/black_bishop.svg",
+            "/images/black_knight.svg",
+            "/images/black_queen.svg",
+            "/images/black_king.svg",
+            ""
         ]
     ]
 
@@ -57,7 +59,7 @@ ApplicationWindow
                     x: squareSize * positionX
                     y: squareSize * positionY
 
-                    source: images[(side == true) ? 0 : 1][type].imgPath
+                    source: images[(side == true) ? 0 : 1][type]
 
                     MouseArea {
                         anchors.fill: parent

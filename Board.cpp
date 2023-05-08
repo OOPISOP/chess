@@ -40,8 +40,7 @@ void Board::resetBoard()
     {
         for(int j=0;j<8;j++)
         {
-            Piece nullPiece;
-            boxes[i].push_back(Spot(j,i,nullPiece));
+            boxes[i].push_back(Spot(j,i));
         }
     }
     for(int i=0;i<8;i++)

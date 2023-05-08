@@ -9,7 +9,7 @@ Piece::Piece(bool white,int type)
 Piece::Piece()
 {
     this->setWhite(true);
-    this->setType(-1);
+    this->setType(6);
 }
 
 bool Piece::isWhite()

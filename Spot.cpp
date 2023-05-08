@@ -2,7 +2,17 @@
 
 Spot::Spot(int x,int y,Piece piece) : piece(piece),x(x),y(y)
 {
+    this->isPiece = true;
+}
 
+Spot::Spot(int x,int y) :x(x),y(y)
+{
+    this->isPiece = false;
+}
+
+bool Spot::havePiece()
+{
+    return this->isPiece;
 }
 
 Piece Spot::getPiece()const
