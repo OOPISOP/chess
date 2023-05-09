@@ -37,7 +37,8 @@ public:
         Side = Qt::UserRole,
         Type,
         PositionX,
-        PositionY
+        PositionY,
+        Mark,
     };
 
     enum Types {
@@ -50,6 +51,7 @@ public:
     };
 
     Q_INVOKABLE void newGame();
+    Q_INVOKABLE bool makeMove(int startX,int startY,int endX,int endY);
 
 
 protected:

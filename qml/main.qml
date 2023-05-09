@@ -31,6 +31,11 @@ ApplicationWindow
             "/images/black_queen.svg",
             "/images/black_king.svg",
             ""
+        ],
+
+        [
+            "/images/square.png",
+            ""
         ]
     ]
 
@@ -47,41 +52,68 @@ ApplicationWindow
         }
     }
 
-    Component {
+    Component
+    {
         id: chessPlacement
         Item {
-            Repeater {
+            Repeater
+            {
                 model: game
-                Image {
-                    height: squareSize
-                    width : squareSize
+                Item
+                {
+                    Image
+                    {
+                        height: squareSize
+                        width : squareSize
 
-                    x: squareSize * positionX
-                    y: squareSize * positionY
+                        x: squareSize * positionX
+                        y: squareSize * positionY
+                        z: 0
 
-                    source: images[(side == true) ? 0 : 1][type]
+                        source: images[(side == true) ? 0 : 1][type]
 
-                    MouseArea {
-                        anchors.fill: parent
-                        drag.target: parent
-                        property int startX: 0
-                        property int startY: 0
-                        onPressed: {
-                            console.log("On press: ", parent.x, parent.y);
-//                            startX = parent.x;
-//                            startY = parent.y;
+                        MouseArea
+                        {
+                            anchors.fill: parent
+                            drag.target: parent
+                            property int startX: 0
+                            property int startY: 0
+                            onPressed:
+                            {
+                                console.log("On press: ", parent.x, parent.y);
+                                startX = parent.x;
+                                startY = parent.y;
+                            }
+                            onReleased:
+                            {
+                                var  fromX = startX / squareSize;
+                                var fromY = startY / squareSize;
+                                var toX   = (parent.x + mouseX) / squareSize;
+                                var toY   = (parent.y + mouseY) / squareSize;
+//                                if (!logic.move(fromX, fromY, toX, toY))
+//                                {
+//                                    parent.x = startX;
+//                                    parent.y = startY;
+//                                }
+                                if(!game.makeMove(fromX,fromY,toX,toY))
+                                {
+                                    parent.x = startX;
+                                    parent.y = startY;
+                                }
+                            }
                         }
-                        onReleased: {
-                            var  fromX = startX / squareSize;
-                            var fromY = startY / squareSize;
-                            var toX   = (parent.x + mouseX) / squareSize;
-                            var toY   = (parent.y + mouseY) / squareSize;
-//                            if (!logic.move(fromX, fromY, toX, toY))
-//                            {
-//                                parent.x = startX;
-//                                parent.y = startY;
-//                            }
-                        }
+                    }
+                    Image
+                    {
+                        height: squareSize
+                        width : squareSize
+
+                        x: squareSize * positionX
+                        y: squareSize * positionY
+                        z: 1
+
+                        source: images[2][(mark == true)? 0:1]
+
                     }
                 }
             }

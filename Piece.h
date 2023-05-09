@@ -23,7 +23,7 @@ public:
     void setKilled(bool killed);
     int getType();
     void setType(int type);
-   // virtual bool canMove(Board board,Spot start,Spot end);
+    virtual bool canMove(Board board,Spot start,Spot end) = 0;
 };
 
 #endif // PIECE_H

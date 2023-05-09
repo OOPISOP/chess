@@ -5,7 +5,11 @@
 class Player
 {
 public:
+    bool whiteSide;
     Player();
+    void setSide(bool whiteSide);
+    bool isWhiteSide();
+    bool operator==(const Player& rhs);
 };
 
 #endif // PLAYER_H
