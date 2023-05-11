@@ -20,13 +20,13 @@ void Piece::setWhite(bool white)
 {
     this->white = white;
 }
-bool Piece::isKilled()
+bool Piece::isMoved()
 {
-    return this->killed;
+    return this->moved;
 }
-void Piece::setKilled(bool killed)
+void Piece::setMoved(bool moved)
 {
-    this->killed = killed;
+    this->moved = moved;
 }
 
 int Piece::getType()
@@ -37,4 +37,30 @@ int Piece::getType()
 void Piece::setType(int type)
 {
     this->type = type;
+}
+
+
+void Piece::setPromoting(bool promoting)
+{
+    this->promoting = promoting;
+}
+bool Piece::isPromoting()
+{
+    return this->promoting;
+}
+void Piece::setEnPassant(bool enPassant)
+{
+    this->enPassant = enPassant;
+}
+bool Piece::isEnPassant()
+{
+    return this->enPassant;
+}
+void Piece::setCastling(bool castling)
+{
+    this->castling = castling;
+}
+bool Piece::isCastling()
+{
+    return this->castling;
 }

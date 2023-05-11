@@ -74,16 +74,25 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         return false;
     }
 
-    if(!endBox->havePiece())
+
+    if (sourcePiece->isEnPassant())
     {
-        startBox->setPiece();
-        endBox->setPiece(sourcePiece);
+
+    }
+    else if (sourcePiece->isCastling())
+    {
+
     }
     else
     {
-        Piece* targetPiece = endBox->getPiece();
-        startBox->setPiece(targetPiece);
+        startBox->setPiece();
         endBox->setPiece(sourcePiece);
+
+        if (sourcePiece->isPromoting())
+        {
+            // {}{}{{}{}Need Piece selecting window{}{{{}{}{}
+            // {}{}{}{}} And change(setPiece?) endBox's Piece to selected one.
+        }
     }
 
     if(this->currentTurn == players[0])
