@@ -19,6 +19,7 @@ private:
     bool enPassant = false;
     bool castling = false;
 
+
 public:
     Piece(bool white,int type);
     Piece();

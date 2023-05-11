@@ -12,8 +12,6 @@ bool Pawn::canMove(Board board,Spot start,Spot end)
     {
         return false;
     }
-
-
     // Normally move 1 forward unit.
     int delta = start.getPiece()->isWhite() ? -1 : 1 ;
 

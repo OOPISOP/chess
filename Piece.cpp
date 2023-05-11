@@ -20,6 +20,7 @@ void Piece::setWhite(bool white)
 {
     this->white = white;
 }
+
 bool Piece::isMoved()
 {
     return this->moved;
@@ -38,7 +39,6 @@ void Piece::setType(int type)
 {
     this->type = type;
 }
-
 
 void Piece::setPromoting(bool promoting)
 {
