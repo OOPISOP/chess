@@ -69,8 +69,6 @@ ApplicationWindow
 
                         x: squareSize * positionX
                         y: squareSize * positionY
-                        z: 1
-
                         source: images[(side == true) ? 0 : 1][type]
 
                         MouseArea
@@ -81,7 +79,7 @@ ApplicationWindow
                             property int startY: 0
                             onPressed :
                             {
-                                chessImage.z = 100;
+                                chessImage.z += 100;
                                 startX = parent.x;
                                 startY = parent.y;
                                 var  fromX = startX / squareSize;
@@ -90,7 +88,6 @@ ApplicationWindow
                             }
                             onReleased:
                             {
-                                chessImage.z = 100;
                                 var fromX = startX / squareSize;
                                 var fromY = startY / squareSize;
                                 var toX   = (parent.x + mouseX) / squareSize;
@@ -108,11 +105,8 @@ ApplicationWindow
                     {
                         height: squareSize
                         width : squareSize
-
                         x: squareSize * positionX
                         y: squareSize * positionY
-                        z: 0
-
                         source: images[2][(mark == true)? 0:1]
 
                     }
