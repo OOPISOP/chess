@@ -7,6 +7,11 @@ Pawn::Pawn(bool white,int type) : Piece(white,type)
 
 bool Pawn::canMove(Board board,Spot start,Spot end)
 {
+    //Cannot out of range
+    if(end.getX()>7||end.getX()<0||end.getY()>7||end.getY()<0)
+    {
+        return false;
+    }
     // Cannot kill ally.
     if(end.havePiece() && end.getPiece()->isWhite() == this->isWhite())
     {
@@ -36,28 +41,23 @@ bool Pawn::canMove(Board board,Spot start,Spot end)
     // Cannot move exceptinally from above condition.
     else
     {
-
         return false;
     }
 
     // First move can forward 2 units.
-    if (!isMoved())
+    // Only available on row 2 or 7.
+    if ((start.getY() == 1) || (start.getY() == 6))
     {
-        // Only available on row 2 or 7.
-        if ((start.getY() == 1) || (start.getY() == 6))
+        int delta2 = start.getPiece()->isWhite() ? -2 : 2 ;
+
+        // Cannot move except 1 or 2 forward units.
+        if (((end.getY() - start.getY()) != delta) &&
+            ((end.getY() - start.getY()) != delta2))
         {
-            int delta2 = start.getPiece()->isWhite() ? -2 : 2 ;
-
-            // Cannot move except 1 or 2 forward units.
-            if (((end.getY() - start.getY()) != delta) &&
-                ((end.getY() - start.getY()) != delta2))
-            {
-                return false;
-            }
-
-            setMoved(true);
-            return true;
+            return false;
         }
+
+        return true;
     }
 
     // Cannot move except 1 forward unit.
