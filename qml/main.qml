@@ -63,12 +63,13 @@ ApplicationWindow
                 {
                     Image
                     {
+                        id: chessImage
                         height: squareSize
                         width : squareSize
 
                         x: squareSize * positionX
                         y: squareSize * positionY
-                        z: 0
+                        z: 1
 
                         source: images[(side == true) ? 0 : 1][type]
 
@@ -78,24 +79,24 @@ ApplicationWindow
                             drag.target: parent
                             property int startX: 0
                             property int startY: 0
-                            onPressed:
+                            onPressed :
                             {
-                                console.log("On press: ", parent.x, parent.y);
+                                chessImage.z = 100;
                                 startX = parent.x;
                                 startY = parent.y;
+                                var  fromX = startX / squareSize;
+                                var fromY = startY / squareSize;
+                                game.showNextMove(fromX,fromY)
                             }
                             onReleased:
                             {
-                                var  fromX = startX / squareSize;
+                                chessImage.z = 100;
+                                var fromX = startX / squareSize;
                                 var fromY = startY / squareSize;
                                 var toX   = (parent.x + mouseX) / squareSize;
                                 var toY   = (parent.y + mouseY) / squareSize;
-//                                if (!logic.move(fromX, fromY, toX, toY))
-//                                {
-//                                    parent.x = startX;
-//                                    parent.y = startY;
-//                                }
-                                if(!game.makeMove(fromX,fromY,toX,toY))
+
+                                if(toX>7||toX<0||toY>7||toY<0||!game.makeMove(fromX,fromY,toX,toY))
                                 {
                                     parent.x = startX;
                                     parent.y = startY;
@@ -110,7 +111,7 @@ ApplicationWindow
 
                         x: squareSize * positionX
                         y: squareSize * positionY
-                        z: 1
+                        z: 0
 
                         source: images[2][(mark == true)? 0:1]
 
@@ -125,8 +126,6 @@ ApplicationWindow
         Item {
             Loader {sourceComponent: gameBoard}
             Loader {sourceComponent: chessPlacement}
-//            Loader {sourceComponent: buttonNewGame}
-//            Loader {sourceComponent: buttonLoadGame}
         }
     }
     StackView {

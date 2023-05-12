@@ -52,6 +52,8 @@ public:
 
     Q_INVOKABLE void newGame();
     Q_INVOKABLE bool makeMove(int startX,int startY,int endX,int endY);
+    Q_INVOKABLE void showNextMove(int x,int y);
+    void resetAllMark();
 
 
 protected:
