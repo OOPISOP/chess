@@ -22,7 +22,7 @@ public:
     };
     vector<vector<Spot>> boxes;
     Board();
-    Spot getBox(int x,int y)const;
+    Spot getBox(int y,int x)const;
     void resetBoard();
 };
 

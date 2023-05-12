@@ -93,7 +93,7 @@ ApplicationWindow
                                 var toX   = (parent.x + mouseX) / squareSize;
                                 var toY   = (parent.y + mouseY) / squareSize;
 
-                                if(toX>7||toX<0||toY>7||toY<0||!game.makeMove(fromX,fromY,toX,toY))
+                                if(toX>8||toX<0||toY>8||toY<0||!game.makeMove(fromX,fromY,toX,toY))
                                 {
                                     parent.x = startX;
                                     parent.y = startY;
