@@ -32,7 +32,7 @@ bool Pawn::canMove(Board board,Spot start,Spot end)
     // Cannot move 1 diagonal unit when the front is blocked or no enemy.
     else if ((abs(end.getX() - start.getX()) == 1))
     {
-        if (!(end.havePiece())||(abs(end.getY() - start.getY()) > 0))
+        if (!(end.havePiece())||(abs(end.getY() - start.getY()) > 1))
         {
             return false;
         }
