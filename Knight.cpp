@@ -6,14 +6,16 @@ Knight::Knight(bool white,int type) : Piece(white,type)
 }
 bool Knight::canMove(Board board,Spot start,Spot end)
 {
-    if(end.getPiece()->isWhite() == this->isWhite())
+    // Cannot kill ally.
+    if(end.havePiece() && end.getPiece()->isWhite() == this->isWhite())
     {
         return false;
     }
-    int delta = start.getPiece()->isWhite() ? -1 : 1 ;
-    if(end.getY()-start.getY()!= delta)
-    {
-        return false;
-    }
-    return true;
+
+    // Declaration for informative variables.
+    int deltaX = end.getX() - start.getX();
+    int deltaY = end.getY() - start.getY();
+
+    // Can have L-shaped move.
+    return (((abs(deltaX) == 1) && (abs(deltaY) == 2)) || ((abs(deltaX) == 2) && (abs(deltaY) == 1)));
 }
