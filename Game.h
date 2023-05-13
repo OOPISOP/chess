@@ -12,7 +12,6 @@
 
 #include "Player.h"
 #include "Board.h"
-#include "Spot.h"
 using namespace std;
 
 
@@ -54,7 +53,7 @@ public:
     Q_INVOKABLE bool makeMove(int startX,int startY,int endX,int endY);
     Q_INVOKABLE void showNextMove(int x,int y);
     void resetAllMark();
-
+    Q_INVOKABLE void promotion(int x,int y,int i);
 
 protected:
     //board row count
@@ -63,6 +62,10 @@ protected:
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole)const override;
     //set role name to qml
     QHash<int, QByteArray> roleNames() const override;
+signals:
+ void showPopup(int x,int y,bool white);
+
+
 private:
     vector<Player> players;
     Board board;

@@ -51,7 +51,6 @@ ApplicationWindow
             }
         }
     }
-
     Component
     {
         id: chessPlacement
@@ -92,7 +91,7 @@ ApplicationWindow
                                 var fromY = startY / squareSize;
                                 var toX   = (parent.x + mouseX) / squareSize;
                                 var toY   = (parent.y + mouseY) / squareSize;
-
+                                console.log("On press: ", toX, toY);
                                 if(toX>8||toX<0||toY>8||toY<0||!game.makeMove(fromX,fromY,toX,toY))
                                 {
                                     parent.x = startX;
@@ -108,13 +107,88 @@ ApplicationWindow
                         x: squareSize * positionX
                         y: squareSize * positionY
                         source: images[2][(mark == true)? 0:1]
-
                     }
+
                 }
             }
         }
+
+
     }
 
+    property int promotionX
+    property int promotionY
+    property  bool promotionWhite
+
+    Connections {
+            target: game
+            function onShowPopup(x,y,w)
+            {
+                        myPopup.open()
+                        myPopup.x = squareSize*x
+                        myPopup.y = squareSize*y
+                        if(!w)
+                        {
+                            myPopup.y -= 4*squareSize
+                        }
+                        promotionX = x
+                        promotionY = y
+                        promotionWhite = w
+
+            }
+        }
+
+    property var promotionImage: [
+        [
+            "/images/white_rook.svg",
+            "/images/white_bishop.svg",
+            "/images/white_knight.svg",
+            "/images/white_queen.svg",
+        ],
+
+        [
+            "/images/black_rook.svg",
+            "/images/black_bishop.svg",
+            "/images/black_knight.svg",
+            "/images/black_queen.svg",
+        ],
+
+    ]
+
+
+    Popup
+    {
+        id: myPopup
+        objectName: "myPopup"
+        height: 4*squareSize
+        width : squareSize
+        modal: true
+        focus: true
+        closePolicy: Popup.CloseOnEscape
+
+        Column
+        {
+               anchors.centerIn: parent
+               Repeater {
+                   model: 4
+                   Image
+                   {
+                       source: promotionImage[promotionWhite==true?0:1][index]
+                       width: squareSize
+                       height: squareSize
+                       MouseArea
+                       {
+                           anchors.fill: parent
+                           onClicked:
+                           {
+                                game.promotion(promotionX,promotionY,index);
+                                myPopup.close()
+                           }
+                       }
+                   }
+               }
+        }
+    }
     Component {
         id: mainScreen
         Item {

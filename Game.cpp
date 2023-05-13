@@ -7,8 +7,16 @@
  * Description: Game
 ***********************************************************************/
 #include "Game.h"
+#include "Bishop.h"
+#include "Knight.h"
+#include "Queen.h"
+#include "Rook.h"
 #include "Spot.h"
 #include <queue>
+#include <QQuickView>
+#include <QQmlComponent>
+#include <QQmlEngine>
+#include <QtQuick/QQuickItem>
 
 //Intent:init the Game class
 //Pre:p1 p2 is Player respect player,and push back to players ,respect have two player,and set the current player
@@ -83,6 +91,17 @@ void Game::showNextMove(int x,int y )
     }
     // The input surround poistion
     int dir[8][2] = { {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0} };
+    int dirKnight[8][2] =  { {-2, 1}, {-1, 2}, {1, 2}, {2, 1}, {2, -1}, {1, -2}, {-1, -2}, {-2, 1} };
+    if(sourcePiece->getType() == 3)
+    {
+        for(int i=0;i<8;i++)
+        {
+            for(int j=0;j<2;j++)
+            {
+                dir[i][j] = dirKnight[i][j];
+            }
+        }
+    }
     queue<pair<int, int>> que;
     queue<bool>flag;
     vector<vector<bool>> vis(8,vector<bool>(8,false));
@@ -99,13 +118,11 @@ void Game::showNextMove(int x,int y )
         {
             int nextX = x + dir[i][0];
             int nextY = y + dir[i][1];
-
-            Spot* endBox = &this->board.boxes[nextY][nextX];
             if(nextX>7||nextX<0||nextY>7||nextY<0)continue;
+            Spot* endBox = &this->board.boxes[nextY][nextX];
             if(sourcePiece->canMove(board,*startBox,*endBox) && !vis[nextX][nextY] && !v)
             {
                 endBox->setMark(true);
-
                 que.push(pair<int, int>(nextX, nextY));
                 if(endBox->havePiece())
                 {
@@ -129,6 +146,7 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
 {
     Spot* startBox = &this->board.boxes[startY][startX];
     Spot* endBox = &this->board.boxes[endY][endX];
+    cout<<endY<<endl;
     if(!startBox->havePiece())
     {
         cout<<"not Piece"<<endl;
@@ -143,7 +161,6 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         return false;
     }
 
-
     if(!sourcePiece->canMove(board,*startBox,*endBox))
     {
         cout<<"can't move"<<endl;
@@ -151,14 +168,15 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
     }
     if(!endBox->havePiece())
     {
-        startBox->setPiece();
         endBox->setPiece(sourcePiece);
+        startBox->setPiece();
+        cout<<"a"<<startBox->havePiece()<<endl;
     }
     else
     {
-        Piece* targetPiece = endBox->getPiece();
-        startBox->setPiece(targetPiece);
         endBox->setPiece(sourcePiece);
+        startBox->setPiece();
+        cout<<"b"<<startBox->havePiece()<<endl;
     }
     if (sourcePiece->isEnPassant())
     {
@@ -170,16 +188,12 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
     }
     else
     {
-        startBox->setPiece();
-        endBox->setPiece(sourcePiece);
-
-        if (sourcePiece->isPromoting())
+        if (sourcePiece->getType() == Pawn &&(endY==0 || endY == 7) )
         {
-            // {}{}{{}{}Need Piece selecting window{}{{{}{}{}
-            // {}{}{}{}} And change(setPiece?) endBox's Piece to selected one.
+            //promotion
+            emit showPopup(endX,endY,sourcePiece->isWhite());
         }
     }
-
     if(this->currentTurn == players[0])
     {
         this->currentTurn = players[1];
@@ -189,9 +203,39 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         this->currentTurn = players[0];
     }
     resetAllMark();
-    emit dataChanged(index(0),index(63));
+    //emit dataChanged(index(0),index(63));
+    beginResetModel();
+    endResetModel();
     return true;
 }
+//Intent:Pawn Promotion
+//Pre:x y and type
+//Post:that Pawn Promotion
+void Game::promotion(int x,int y,int type)
+{
+    Spot* spot = &this->board.boxes[y][x];
+    Piece* piece = spot->getPiece();
+    bool white = piece->isWhite();
+    if(type==0)
+    {
+        spot->setPiece(new class Rook(white,1));
+    }
+    else if(type == 1)
+    {
+        spot->setPiece(new class Bishop(white,2));
+    }
+    else if(type == 2)
+    {
+        spot->setPiece(new class Knight(white,3));
+    }
+    else if(type == 3)
+    {
+        spot->setPiece(new class Queen(white,4));
+    }
+    beginResetModel();
+    endResetModel();
+}
+
 
 int Game::rowCount(const QModelIndex & ) const {
     return (board.boxes.size()*board.boxes[0].size());

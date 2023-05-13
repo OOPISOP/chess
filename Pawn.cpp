@@ -43,11 +43,18 @@ bool Pawn::canMove(Board board,Spot start,Spot end)
         return false;
     }
 
+    Spot frontTwoSpot = board.getBox(start.getY()+2*delta,start.getX());
     // First move can forward 2 units.
     // Only available on row 2 or 7.
     if ((start.getY() == 1) || (start.getY() == 6))
     {
         int delta2 = start.getPiece()->isWhite() ? -2 : 2 ;
+
+        //when 2 forward units cannot have piece
+        if((end.getY() - start.getY()) == delta2&&frontTwoSpot.havePiece())
+        {
+            return false;
+        }
 
         // Cannot move except 1 or 2 forward units.
         if (((end.getY() - start.getY()) != delta) &&
