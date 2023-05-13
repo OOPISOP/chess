@@ -1,6 +1,8 @@
 #ifndef GAME_H
 #define GAME_H
 
+#define _HAS_STD_BYTE 0
+
 #include <QMainWindow>
 # include <QAbstractListModel>
 # include <QDebug>
