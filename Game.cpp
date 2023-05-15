@@ -185,20 +185,32 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         endBox->setPiece(sourcePiece);
         startBox->setPiece();
     }
-    if(this->enPassant.first > 0 && this->enPassant.second > 0)
+    Spot* near = &this->board.boxes[startY][startX+ (endX - startX)];
+    if(near->havePiece()&&near->getPiece()->isEnPassant())
     {
-        Spot* enPassantSpot = &this->board.boxes[8 - this->enPassant.second][this->enPassant.first];
-        Piece* enPassantPiece = enPassantSpot->getPiece();
-        enPassantPiece->setEnPassant(false);
+        near->setPiece();
     }
-    if (sourcePiece->isEnPassant())
+    else
     {
+        if(this->enPassant.first > 0 && this->enPassant.second > 0)
+        {
+            Spot* enPassantSpot = &this->board.boxes[8 - this->enPassant.second][this->enPassant.first];
+            Piece* enPassantPiece = enPassantSpot->getPiece();
+            enPassantPiece->setEnPassant(false);
+        }
+    }
+
+
+    if(isEnPassant(startX,startY,endX,endY))
+    {
+        sourcePiece->setEnPassant(true);
         this->enPassant = make_pair(endX,8 - endY);
     }
     else
     {
         this->enPassant = make_pair(-1,-1);
     }
+
     if (sourcePiece->isCastling())
     {
 
@@ -224,6 +236,16 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
     endResetModel();
     return true;
 }
+
+bool Game::isEnPassant(int startX,int startY,int endX,int endY)
+{
+    if(abs(endY - startY) != 2 || endX != startX)
+    {
+        return false;
+    }
+    return true;
+}
+
 //Intent:Pawn Promotion
 //Pre:x y and type
 //Post:that Pawn Promotion

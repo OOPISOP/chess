@@ -32,7 +32,16 @@ bool Pawn::canMove(Board board,Spot start,Spot end)
     // Cannot move 1 diagonal unit when the front is blocked or no enemy.
     else if ((abs(end.getX() - start.getX()) == 1))
     {
-        if (!(end.havePiece())||(abs(end.getY() - start.getY()) > 1))
+        Spot near = board.getBox(start.getY(),start.getX() + (end.getX() - start.getX()));
+        if(near.havePiece())
+        {
+            if(!(end.havePiece())&&near.getPiece()->isEnPassant()&&((end.getY() - start.getY()) == delta))
+            {
+                cout<<near.getX()<<" "<<near.getY()<<endl;
+                return true;
+            }
+        }
+        if (!(end.havePiece())||(((abs(end.getY() - start.getY()) > 1))))
         {
             return false;
         }
@@ -62,7 +71,6 @@ bool Pawn::canMove(Board board,Spot start,Spot end)
         {
             return false;
         }
-
         return true;
     }
 
@@ -77,7 +85,5 @@ bool Pawn::canMove(Board board,Spot start,Spot end)
     {
         setPromoting(true);
     }
-
-    setMoved(true);
     return true;
 }

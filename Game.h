@@ -62,6 +62,7 @@ public:
     Q_INVOKABLE void redo();
     void setGame(string fen);
     void setBoardFromFEN(string fen);
+    bool isEnPassant(int startX,int startY,int endX,int endY);
 
 protected:
     //board row count

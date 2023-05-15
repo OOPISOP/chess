@@ -8,10 +8,13 @@ ApplicationWindow
     title: qsTr("Chess")
     visible: true
     minimumWidth: 8 * squareSize
-    minimumHeight: 8 * squareSize + 28
+    minimumHeight: 8 * squareSize + menuBarHeight
 
     property int squareSize: 80
+    property int menuBarHeight:30
+
     menuBar:MenuBar {
+        height: menuBarHeight
            Menu {
                title: "Game"
                MenuItem { text: "Open" }
