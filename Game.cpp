@@ -8,7 +8,9 @@
 ***********************************************************************/
 #include "Game.h"
 #include "Bishop.h"
+#include "King.h"
 #include "Knight.h"
+#include "Pawn.h"
 #include "Queen.h"
 #include "Rook.h"
 #include "Spot.h"
@@ -17,6 +19,7 @@
 #include <QQmlComponent>
 #include <QQmlEngine>
 #include <QtQuick/QQuickItem>
+#include <sstream>
 
 //Intent:init the Game class
 //Pre:p1 p2 is Player respect player,and push back to players ,respect have two player,and set the current player
@@ -33,6 +36,10 @@ Game::Game(QObject *parent) : QAbstractListModel(parent)
     {
         this->currentTurn = p2;
     }
+    this->enPassant = make_pair(-1,-1);
+    this->fenList.clear();
+    this->recordIndex = 0;
+    recordFEN();
 }
 
 Game::~Game()
@@ -55,6 +62,10 @@ void Game::newGame()
     {
         this->currentTurn = p2;
     }
+    this->enPassant = make_pair(-1,-1);
+    this->fenList.clear();
+    this->recordIndex = 0;
+    recordFEN();
 }
 
 void Game::resetAllMark()
@@ -159,7 +170,6 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         cout<<"not your turn"<<endl;
         return false;
     }
-
     if(!sourcePiece->canMove(board,*startBox,*endBox))
     {
         cout<<"can't move"<<endl;
@@ -169,30 +179,37 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
     {
         endBox->setPiece(sourcePiece);
         startBox->setPiece();
-        cout<<"a"<<startBox->havePiece()<<endl;
     }
     else
     {
         endBox->setPiece(sourcePiece);
         startBox->setPiece();
-        cout<<"b"<<startBox->havePiece()<<endl;
+    }
+    if(this->enPassant.first > 0 && this->enPassant.second > 0)
+    {
+        Spot* enPassantSpot = &this->board.boxes[8 - this->enPassant.second][this->enPassant.first];
+        Piece* enPassantPiece = enPassantSpot->getPiece();
+        enPassantPiece->setEnPassant(false);
     }
     if (sourcePiece->isEnPassant())
     {
-
-    }
-    else if (sourcePiece->isCastling())
-    {
-
+        this->enPassant = make_pair(endX,8 - endY);
     }
     else
     {
-        if (sourcePiece->getType() == Pawn &&(endY==0 || endY == 7) )
-        {
-            //promotion
-            emit showPopup(endX,endY,sourcePiece->isWhite());
-        }
+        this->enPassant = make_pair(-1,-1);
     }
+    if (sourcePiece->isCastling())
+    {
+
+    }
+
+    if (sourcePiece->getType() == Pawn &&(endY==0 || endY == 7) )
+    {
+        //promotion
+        emit showPopup(endX,endY,sourcePiece->isWhite());
+    }
+
     if(this->currentTurn == players[0])
     {
         this->currentTurn = players[1];
@@ -202,7 +219,7 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         this->currentTurn = players[0];
     }
     resetAllMark();
-    //emit dataChanged(index(0),index(63));
+    recordFEN();
     beginResetModel();
     endResetModel();
     return true;
@@ -233,6 +250,197 @@ void Game::promotion(int x,int y,int type)
     }
     beginResetModel();
     endResetModel();
+}
+
+
+void Game::setFEN(string fen)
+{
+
+}
+
+void Game::recordFEN()
+{
+    //FEN:k7/pppppppp/8/8/8/8/PPPPPPPP/K7 b - - 0 1
+    string fen = "";
+    for(int i=0;i<8;i++)
+    {
+        int  emptyCount = 0;
+        for(int j=0;j<8;j++)
+        {
+            const Spot* SPOT = &this->board.boxes[i][j];
+            const Piece* PIECE = SPOT->getPiece();
+            if(!SPOT->havePiece())
+            {
+                emptyCount++;
+                continue;
+            }
+            if(emptyCount>0)
+            {
+                fen += to_string(emptyCount);
+                emptyCount = 0;
+            }
+            if(PIECE->isWhite())
+            {
+                fen += "PRBNQK"[PIECE->getType()];
+            }
+            else
+            {
+                fen += "prbnqk"[PIECE->getType()];
+            }
+        }
+        if(emptyCount > 0)
+        {
+            fen += to_string(emptyCount);
+        }
+        if(i < 7)
+        {
+            fen += "/";
+        }
+    }
+    fen += " ";
+    if(currentTurn.isWhiteSide())
+    {
+        fen += "w";
+    }
+    else
+    {
+        fen += "b";
+    }
+    fen += " - ";
+    if(this->enPassant.first < 0 || this->enPassant.second < 0)
+    {
+        fen += " - ";
+    }
+    else
+    {
+        fen += 'a' + this->enPassant.first;
+        fen += '0' + this->enPassant.second;
+    }
+    cout<<fen<<endl;
+    this->fenList.push_back(fen);
+    this->recordIndex = fenList.size() - 1;
+}
+
+void Game::setBoardFromFEN(string fen)
+{
+    int i=0,j=0;
+    for(const auto& f : fen)
+    {
+        if( f== '/')
+        {
+            i++;
+            j=0;
+        }
+        if(j>7||j>7)break;
+        if(isdigit(f))
+        {
+            int n = f - '0';
+            while(n--)
+            {
+                Spot spot(j,i);
+                this->board.boxes[i][j] = spot;
+                j++;
+            }
+        }
+        if(isalpha(f))
+        {
+            Spot spot(j,i);
+                //P R B  N Q K
+            switch(f)
+            {
+            case 'p':
+                spot.setPiece(new class Pawn(false,0));
+                break;
+            case 'r':
+                spot.setPiece(new class Rook(false,1));
+                break;
+            case 'b':
+                spot.setPiece(new class Bishop(false,2));
+                break;
+            case 'n':
+                spot.setPiece(new class Knight(false,3));
+                break;
+            case 'q':
+                spot.setPiece(new class Queen(false,4));
+                break;
+            case 'k':
+                spot.setPiece(new  class King(false,5));
+                break;
+            case 'P':
+                spot.setPiece(new class Pawn(true,0));
+                break;
+            case 'R':
+                spot.setPiece(new class Rook(true,1));
+                break;
+            case 'B':
+                spot.setPiece(new class Bishop(true,2));
+                break;
+            case 'N':
+                spot.setPiece(new class Knight(true,3));
+                break;
+            case 'Q':
+                spot.setPiece(new class Queen(true,4));
+                break;
+            case 'K':
+                spot.setPiece(new  class King(true,5));
+                break;
+            default:
+                cout<<"error piece type"<<endl;
+                break;
+            }
+            this->board.boxes[i][j] = spot;
+            j++;
+        }
+    }
+    beginResetModel();
+    endResetModel();
+}
+
+void Game::setGame(string fen)
+{
+    vector<std::string> parts;
+    stringstream ss(fen);
+    string part;
+    while (getline(ss, part, ' '))
+    {
+        parts.push_back(part);
+    }
+    setBoardFromFEN(parts[0]);
+    Player p1,p2;
+    p1.setSide(true);
+    p2.setSide(false);
+    this->players.push_back(p1);
+    this->players.push_back(p2);
+    currentTurn = (parts[1] == "w") ? p1 : p2;
+    if (parts[3] != "-") {
+        int file = parts[3][0] - 'a';
+        int rank = parts[3][1] - '1';
+        this->enPassant = make_pair(file, rank);
+    }
+    beginResetModel();
+    endResetModel();
+}
+
+void Game::undo()
+{
+    if(recordIndex >= fenList.size() - 1)
+    {
+        return ;
+    }
+    recordIndex++;
+    cout<<fenList[recordIndex]<<endl;
+    setGame(fenList[recordIndex]);
+}
+
+void Game::redo()
+{
+    if(recordIndex <= 0)
+    {
+        return ;
+    }
+    recordIndex--;
+    cout<<fenList[recordIndex]<<endl;
+    setGame(fenList[recordIndex]);
 }
 
 

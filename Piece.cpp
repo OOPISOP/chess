@@ -12,7 +12,7 @@ Piece::Piece()
     this->setType(6);
 }
 
-bool Piece::isWhite()
+bool Piece::isWhite() const
 {
     return this->white;
 }
@@ -21,7 +21,7 @@ void Piece::setWhite(bool white)
     this->white = white;
 }
 
-bool Piece::isMoved()
+bool Piece::isMoved() const
 {
     return this->moved;
 }
@@ -31,7 +31,7 @@ void Piece::setMoved(bool moved)
 
 }
 
-int Piece::getType()
+int Piece::getType() const
 {
     return this->type;
 }
@@ -46,7 +46,7 @@ void Piece::setPromoting(bool promoting)
 {
     this->promoting = promoting;
 }
-bool Piece::isPromoting()
+bool Piece::isPromoting() const
 {
     return this->promoting;
 }
@@ -54,7 +54,7 @@ void Piece::setEnPassant(bool enPassant)
 {
     this->enPassant = enPassant;
 }
-bool Piece::isEnPassant()
+bool Piece::isEnPassant()const
 {
     return this->enPassant;
 }
@@ -62,7 +62,7 @@ void Piece::setCastling(bool castling)
 {
     this->castling = castling;
 }
-bool Piece::isCastling()
+bool Piece::isCastling()const
 {
     return this->castling;
 }

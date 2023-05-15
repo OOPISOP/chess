@@ -56,6 +56,12 @@ public:
     Q_INVOKABLE void showNextMove(int x,int y);
     void resetAllMark();
     Q_INVOKABLE void promotion(int x,int y,int i);
+    void setFEN(string fen);
+    void recordFEN();
+    Q_INVOKABLE void undo();
+    Q_INVOKABLE void redo();
+    void setGame(string fen);
+    void setBoardFromFEN(string fen);
 
 protected:
     //board row count
@@ -73,5 +79,8 @@ private:
     Board board;
     Player currentTurn;
     GameStatus status;
+    pair<int,int> enPassant;
+    vector<string> fenList;
+    int recordIndex;
 };
 #endif // GAME_H

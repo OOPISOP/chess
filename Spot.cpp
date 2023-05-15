@@ -12,7 +12,7 @@ Spot::Spot(int x,int y) :x(x),y(y)
     this->mark = false;
 }
 
-bool Spot::havePiece()
+bool Spot::havePiece()const
 {
     return this->isPiece;
 }

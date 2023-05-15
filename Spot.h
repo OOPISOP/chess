@@ -21,7 +21,7 @@ public:
     void setX(int x);
     int getY()const;
     void setY(int y);
-    bool havePiece();
+    bool havePiece()const;
     void setMark(bool mark);
     bool getMark();
 };

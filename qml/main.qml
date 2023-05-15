@@ -1,6 +1,6 @@
-import QtQuick 2.0
+import QtQuick 2
 import QtQuick.Layouts 1.0
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.3
 
 ApplicationWindow
 {
@@ -8,10 +8,33 @@ ApplicationWindow
     title: qsTr("Chess")
     visible: true
     minimumWidth: 8 * squareSize
-    minimumHeight: 8 * squareSize
+    minimumHeight: 8 * squareSize + 28
 
     property int squareSize: 80
+    menuBar:MenuBar {
+           Menu {
+               title: "Game"
+               MenuItem { text: "Open" }
+               MenuItem { text: "Save" }
+               MenuItem { text: "Exit" }
+           }
 
+           Menu {
+               title: "Edit"
+               Action
+               {
+                   text: "Undo"
+                   shortcut: "Ctrl+u"
+                   onTriggered : game.undo()
+               }
+               Action
+               {
+                   text: "Redo"
+                   shortcut: "Ctrl+r"
+                   onTriggered : game.redo()
+               }
+           }
+       }
     property var images: [
         [
             "/images/white_pawn.svg",

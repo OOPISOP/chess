@@ -24,21 +24,21 @@ private:
 public:
     Piece(bool white,int type);
     Piece();
-    bool isWhite();
+    bool isWhite()const;
     void setWhite(bool white);
 
-    bool isMoved();
+    bool isMoved()const;
     void setMoved(bool moved);
-    int getType();
+    int getType()const;
     void setType(int type);
     virtual bool canMove(Board board,Spot start,Spot end) = 0;
 
     void setPromoting(bool promoting);
-    bool isPromoting();
+    bool isPromoting()const;
     void setEnPassant(bool enPassant);
-    bool isEnPassant();
+    bool isEnPassant()const;
     void setCastling(bool castling);
-    bool isCastling();
+    bool isCastling()const;
 
 };
 
