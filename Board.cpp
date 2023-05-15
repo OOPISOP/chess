@@ -15,7 +15,6 @@ Spot Board::getBox(int y,int x) const
 
     if(x < 0 || x > 7 || y < 0 || y > 7)
     {
-        cout<<x<<" "<<y<<endl;
         cout<<"Index out of bound"<<endl;
         return boxes[0][0];
     }

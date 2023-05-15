@@ -146,7 +146,6 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
 {
     Spot* startBox = &this->board.boxes[startY][startX];
     Spot* endBox = &this->board.boxes[endY][endX];
-    cout<<endY<<endl;
     if(!startBox->havePiece())
     {
         cout<<"not Piece"<<endl;
