@@ -102,7 +102,7 @@ void Game::showNextMove(int x,int y )
     }
     // The input surround poistion
     int dir[8][2] = { {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0} };
-    int dirKnight[8][2] =  { {-2, 1}, {-1, 2}, {1, 2}, {2, 1}, {2, -1}, {1, -2}, {-1, -2}, {-2, 1} };
+    int dirKnight[8][2] =  { {-2, 1}, {-1, 2}, {1, 2}, {2, 1}, {2, -1}, {1, -2}, {-1, -2}, {-2, -1} };
     if(sourcePiece->getType() == 3)
     {
         for(int i=0;i<8;i++)
@@ -421,7 +421,7 @@ void Game::setGame(string fen)
     endResetModel();
 }
 
-void Game::undo()
+void Game::redo()
 {
     if(recordIndex >= fenList.size() - 1)
     {
@@ -432,7 +432,7 @@ void Game::undo()
     setGame(fenList[recordIndex]);
 }
 
-void Game::redo()
+void Game::undo()
 {
     if(recordIndex <= 0)
     {
