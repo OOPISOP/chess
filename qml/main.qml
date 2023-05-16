@@ -71,7 +71,7 @@ ApplicationWindow
         height: fenInputHeight
         width: 8 * squareSize
         anchors.top: parent.top
-        placeholderText: "Enter text here"
+        placeholderText: "Enter FEN here"
         onAccepted:
         {
             if(game.setFEN(text))
