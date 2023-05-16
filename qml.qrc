@@ -17,7 +17,7 @@
         	<file>images/white_rook.svg</file>
 		<file>images/circles.png</file>
 		<file>images/square.png</file>
-		<file>sounds/move1.mp3</file>
-		<file>sounds/move2.mp3</file>
+		<file>sounds/move1.wav</file>
+		<file>sounds/move2.wav</file>
 	</qresource>
 </RCC>

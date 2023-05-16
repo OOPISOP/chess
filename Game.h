@@ -1,6 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "QtMultimedia/qsoundeffect.h"
 #define _HAS_STD_BYTE 0
 
 #include <QMainWindow>
@@ -63,6 +64,7 @@ public:
     void setGame(string fen);
     void setBoardFromFEN(string fen);
     bool isEnPassant(int startX,int startY,int endX,int endY);
+    void playChessSound();
 
 protected:
     //board row count
@@ -83,5 +85,9 @@ private:
     pair<int,int> enPassant;
     vector<string> fenList;
     int recordIndex;
+    QString p1ChessSound = ":/sounds/move1.wav";
+    QString p2ChessSound = ":/sounds/move2.wav";
+    //音效播放器
+    QSoundEffect effect;
 };
 #endif // GAME_H

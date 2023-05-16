@@ -22,6 +22,7 @@
 #include <sstream>
 #include <QtMultimedia/QMediaPlayer>
 #include <QAudioOutput>
+#include <QSoundEffect>
 
 
 //Intent:init the Game class
@@ -41,8 +42,8 @@ Game::Game(QObject *parent) : QAbstractListModel(parent)
     }
     this->enPassant = make_pair(-1,-1);
     this->fenList.clear();
-    this->recordIndex = 0;
-    recordFEN();
+    this->recordIndex = -1;
+
 }
 
 Game::~Game()
@@ -67,7 +68,8 @@ void Game::newGame()
     }
     this->enPassant = make_pair(-1,-1);
     this->fenList.clear();
-    this->recordIndex = 0;
+    this->recordIndex = -1;
+    this->effect.setVolume(1.f);
     recordFEN();
 }
 
@@ -232,19 +234,23 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
     {
         this->currentTurn = players[0];
     }
-    //音效播放器
-    QMediaPlayer* player = new QMediaPlayer;
-    QAudioOutput* audioOutput = new QAudioOutput;
-    player->setAudioOutput(audioOutput);
-    player->setSource(QUrl(":/sounds/move1.mp3"));
-    audioOutput->setVolume(100);
-    player->play();
-    cout<<player->mediaStatus()<<endl;
+    playChessSound();
     resetAllMark();
     recordFEN();
     beginResetModel();
     endResetModel();
     return true;
+}
+
+void Game::playChessSound()
+{
+    QString soundSource = p1ChessSound;
+    if(currentTurn == players[1])
+    {
+        soundSource = p2ChessSound;
+    }
+    effect.setSource(QUrl::fromLocalFile(soundSource));
+    effect.play();
 }
 
 bool Game::isEnPassant(int startX,int startY,int endX,int endY)
@@ -448,18 +454,16 @@ void Game::setGame(string fen)
     if (parts[3] != "-")
     {
         int file = parts[3][0] - 'a';
-        int rank = parts[3][1] - '1';
+        int rank = 8 - (parts[3][1] - '0') ;
         this->enPassant = make_pair(file, rank);
         if(file>7||file<0||rank>7||rank<0)
         {
             cout<<"en Passant error pos"<<endl;
         }
         Spot* spot = &this->board.boxes[rank][file];
-        if(spot->havePiece())
-        {
-            Piece* piece = spot->getPiece();
-            piece->setEnPassant(true);
-        }
+        Piece* piece = spot->getPiece();
+        cout<<"en "<<file<<" "<<rank<<endl;
+        piece->setEnPassant(true);
     }
     beginResetModel();
     endResetModel();
