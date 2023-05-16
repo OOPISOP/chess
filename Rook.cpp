@@ -39,9 +39,5 @@ bool Rook::canMove(Board board,Spot start,Spot end)
         colX += leftOrRight;
         rowY += upOrDown;
     }
-
-    // Save value for castling.
-    setMoved(true);
-
     return true;
 }

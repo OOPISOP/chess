@@ -11,6 +11,7 @@ class King : public Piece
 public:
     King(bool white,int type);
     virtual bool canMove(Board board,Spot start,Spot end);
+    bool isValidCastling(Board board,Spot start,Spot end);
 };
 
 #endif // KING_H

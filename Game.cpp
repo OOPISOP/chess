@@ -30,20 +30,7 @@
 //Pos:set two player and current turn
 Game::Game(QObject *parent) : QAbstractListModel(parent)
 {
-    Player p1,p2;
-    p1.setSide(true);
-    p2.setSide(false);
-    this->players.push_back(p1);
-    this->players.push_back(p2);
-    this->currentTurn = p1;
-    if(p2.isWhiteSide())
-    {
-        this->currentTurn = p2;
-    }
-    this->enPassant = make_pair(-1,-1);
-    this->fenList.clear();
-    this->recordIndex = -1;
-
+    newGame();
 }
 
 Game::~Game()
@@ -67,6 +54,7 @@ void Game::newGame()
         this->currentTurn = p2;
     }
     this->enPassant = make_pair(-1,-1);
+    this->castleRook = make_pair(-1,-1);
     this->fenList.clear();
     this->recordIndex = -1;
     this->effect.setVolume(1.f);
@@ -139,7 +127,6 @@ void Game::showNextMove(int x,int y )
             flag.push(false);
             if(sourcePiece->canMove(board,*startBox,*endBox) && !vis[nextX][nextY] && !v)
             {
-                cout<<nextX<<" "<<nextY<<" "<<vis[nextX][nextY]<<" "<<v<<endl;
                 endBox->setMark(true);
                 if(endBox->havePiece())
                 {
@@ -357,6 +344,16 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         cout<<"can't move"<<endl;
         return false;
     }
+    if(isCastle(startX,startY,endX,endY))
+    {
+        Spot* rookSpot = &this->board.boxes[castleRook.second][castleRook.first];
+        Piece* rookPiece = rookSpot->getPiece();
+        int rookTargetX = (endX-startX)>0?endX - 1  : endX + 1;
+        Spot* targetSpot = &this->board.boxes[endY][rookTargetX];
+        targetSpot->setPiece(rookPiece);
+        rookSpot->setPiece();
+        castleRook = make_pair(-1,-1);
+    }
 
     if(!endBox->havePiece())
     {
@@ -368,6 +365,7 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         endBox->setPiece(sourcePiece);
         startBox->setPiece();
     }
+    endBox->getPiece()->setMoved(true);
     Spot* near = &this->board.boxes[startY][startX+ (endX - startX)];
     if(near->havePiece()&&near->getPiece()->isEnPassant())
     {
@@ -382,8 +380,6 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
             enPassantPiece->setEnPassant(false);
         }
     }
-
-
     if(isEnPassant(startX,startY,endX,endY))
     {
         sourcePiece->setEnPassant(true);
@@ -393,13 +389,6 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
     {
         this->enPassant = make_pair(-1,-1);
     }
-
-    if (sourcePiece->isCastling())
-    {
-
-    }
-
-
 
     if (seeCheck())
     {
@@ -459,6 +448,24 @@ void Game::playChessSound()
     }
     effect.setSource(QUrl::fromLocalFile(soundSource));
     effect.play();
+}
+
+bool Game::isCastle(int startX,int startY,int endX,int endY)
+{
+    Spot* startBox = &this->board.boxes[startY][startX];
+    Piece* startPiece = startBox->getPiece();
+    if(startPiece->getType()!=King||startPiece->isMoved())
+    {
+         return false;
+    }
+    int deltaY = endY - startY;
+    int deltaX = endX - startX;
+    if(deltaY!=0||abs(deltaX)<2)
+    {
+         return false;
+    }
+    castleRook = make_pair((deltaX>0)?7:0,endY);
+    return true;
 }
 
 bool Game::isEnPassant(int startX,int startY,int endX,int endY)
@@ -562,10 +569,8 @@ void Game::recordFEN()
         fen += 'a' + this->enPassant.first;
         fen += '0' + this->enPassant.second;
     }
-    cout<<fen<<endl;
     this->fenList.push_back(fen);
     this->recordIndex++;
-    cout<<"index:"<<recordIndex<<endl;
 }
 
 void Game::setBoardFromFEN(string fen)
@@ -670,7 +675,6 @@ void Game::setGame(string fen)
         }
         Spot* spot = &this->board.boxes[rank][file];
         Piece* piece = spot->getPiece();
-        cout<<"en "<<file<<" "<<rank<<endl;
         piece->setEnPassant(true);
     }
     beginResetModel();
@@ -695,8 +699,6 @@ void Game::undo()
         return ;
     }
     recordIndex--;
-    cout<<"index:"<<recordIndex<<endl;
-    cout<<"index:"<<fenList[recordIndex]<<endl;
     setGame(fenList[recordIndex]);
 }
 

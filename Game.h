@@ -68,6 +68,7 @@ public:
     void setBoardFromFEN(string fen);
     bool isEnPassant(int startX,int startY,int endX,int endY);
     void playChessSound();
+    bool isCastle(int startX,int startY,int endX,int endY);
 
 protected:
     //board row count
@@ -92,5 +93,6 @@ private:
     QString p2ChessSound = ":/sounds/move2.wav";
     //音效播放器
     QSoundEffect effect;
+    pair<int,int> castleRook;
 };
 #endif // GAME_H

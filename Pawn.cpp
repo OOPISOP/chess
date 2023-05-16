@@ -19,7 +19,6 @@ bool Pawn::canMove(Board board,Spot start,Spot end)
     }
     // Normally move 1 forward unit.
     int delta = start.getPiece()->isWhite() ? -1 : 1 ;
-
     // Cannot move 1 forward unit when the front is blocked.
     if (abs(end.getX() - start.getX()) == 0)
     {
