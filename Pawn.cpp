@@ -66,7 +66,7 @@ bool Pawn::canMove(Board board,Spot start,Spot end)
         //when 2 forward units cannot have piece
         if((end.getY() - start.getY()) == delta2)
         {
-            if(start.getY()+delta2>7||start.getY()+delta2<0)
+            if(start.getY()+delta2 > 7||start.getY()+delta2 < 0)
             {
                 return false;
             }
@@ -75,7 +75,6 @@ bool Pawn::canMove(Board board,Spot start,Spot end)
             {
                 return false;
             }
-
         }
 
         // Cannot move except 1 or 2 forward units.
