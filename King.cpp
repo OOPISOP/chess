@@ -33,7 +33,7 @@ bool King::isValidCastling(Board board,Spot start,Spot end)
 {
     Spot startBox = board.getBox(start.getY(),start.getX());
     Piece* startPiece = startBox.getPiece();
-    if(startPiece->getType()!=5||startPiece->isMoved())
+    if(startPiece->getType()!=5||(startPiece->isWhite()&&board.whiteKingMoved)||((!startPiece->isWhite()&&board.blackKingMoved)))
     {
         return false;
     }
@@ -43,18 +43,25 @@ bool King::isValidCastling(Board board,Spot start,Spot end)
     {
         return false;
     }
-
     int rookX = (deltaX>0)?7:0;
-    cout<<"R"<<rookX<<endl;
+    bool rookMoved = false;
+    if(startPiece->isWhite())
+    {
+        rookMoved = (deltaX>0)?board.whiteRightRookMoved:board.blackRightRookMoved;
+    }
+    else
+    {
+        rookMoved = (deltaX>0)?board.blackLeftRookMoved:board.blackLeftRookMoved;
+    }
+
     Spot rookStartBox =  board.getBox(end.getY(),rookX);
-    if(!rookStartBox.havePiece()||rookStartBox.getPiece()->getType()!=1||rookStartBox.getPiece()->isMoved())
+    if(!rookStartBox.havePiece()||rookStartBox.getPiece()->getType()!=1||rookMoved)
     {
         return false;
     }
 
     Spot rookEndBox = board.getBox(end.getY(),end.getX() - ((deltaX>0)?1:-1));
-    cout<<rookStartBox.getX()<<" "<<rookStartBox.getY()<<endl;
-    cout<<rookEndBox.getX()<<" "<<rookEndBox.getY()<<endl;
+
     if(!rookStartBox.getPiece()->canMove(board,rookStartBox,rookEndBox))
     {
         return false;

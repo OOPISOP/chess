@@ -53,6 +53,16 @@ public:
         King
     };
 
+    struct  KingAndRookStatus
+    {
+        bool whiteKingMoved = false;
+        bool whiteLeftRookMoved = false;
+        bool whiteRightRookMoved = false;
+        bool blackKingMoved = false;
+        bool blackLeftRookMoved = false;
+        bool blackRightRookMoved = false;
+    };
+
     Q_INVOKABLE void newGame();
     bool seeCheck();
     void seeStatus();
@@ -64,11 +74,12 @@ public:
     void recordFEN();
     Q_INVOKABLE void undo();
     Q_INVOKABLE void redo();
-    void setGame(string fen);
+    void setGame(string fen,KingAndRookStatus status);
     void setBoardFromFEN(string fen);
     bool isEnPassant(int startX,int startY,int endX,int endY);
     void playChessSound();
     bool isCastle(int startX,int startY,int endX,int endY);
+    void setCastleFromFEN(KingAndRookStatus status);
 
 protected:
     //board row count
@@ -94,5 +105,7 @@ private:
     //音效播放器
     QSoundEffect effect;
     pair<int,int> castleRook;
+    vector<KingAndRookStatus> castleStatusList;
+
 };
 #endif // GAME_H

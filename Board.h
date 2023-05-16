@@ -24,6 +24,12 @@ public:
     Board();
     Spot getBox(int y,int x)const;
     void resetBoard();
+    bool whiteKingMoved = false;
+    bool whiteLeftRookMoved = false;
+    bool whiteRightRookMoved = false;
+    bool blackKingMoved = false;
+    bool blackLeftRookMoved = false;
+    bool blackRightRookMoved = false;
 };
 
 #endif // BOARD_H

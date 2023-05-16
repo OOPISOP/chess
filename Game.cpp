@@ -59,6 +59,7 @@ void Game::newGame()
     this->recordIndex = -1;
     this->effect.setVolume(1.f);
     recordFEN();
+    castleStatusList.clear();
 }
 
 void Game::resetAllMark()
@@ -365,7 +366,42 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         endBox->setPiece(sourcePiece);
         startBox->setPiece();
     }
-    endBox->getPiece()->setMoved(true);
+    if(endBox->getPiece()->getType()==King)
+    {
+        if(currentTurn.isWhiteSide())
+        {
+            board.whiteKingMoved = true;
+        }
+        else
+        {
+            board.blackKingMoved = true;
+        }
+    }
+    if(endBox->getPiece()->getType()==Rook)
+    {
+        if(currentTurn.isWhiteSide())
+        {
+            if(startX == 0)
+            {
+                board.whiteLeftRookMoved = true;
+            }
+            else if(startX == 7)
+            {
+                board.whiteRightRookMoved = true;
+            }
+        }
+        else
+        {
+            if(startX == 0)
+            {
+                board.blackLeftRookMoved = true;
+            }
+            else if(startX == 7)
+            {
+                board.blackRightRookMoved = true;
+            }
+        }
+    }
     Spot* near = &this->board.boxes[startY][startX+ (endX - startX)];
     if(near->havePiece()&&near->getPiece()->isEnPassant())
     {
@@ -416,7 +452,6 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         return false;
     }
 
-
     if (sourcePiece->getType() == Pawn &&(endY==0 || endY == 7) )
     {
         //promotion
@@ -454,7 +489,7 @@ bool Game::isCastle(int startX,int startY,int endX,int endY)
 {
     Spot* startBox = &this->board.boxes[startY][startX];
     Piece* startPiece = startBox->getPiece();
-    if(startPiece->getType()!=King||startPiece->isMoved())
+    if(startPiece->getType()!=King||(startPiece->isWhite()&&board.whiteKingMoved)||((!startPiece->isWhite()&&board.blackKingMoved)))
     {
          return false;
     }
@@ -506,11 +541,6 @@ void Game::promotion(int x,int y,int type)
 }
 
 
-void Game::setFEN(string fen)
-{
-
-}
-
 void Game::recordFEN()
 {
     //FEN:k7/pppppppp/8/8/8/8/PPPPPPPP/K7 b - - 0 1
@@ -559,19 +589,53 @@ void Game::recordFEN()
     {
         fen += "b";
     }
-    fen += " - ";
+    fen += " ";
+    string castling = "";
+    KingAndRookStatus castleStatus;
+    castleStatus.whiteKingMoved = board.whiteKingMoved;
+    castleStatus.whiteLeftRookMoved = board.blackLeftRookMoved;
+    castleStatus.whiteRightRookMoved = board.blackRightRookMoved;
+    castleStatus.blackKingMoved = board.blackLeftRookMoved;
+    castleStatus.blackLeftRookMoved = board.blackLeftRookMoved;
+    castleStatus.blackRightRookMoved = board.blackRightRookMoved;
+    if (!board.whiteKingMoved)
+    {
+        if (!board.whiteLeftRookMoved) castling += "K";
+        if (!board.whiteRightRookMoved) castling += "Q";
+    }
+    if (!board.blackKingMoved)
+    {
+        if (!board.blackLeftRookMoved) castling += "k";
+        if (!board.blackRightRookMoved) castling += "q";
+    }
+    if (castling.empty())
+    {
+        fen += "-";
+    } else
+    {
+        fen += castling;
+    }
+    fen += " ";
     if(this->enPassant.first < 0 || this->enPassant.second < 0)
     {
-        fen += "- ";
+        fen += "-";
     }
     else
     {
         fen += 'a' + this->enPassant.first;
         fen += '0' + this->enPassant.second;
     }
+    if(recordIndex < this->fenList.size()-1)
+    {
+        this->fenList.resize(recordIndex+1);
+        this->castleStatusList.resize(recordIndex+1);
+    }
     this->fenList.push_back(fen);
+    this->castleStatusList.push_back(castleStatus);
+    cout<<fen<<endl;
     this->recordIndex++;
 }
+
 
 void Game::setBoardFromFEN(string fen)
 {
@@ -648,7 +712,7 @@ void Game::setBoardFromFEN(string fen)
     endResetModel();
 }
 
-void Game::setGame(string fen)
+void Game::setGame(string fen,KingAndRookStatus status)
 {
     vector<std::string> parts;
     stringstream ss(fen);
@@ -664,6 +728,7 @@ void Game::setGame(string fen)
     this->players.push_back(p1);
     this->players.push_back(p2);
     currentTurn = (parts[1] == "w") ? p1 : p2;
+    setCastleFromFEN(status);
     if (parts[3] != "-")
     {
         int file = parts[3][0] - 'a';
@@ -681,6 +746,16 @@ void Game::setGame(string fen)
     endResetModel();
 }
 
+void Game::setCastleFromFEN(KingAndRookStatus status)
+{
+    board.whiteKingMoved = status.whiteKingMoved;
+    board.whiteLeftRookMoved = status.whiteLeftRookMoved;
+    board.whiteRightRookMoved = status.whiteRightRookMoved;
+    board.blackKingMoved = status.blackKingMoved;
+    board.blackLeftRookMoved = status.blackLeftRookMoved;
+    board.blackRightRookMoved = status.blackRightRookMoved;
+}
+
 void Game::redo()
 {
     if(recordIndex >= fenList.size() - 1)
@@ -689,7 +764,7 @@ void Game::redo()
     }
     recordIndex++;
     cout<<fenList[recordIndex]<<endl;
-    setGame(fenList[recordIndex]);
+    setGame(fenList[recordIndex],castleStatusList[recordIndex]);
 }
 
 void Game::undo()
@@ -699,7 +774,8 @@ void Game::undo()
         return ;
     }
     recordIndex--;
-    setGame(fenList[recordIndex]);
+    cout<<fenList[recordIndex]<<endl;
+    setGame(fenList[recordIndex],castleStatusList[recordIndex]);
 }
 
 
