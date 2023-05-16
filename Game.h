@@ -75,7 +75,7 @@ public:
     Q_INVOKABLE bool makeMove(int startX,int startY,int endX,int endY);
     void resetAllMark();
     Q_INVOKABLE void promotion(int x,int y,int i);
-    void setFEN(string fen);
+    Q_INVOKABLE bool setFEN(QString fen);
     void recordFEN();
     Q_INVOKABLE void undo();
     Q_INVOKABLE void redo();
@@ -85,6 +85,8 @@ public:
     void playChessSound();
     bool isCastle(int startX,int startY,int endX,int endY);
     void setCastleFromFEN(KingAndRookStatus status);
+    void updateKingRook(string fen);
+
 
 protected:
     //board row count

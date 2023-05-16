@@ -9,10 +9,11 @@ ApplicationWindow
     title: qsTr("Chess")
     visible: true
     minimumWidth: 8 * squareSize
-    minimumHeight: 8 * squareSize + menuBarHeight
+    minimumHeight: 8 * squareSize + menuBarHeight + 20
 
     property int squareSize: 80
     property int menuBarHeight:30
+    property  int fenInputHeight: 20
 
     menuBar:MenuBar {
         height: menuBarHeight
@@ -65,6 +66,20 @@ ApplicationWindow
             ""
         ]
     ]
+    TextField
+    {
+        height: fenInputHeight
+        width: 8 * squareSize
+        anchors.top: parent.top
+        placeholderText: "Enter FEN here"
+        onAccepted:
+        {
+            if(game.setFEN(text))
+            {
+                console.log("User input: " + text)
+            }
+        }
+    }
 
     Component {
         // First screen
@@ -72,6 +87,7 @@ ApplicationWindow
         Item {
             Image {
                 id: board
+                y:fenInputHeight
                 source: "/images/chess_board.jpg"
                 height: 8 * squareSize
                 width: 8 * squareSize
@@ -94,7 +110,7 @@ ApplicationWindow
                         width : squareSize
 
                         x: squareSize * positionX
-                        y: squareSize * positionY
+                        y: fenInputHeight + squareSize * positionY
                         source: images[(side == true) ? 0 : 1][type]
 
                         MouseArea
@@ -107,7 +123,7 @@ ApplicationWindow
                             {
                                 chessImage.z += 100;
                                 startX = parent.x;
-                                startY = parent.y;
+                                startY = parent.y ;
                                 var  fromX = startX / squareSize;
                                 var fromY = startY / squareSize;
                                 game.showNextMove(fromX,fromY)
@@ -132,7 +148,7 @@ ApplicationWindow
                         height: squareSize
                         width : squareSize
                         x: squareSize * positionX
-                        y: squareSize * positionY
+                        y: fenInputHeight + squareSize * positionY
                         source: images[2][(mark == true)? 0:1]
                     }
 
@@ -219,6 +235,7 @@ ApplicationWindow
     Component {
         id: mainScreen
         Item {
+
             Loader {sourceComponent: gameBoard}
             Loader {sourceComponent: chessPlacement}
         }
