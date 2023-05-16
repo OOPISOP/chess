@@ -28,6 +28,7 @@ public:
     enum GameStatus
     {
         ACTIVE,
+        WHITE_WIN,
         BLACK_WIN,
         FOREIT,
         STALEMATE,
@@ -53,6 +54,8 @@ public:
     };
 
     Q_INVOKABLE void newGame();
+    bool seeCheck();
+    void seeStatus();
     Q_INVOKABLE bool makeMove(int startX,int startY,int endX,int endY);
     Q_INVOKABLE void showNextMove(int x,int y);
     void resetAllMark();

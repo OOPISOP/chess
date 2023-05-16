@@ -16,6 +16,8 @@ private:
     bool moved = false;
     int type;
 
+    bool checked = false;
+
     bool promoting = false;
     bool enPassant = false;
     bool castling = false;
@@ -32,6 +34,9 @@ public:
     int getType()const;
     void setType(int type);
     virtual bool canMove(Board board,Spot start,Spot end) = 0;
+
+    bool isChecked()const;
+    void setChecked(bool checked);
 
     void setPromoting(bool promoting);
     bool isPromoting()const;

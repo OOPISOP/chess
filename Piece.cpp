@@ -41,6 +41,15 @@ void Piece::setType(int type)
     this->type = type;
 }
 
+bool Piece::isChecked()const
+{
+    return this->checked;
+
+}
+void Piece::setChecked(bool checked)
+{
+    this->checked = checked;
+}
 
 void Piece::setPromoting(bool promoting)
 {
