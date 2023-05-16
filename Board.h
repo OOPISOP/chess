@@ -22,6 +22,7 @@ public:
     };
     vector<vector<Spot>> boxes;
     Board();
+    Board(const Board &sourceBoard);
     Spot getBox(int y,int x)const;
     void resetBoard();
     Spot findKing(bool isWhite);

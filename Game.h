@@ -28,11 +28,10 @@ public:
     enum GameStatus
     {
         ACTIVE,
-        WHITE_WIN,
-        BLACK_WIN,
-        FOREIT,
+        CHECKMATE,
         STALEMATE,
-        RESIGNATTON
+        RESIGNATTON,
+        FOREIT
     };
 
     enum Roles
@@ -64,9 +63,14 @@ public:
     };
 
     Q_INVOKABLE void newGame(bool white);
-    bool seeCheck();
-    void seeStatus();
     Q_INVOKABLE bool makeMove(int startX,int startY,int endX,int endY);
+    Spot FindKing(bool isWhite);
+    bool seeCheck(Spot enemyKingsSpot);
+    bool seeCheckmate();
+    bool isCheckmateMove(Spot start, Spot end);
+    bool canReallyMove(Spot start, Spot end);
+    void makeMoveSimulator(Board tempBoard, Spot start, Spot end);
+
     Q_INVOKABLE void showNextMove(int x,int y);
     void resetAllMark();
     Q_INVOKABLE void promotion(int x,int y,int i);
