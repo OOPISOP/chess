@@ -69,7 +69,7 @@ public:
     bool seeCheckmate();
     bool isCheckmateMove(Spot start, Spot end);
     bool canReallyMove(Spot start, Spot end);
-    bool makeMoveSimulator(Board tempBoard, Spot start, Spot end);
+    void makeMoveSimulator(Board tempBoard, Spot start, Spot end);
 
     Q_INVOKABLE void showNextMove(int x,int y);
     Q_INVOKABLE bool makeMove(int startX,int startY,int endX,int endY);

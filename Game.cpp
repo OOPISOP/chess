@@ -183,7 +183,7 @@ bool Game::seeCheck(Spot enemyKingsSpot)
    int endIndex = (currentTurn.isWhiteSide()) ? -1 : 8;
    int deltaIndex = (currentTurn.isWhiteSide()) ? -1 : 1;
 
-   // Find possible attck to enemy's king.
+   // Find possible attack to enemy's king.
    for (int row = startIndex; row != endIndex; row += deltaIndex)
    {
         for (int col = startIndex; col != endIndex; col += deltaIndex)
@@ -210,6 +210,7 @@ bool Game::seeCheck(Spot enemyKingsSpot)
 
 bool Game::seeCheckmate()
 {
+   /*
    // Declaration for variables.
    int startIndex = (currentTurn.isWhiteSide()) ? 7 : 0;
    int endIndex = (currentTurn.isWhiteSide()) ? -1 : 8;
@@ -232,30 +233,7 @@ bool Game::seeCheckmate()
                 (tempPiece->isWhite() == currentTurn.isWhiteSide()) &&
                 (tempPiece->getType() == King))
             {
-                // Found valid move.
-                for (int i = 0; i < 8; i++)
-                {
-                   // Initialise.
-                   int nextX = col + directions[i][0];
-                   int nextY = row + directions[i][1];
 
-                   // Skip if out of range.
-                   if ((nextX > 7) || (nextX < 0) || (nextY > 7) || (nextY < 0))
-                   {
-                       continue;
-                   }
-
-                   // Initialise.
-                   Spot tempSpot(0,0);
-                   tempSpot.setX(nextX);
-                   tempSpot.setY(nextY);
-
-                   // Save all possible move.
-                   if (canReallyMove(kingsSpot, tempSpot))
-                   {
-                       validDirections.push_back(i);
-                   }
-                }
 
                 // Break searching.
                 row = (endIndex - deltaIndex);
@@ -264,12 +242,37 @@ bool Game::seeCheckmate()
         }
    }
 
+   // Found valid move.
+   for (int i = 0; i < 8; i++)
+   {
+        // Initialise.
+        int nextX = col + directions[i][0];
+        int nextY = row + directions[i][1];
+
+        // Skip if out of range.
+        if ((nextX > 7) || (nextX < 0) || (nextY > 7) || (nextY < 0))
+        {
+            continue;
+        }
+
+        // Initialise.
+        Spot tempSpot(0,0);
+        tempSpot.setX(nextX);
+        tempSpot.setY(nextY);
+
+        // Save all possible move.
+        if (canReallyMove(kingsSpot, tempSpot))
+        {
+            validDirections.push_back(i);
+        }
+   }
+
    // Initialise index variables oppositely.
    startIndex = (currentTurn.isWhiteSide()) ? 0 : 7;
    endIndex = (currentTurn.isWhiteSide()) ? 8 : -1;
    deltaIndex = (currentTurn.isWhiteSide()) ? 1 : -1;
 
-   // Find possible attck from enemy and judge game status.
+   // Find possible attack from enemy and judge game status.
    for (int row = startIndex; row != endIndex; row += deltaIndex)
    {
         for (int col = startIndex; col != endIndex; col += deltaIndex)
@@ -317,69 +320,40 @@ bool Game::seeCheckmate()
             }
         }
    }
+*/
 
    return false;
 }
 
 bool Game::isCheckmateMove(Spot start, Spot end)
 {
+   // Declaration for variables.
    Board tempBoard(board);
+   Spot kingsSpot = FindKing(currentTurn.isWhiteSide());
 
+   // Simulate next situation.
    makeMoveSimulator(tempBoard, start, end);
 
+   // Initialise.
+   int startIndex = (currentTurn.isWhiteSide()) ? 7 : 0;
+   int endIndex = (currentTurn.isWhiteSide()) ? -1 : 8;
+   int deltaIndex = (currentTurn.isWhiteSide()) ? -1 : 1;
 
-
-
-   // Initialise index variables.
-   startIndex = (currentTurn.isWhiteSide()) ? 0 : 7;
-   endIndex = (currentTurn.isWhiteSide()) ? 8 : -1;
-   deltaIndex = (currentTurn.isWhiteSide()) ? 1 : -1;
-
-   // Find possible attck from enemy.
+   // Find possible attack from enemy.
    for (int row = startIndex; row != endIndex; row += deltaIndex)
    {
         for (int col = startIndex; col != endIndex; col += deltaIndex)
         {
             // Initialise.
-            Spot tempSpot = board.getBox(row, col);
+            Spot tempSpot = tempBoard.getBox(row, col);
             Piece *tempPiece = tempSpot.getPiece();
 
-            // Enemy found.
+            // Enemy found way to attack King.
             if (tempSpot.havePiece() &&
-                (tempPiece->isWhite() != currentTurn.isWhiteSide()))
+                (tempPiece->isWhite() != currentTurn.isWhiteSide()) &&
+                tempPiece->canMove(tempBoard, tempSpot, kingsSpot))
             {
-                // Check whether each possible move can be attacted.
-                for (int i = 0; i < (int)validDirections.size(); i++)
-                {
-                   // Initialise.
-                   int x = col + directions[validDirections[i]][0];
-                   int y = row + directions[validDirections[i]][1];
-
-                   // Skip if out of range.
-                   if ((x > 7) || (x < 0) || (y > 7) || (y < 0))
-                   {
-                       continue;
-                   }
-
-                   // Initialise.
-                   Spot targetSpot(0,0);
-                   targetSpot.setX(x);
-                   targetSpot.setY(y);
-
-                   // Remove all checkmate move.
-                   if (canReallyMove(tempSpot, targetSpot))
-                   {
-                       // King has no way to run.
-                       if (validDirections.size() == 0)
-                       {
-                           return true;
-                       }
-                       else
-                       {
-                           validDirections.pop_back();
-                       }
-                   }
-                }
+                return true;
             }
         }
    }
@@ -391,7 +365,7 @@ bool Game::canReallyMove(Spot start, Spot end)
 {
    if (start.getPiece()->canMove(board, start, end))
    {
-        if (isCheckmateMove(start, end))
+        if (!isCheckmateMove(start, end))
         {
             return true;
         }
@@ -406,15 +380,16 @@ bool Game::canReallyMove(Spot start, Spot end)
 
 void Game::makeMoveSimulator(Board tempBoard, Spot start, Spot end)
 {
-   Spot* startBox = tempBoard.boxes[start.getY()][start.getX()];
-   Spot* endBox = tempBoard.boxes[end.getY()][end.getX()];
+   Spot* startBox = &tempBoard.boxes[start.getY()][start.getX()];
+   Spot* endBox = &tempBoard.boxes[end.getY()][end.getX()];
+   Piece* sourcePiece = startBox->getPiece();
 
    if(isCastle(start.getX(),start.getY(),end.getX(),end.getY()))
    {
-        Spot* rookSpot = tempBoard.boxes[castleRook.second][castleRook.first];
+        Spot* rookSpot = &tempBoard.boxes[castleRook.second][castleRook.first];
         Piece* rookPiece = rookSpot->getPiece();
         int rookTargetX = (end.getX()-start.getX())>0?end.getX() - 1  : end.getX() + 1;
-        Spot* targetSpot = tempBoard.boxes[end.getY()][rookTargetX];
+        Spot* targetSpot = &tempBoard.boxes[end.getY()][rookTargetX];
         targetSpot->setPiece(rookPiece);
         rookSpot->setPiece();
    }
@@ -446,29 +421,29 @@ void Game::makeMoveSimulator(Board tempBoard, Spot start, Spot end)
    {
         if(currentTurn.isWhiteSide())
         {
-            if(startX == 0)
+            if(start.getX() == 0)
             {
                 tempBoard.whiteLeftRookMoved = true;
             }
-            else if(startX == 7)
+            else if(start.getX() == 7)
             {
                 tempBoard.whiteRightRookMoved = true;
             }
         }
         else
         {
-            if(startX == 0)
+            if(start.getX() == 0)
             {
                 tempBoard.blackLeftRookMoved = true;
             }
-            else if(startX == 7)
+            else if(start.getX() == 7)
             {
                 tempBoard.blackRightRookMoved = true;
             }
         }
    }
 
-   Spot* near = tempBoard.boxes[startY][startX+ (endX - startX)];
+   Spot* near = &tempBoard.boxes[start.getY()][start.getX()+ (end.getX() - start.getX())];
 
    if(near->havePiece()&&near->getPiece()->isEnPassant())
    {
@@ -478,17 +453,15 @@ void Game::makeMoveSimulator(Board tempBoard, Spot start, Spot end)
    {
         if(this->enPassant.first > 0 && this->enPassant.second > 0)
         {
-            Spot* enPassantSpot = tempBoard.boxes[8 - this->enPassant.second][this->enPassant.first];
+            Spot* enPassantSpot = &tempBoard.boxes[8 - this->enPassant.second][this->enPassant.first];
             Piece* enPassantPiece = enPassantSpot->getPiece();
             enPassantPiece->setEnPassant(false);
         }
    }
-   if(isEnPassant(startX,startY,endX,endY))
+   if(isEnPassant(start.getX(),start.getY(),end.getX(),end.getY()))
    {
         sourcePiece->setEnPassant(true);
    }
-
-   return true;
 }
 
 
@@ -501,6 +474,7 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
 {
     Spot* startBox = &this->board.boxes[startY][startX];
     Spot* endBox = &this->board.boxes[endY][endX];
+
     if(!startBox->havePiece())
     {
         cout<<"not Piece"<<endl;
@@ -519,6 +493,7 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         cout<<"can't move"<<endl;
         return false;
     }
+
     if(isCastle(startX,startY,endX,endY))
     {
         Spot* rookSpot = &this->board.boxes[castleRook.second][castleRook.first];
@@ -540,6 +515,7 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         endBox->setPiece(sourcePiece);
         startBox->setPiece();
     }
+
     if(endBox->getPiece()->getType()==King)
     {
         if(currentTurn.isWhiteSide())
@@ -576,7 +552,9 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
             }
         }
     }
+
     Spot* near = &this->board.boxes[startY][startX+ (endX - startX)];
+
     if(near->havePiece()&&near->getPiece()->isEnPassant())
     {
         near->setPiece();
@@ -607,6 +585,7 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
     {
         // PLAY CHECK SOUND.
     }
+    seeCheckmate();
     if (status == CHECKMATE)
     {
         if (statusCheck)
