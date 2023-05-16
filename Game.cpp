@@ -136,18 +136,16 @@ void Game::showNextMove(int x,int y )
             int nextY = y + dir[i][1];
             if(nextX>7||nextX<0||nextY>7||nextY<0)continue;
             Spot* endBox = &this->board.boxes[nextY][nextX];
+            flag.push(false);
             if(sourcePiece->canMove(board,*startBox,*endBox) && !vis[nextX][nextY] && !v)
             {
+                cout<<nextX<<" "<<nextY<<" "<<vis[nextX][nextY]<<" "<<v<<endl;
                 endBox->setMark(true);
-                que.push(pair<int, int>(nextX, nextY));
                 if(endBox->havePiece())
                 {
-                    flag.push(true);
+                   flag.back() = true;
                 }
-                else
-                {
-                    flag.push(false);
-                }
+                que.push(pair<int, int>(nextX, nextY));
             }
             vis[nextX][nextY] = true;
         }
