@@ -276,7 +276,7 @@ void Game::seeStatus()
                 (tempPiece->isWhite() != currentTurn.isWhiteSide()))
             {
                 // Check whether each possible move can be attacted.
-                for (int i = 0; i < validDirections.size(); i++)
+                for (int i = 0; i < (int)validDirections.size(); i++)
                 {
                     // Initialise.
                     int x = col + directions[validDirections[i]][0];
@@ -625,7 +625,7 @@ void Game::recordFEN()
         fen += 'a' + this->enPassant.first;
         fen += '0' + this->enPassant.second;
     }
-    if(recordIndex < this->fenList.size()-1)
+    if(recordIndex < (int)this->fenList.size()-1)
     {
         this->fenList.resize(recordIndex+1);
         this->castleStatusList.resize(recordIndex+1);
@@ -758,7 +758,7 @@ void Game::setCastleFromFEN(KingAndRookStatus status)
 
 void Game::redo()
 {
-    if(recordIndex >= fenList.size() - 1)
+    if(recordIndex >= (int)fenList.size() - 1)
     {
         return ;
     }
@@ -791,7 +791,7 @@ QVariant Game::data(const QModelIndex & modelIndex, int role) const
 
     int index = static_cast<int>(modelIndex.row());
 
-    if(index >= (board.boxes.size() * board.boxes[0].size()) || index < 0)
+    if(index >= (int)(board.boxes.size() * board.boxes[0].size()) || index < 0)
     {
         return (QVariant());
     }

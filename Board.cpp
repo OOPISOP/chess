@@ -10,6 +10,12 @@ Board::Board()
 {
     this->resetBoard();
 }
+Board::Board(const Board &sourceBoard)
+{
+    this->x = sourceBoard.x;
+    this->y = sourceBoard.y;
+    this->boxes = sourceBoard.boxes;
+}
 Spot Board::getBox(int y,int x) const
 {
 
