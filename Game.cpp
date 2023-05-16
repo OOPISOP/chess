@@ -20,6 +20,9 @@
 #include <QQmlEngine>
 #include <QtQuick/QQuickItem>
 #include <sstream>
+#include <QtMultimedia/QMediaPlayer>
+#include <QAudioOutput>
+
 
 //Intent:init the Game class
 //Pre:p1 p2 is Player respect player,and push back to players ,respect have two player,and set the current player
@@ -229,7 +232,14 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
     {
         this->currentTurn = players[0];
     }
-
+    //音效播放器
+    QMediaPlayer* player = new QMediaPlayer;
+    QAudioOutput* audioOutput = new QAudioOutput;
+    player->setAudioOutput(audioOutput);
+    player->setSource(QUrl(":/sounds/move1.mp3"));
+    audioOutput->setVolume(100);
+    player->play();
+    cout<<player->mediaStatus()<<endl;
     resetAllMark();
     recordFEN();
     beginResetModel();

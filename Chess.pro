@@ -1,4 +1,4 @@
-QT       += core gui quick quickcontrols2
+QT       += core gui quick quickcontrols2 multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
