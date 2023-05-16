@@ -200,7 +200,6 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         }
     }
 
-
     if(isEnPassant(startX,startY,endX,endY))
     {
         sourcePiece->setEnPassant(true);
@@ -230,6 +229,7 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
     {
         this->currentTurn = players[0];
     }
+
     resetAllMark();
     recordFEN();
     beginResetModel();
@@ -331,7 +331,7 @@ void Game::recordFEN()
     fen += " - ";
     if(this->enPassant.first < 0 || this->enPassant.second < 0)
     {
-        fen += " - ";
+        fen += "- ";
     }
     else
     {
@@ -340,7 +340,8 @@ void Game::recordFEN()
     }
     cout<<fen<<endl;
     this->fenList.push_back(fen);
-    this->recordIndex = fenList.size() - 1;
+    this->recordIndex++;
+    cout<<"index:"<<recordIndex<<endl;
 }
 
 void Game::setBoardFromFEN(string fen)
@@ -434,10 +435,21 @@ void Game::setGame(string fen)
     this->players.push_back(p1);
     this->players.push_back(p2);
     currentTurn = (parts[1] == "w") ? p1 : p2;
-    if (parts[3] != "-") {
+    if (parts[3] != "-")
+    {
         int file = parts[3][0] - 'a';
         int rank = parts[3][1] - '1';
         this->enPassant = make_pair(file, rank);
+        if(file>7||file<0||rank>7||rank<0)
+        {
+            cout<<"en Passant error pos"<<endl;
+        }
+        Spot* spot = &this->board.boxes[rank][file];
+        if(spot->havePiece())
+        {
+            Piece* piece = spot->getPiece();
+            piece->setEnPassant(true);
+        }
     }
     beginResetModel();
     endResetModel();
@@ -461,7 +473,8 @@ void Game::undo()
         return ;
     }
     recordIndex--;
-    cout<<fenList[recordIndex]<<endl;
+    cout<<"index:"<<recordIndex<<endl;
+    cout<<"index:"<<fenList[recordIndex]<<endl;
     setGame(fenList[recordIndex]);
 }
 

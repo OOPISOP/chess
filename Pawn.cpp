@@ -19,12 +19,16 @@ bool Pawn::canMove(Board board,Spot start,Spot end)
     }
     // Normally move 1 forward unit.
     int delta = start.getPiece()->isWhite() ? -1 : 1 ;
-    Spot frontSpot = board.getBox(start.getY()+delta,start.getX());
 
     // Cannot move 1 forward unit when the front is blocked.
     if (abs(end.getX() - start.getX()) == 0)
     {
-        if (frontSpot.havePiece())
+        if (start.getY()+delta>7||start.getY()+delta<0)
+        {
+            return false;
+        }
+        Spot frontSpot = board.getBox(start.getY()+delta,start.getX());
+        if(frontSpot.havePiece())
         {
             return false;
         }
@@ -52,7 +56,7 @@ bool Pawn::canMove(Board board,Spot start,Spot end)
         return false;
     }
 
-    Spot frontTwoSpot = board.getBox(start.getY()+2*delta,start.getX());
+
     // First move can forward 2 units.
     // Only available on row 2 or 7.
     if ((start.getY() == 1) || (start.getY() == 6))
@@ -60,9 +64,18 @@ bool Pawn::canMove(Board board,Spot start,Spot end)
         int delta2 = start.getPiece()->isWhite() ? -2 : 2 ;
 
         //when 2 forward units cannot have piece
-        if((end.getY() - start.getY()) == delta2&&frontTwoSpot.havePiece())
+        if((end.getY() - start.getY()) == delta2)
         {
-            return false;
+            if(start.getY()+delta2>7||start.getY()+delta2<0)
+            {
+                return false;
+            }
+            Spot frontTwoSpot = board.getBox(start.getY()+delta2,start.getX());
+            if(frontTwoSpot.havePiece())
+            {
+                return false;
+            }
+
         }
 
         // Cannot move except 1 or 2 forward units.
@@ -78,12 +91,6 @@ bool Pawn::canMove(Board board,Spot start,Spot end)
     if((end.getY() - start.getY()) != delta)
     {
         return false;
-    }
-
-    // Check promotion.
-    if ((start.getY() == 1) || (start.getY() == 6))
-    {
-        setPromoting(true);
     }
     return true;
 }
