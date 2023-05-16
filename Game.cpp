@@ -636,6 +636,20 @@ void Game::recordFEN()
     this->recordIndex++;
 }
 
+bool Game::setFEN(QString fen)
+{
+    this->enPassant = make_pair(-1,-1);
+    this->castleRook = make_pair(-1,-1);
+    this->fenList.clear();
+    this->recordIndex = -1;
+    this->effect.setVolume(1.f);
+    castleStatusList.clear();
+    KingAndRookStatus status;
+    setGame(fen.toStdString(),status);
+    recordFEN();
+    return true;
+}
+
 
 void Game::setBoardFromFEN(string fen)
 {
@@ -712,6 +726,31 @@ void Game::setBoardFromFEN(string fen)
     endResetModel();
 }
 
+void Game::updateKingRook(string fen)
+{
+    cout<<fen<<endl;
+    if(fen!="-")
+    {
+        if(fen.find('K')!=string::npos&&fen.find('Q')!=string::npos)
+        {
+            this->board.whiteKingMoved = false;
+        }
+        if(fen.find('k')!=string::npos&&fen.find('q')!=string::npos)
+        {
+             this->board.blackKingMoved = false;
+        }
+        this->board.whiteRightRookMoved = !(fen.find("K") != string::npos);
+        this->board.whiteLeftRookMoved = !(fen.find("Q") != string::npos);
+        this->board.blackRightRookMoved = !(fen.find("k") != string::npos);
+        this->board.blackLeftRookMoved = !(fen.find("q") != string::npos);
+    }
+    else
+    {
+        this->board.whiteKingMoved = true;
+        this->board.blackKingMoved = true;
+    }
+}
+
 void Game::setGame(string fen,KingAndRookStatus status)
 {
     vector<std::string> parts;
@@ -728,7 +767,11 @@ void Game::setGame(string fen,KingAndRookStatus status)
     this->players.push_back(p1);
     this->players.push_back(p2);
     currentTurn = (parts[1] == "w") ? p1 : p2;
-    setCastleFromFEN(status);
+    updateKingRook(parts[2]);
+    if(recordIndex>=0)
+    {
+        setCastleFromFEN(status);
+    }
     if (parts[3] != "-")
     {
         int file = parts[3][0] - 'a';
@@ -742,6 +785,7 @@ void Game::setGame(string fen,KingAndRookStatus status)
         Piece* piece = spot->getPiece();
         piece->setEnPassant(true);
     }
+
     beginResetModel();
     endResetModel();
 }
