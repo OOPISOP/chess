@@ -63,7 +63,7 @@ public:
         bool blackRightRookMoved = false;
     };
 
-    Q_INVOKABLE void newGame();
+    Q_INVOKABLE void newGame(bool white);
     bool seeCheck();
     void seeStatus();
     Q_INVOKABLE bool makeMove(int startX,int startY,int endX,int endY);

@@ -30,7 +30,7 @@
 //Pos:set two player and current turn
 Game::Game(QObject *parent) : QAbstractListModel(parent)
 {
-    newGame();
+    newGame(true);
 }
 
 Game::~Game()
@@ -40,19 +40,15 @@ Game::~Game()
 //Intent:creat  the new Game
 //Pre:p1 p2 is Player represent player,and push back to players ,represent have two player,and set the current player
 //Pos:set two player and current turn
-void Game::newGame()
+void Game::newGame(bool white)
 {
     board.resetBoard();
     Player p1,p2;
-    p1.setSide(true);
-    p2.setSide(false);
+    p1.setSide(white);
+    p2.setSide(!white);
     this->players.push_back(p1);
     this->players.push_back(p2);
     this->currentTurn = p1;
-    if(p2.isWhiteSide())
-    {
-        this->currentTurn = p2;
-    }
     this->enPassant = make_pair(-1,-1);
     this->castleRook = make_pair(-1,-1);
     this->fenList.clear();

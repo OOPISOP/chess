@@ -19,9 +19,17 @@ ApplicationWindow
         height: menuBarHeight
            Menu {
                title: "Game"
-               MenuItem { text: "Open" }
-               MenuItem { text: "Save" }
-               MenuItem { text: "Exit" }
+               Action
+               {
+                   text: "Noraml(White First)"
+                   onTriggered : game.newGame(true)
+               }
+               Action
+               {
+                   text: "Black First"
+                   onTriggered : game.newGame(false)
+               }
+
            }
 
            Menu {

@@ -66,5 +66,66 @@ bool King::isValidCastling(Board board,Spot start,Spot end)
     {
         return false;
     }
+    if(seeCheck(board,start))
+    {
+        return false;
+    }
     return true;
+}
+
+bool King::seeCheck(Board board,Spot start)
+{
+    // Declaration for variables.
+    int startIndex = (start.getPiece()->isWhite()) ? 0 : 7;
+    int endIndex = (start.getPiece()->isWhite()) ? 8 : -1;
+    int deltaIndex = (start.getPiece()->isWhite()) ? 1 : -1;
+    Spot kingsSpot(0,0);
+    Piece* kingsPiece;
+
+    // Find enemy's King.
+    for (int row = startIndex; row != endIndex; row += deltaIndex)
+    {
+        for (int col = startIndex; col != endIndex; col += deltaIndex)
+        {
+            // Initialise.
+            kingsSpot = board.getBox(row, col);
+            kingsPiece = kingsSpot.getPiece();
+
+            // King found.
+            if (kingsSpot.havePiece() &&
+                (kingsPiece->isWhite() != start.getPiece()->isWhite()) &&
+                (kingsPiece->getType() == 5))
+            {
+                // Break searching.
+                row = (endIndex - deltaIndex);
+                break;
+            }
+        }
+    }
+
+    // Initialise index variables oppositely.
+    startIndex = (start.getPiece()->isWhite()) ? 7 : 0;
+    endIndex = (start.getPiece()->isWhite()) ? -1 : 8;
+    deltaIndex = (start.getPiece()->isWhite()) ? -1 : 1;
+
+    // Find possible attck to enemy's king.
+    for (int row = startIndex; row != endIndex; row += deltaIndex)
+    {
+        for (int col = startIndex; col != endIndex; col += deltaIndex)
+        {
+            // Initialise.
+            Spot tempSpot = board.getBox(row, col);
+            Piece *tempPiece = tempSpot.getPiece();
+
+            // Possible attack found.
+            if (tempSpot.havePiece() &&
+                (tempPiece->isWhite() == start.getPiece()->isWhite()) &&
+                (tempPiece->canMove(board, tempSpot, kingsSpot)))
+            {
+                kingsPiece->setChecked(true);
+                return true;
+            }
+        }
+    }
+    return false;
 }

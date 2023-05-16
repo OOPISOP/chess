@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     Game game;
     //new game
-    game.newGame();
+    game.newGame(true);
     QQmlApplicationEngine engine;
     //define game to qml
     engine.rootContext()->setContextProperty("game", &game);
