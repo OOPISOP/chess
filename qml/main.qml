@@ -131,7 +131,7 @@ ApplicationWindow
                             {
                                 chessImage.z += 100;
                                 startX = parent.x;
-                                startY = parent.y ;
+                                startY = parent.y;
                                 var  fromX = startX / squareSize;
                                 var fromY = startY / squareSize;
                                 game.showNextMove(fromX,fromY)

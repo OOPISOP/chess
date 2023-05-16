@@ -24,6 +24,7 @@ public:
     Board();
     Spot getBox(int y,int x)const;
     void resetBoard();
+    Spot findKing(bool isWhite);
     bool whiteKingMoved = false;
     bool whiteLeftRookMoved = false;
     bool whiteRightRookMoved = false;

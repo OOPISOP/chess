@@ -104,31 +104,22 @@ void Game::showNextMove(int x,int y )
         }
     }
     queue<pair<int, int>> que;
-    queue<bool>flag;
     vector<vector<bool>> vis(8,vector<bool>(8,false));
     que.push(pair<int, int>(x, y));
-    flag.push(false);
     while(!que.empty())
     {
         int x = que.front().first;
         int y = que.front().second;
-        bool v = flag.front();
         que.pop();
-        flag.pop();
         for(int i=0;i<8;i++)
         {
             int nextX = x + dir[i][0];
             int nextY = y + dir[i][1];
             if(nextX>7||nextX<0||nextY>7||nextY<0)continue;
             Spot* endBox = &this->board.boxes[nextY][nextX];
-            flag.push(false);
-            if(sourcePiece->canMove(board,*startBox,*endBox) && !vis[nextX][nextY] && !v)
+            if(sourcePiece->canMove(board,*startBox,*endBox) && !vis[nextX][nextY])
             {
                 endBox->setMark(true);
-                if(endBox->havePiece())
-                {
-                   flag.back() = true;
-                }
                 que.push(pair<int, int>(nextX, nextY));
             }
             vis[nextX][nextY] = true;
@@ -422,10 +413,10 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         this->enPassant = make_pair(-1,-1);
     }
 
-    if (seeCheck())
-    {
-        // PLAY CHECK SOUND.
-    }
+//    if (seeCheck())
+//    {
+//        // PLAY CHECK SOUND.
+//    }
     seeStatus();
     if (status == WHITE_WIN)
     {

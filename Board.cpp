@@ -58,3 +58,34 @@ void Board::resetBoard()
     boxes[7].push_back(Spot(6,7,new Knight(true,A_Knight)));
     boxes[7].push_back(Spot(7,7,new Rook(true,A_Rook)));
 }
+
+
+Spot Board::findKing(bool isWhite)
+{
+    // Declaration for variables.
+    // Initialise.
+    int startIndex = (isWhite) ? 7 : 0;
+    int endIndex = (isWhite) ? -1 : 8;
+    int deltaIndex = (isWhite) ? -1 : 1;
+    Spot kingsSpot(0,0);
+    Piece* kingsPiece;
+
+    // Find King.
+    for (int row = startIndex; row != endIndex; row += deltaIndex)
+    {
+        for (int col = startIndex; col != endIndex; col += deltaIndex)
+        {
+            // Initialise.
+            kingsSpot = getBox(row, col);
+            kingsPiece = kingsSpot.getPiece();
+
+            // King found.
+            if (kingsSpot.havePiece() &&
+                (kingsPiece->isWhite() == isWhite) &&
+                (kingsPiece->getType() == A_King))
+            {
+                return kingsSpot;
+            }
+        }
+    }
+}
