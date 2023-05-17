@@ -67,9 +67,9 @@ public:
     Spot FindKing(bool isWhite);
     bool seeCheck(Spot enemyKingsSpot);
     bool seeCheckmate();
-    bool isCheckmateMove(Spot start, Spot end);
+    bool isCheckmateMove(Board tempBoard, bool isWhite);
     bool canReallyMove(Spot start, Spot end);
-    void makeMoveSimulator(Board tempBoard, Spot start, Spot end);
+    void makeMoveSimulator(Board &tempBoard, Spot start, Spot end);
 
     Q_INVOKABLE void showNextMove(int x,int y);
     void resetAllMark();
