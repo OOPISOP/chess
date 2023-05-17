@@ -192,16 +192,10 @@ bool Game::seeCheck(Spot enemyKingsSpot)
    return false;
 }
 
-bool Game::seeCheckmate()
+bool Game::seeCheckmate(bool isWhite)
 {
-   Spot tempSpot = FindKing(this->board, !currentTurn.isWhiteSide());
+   Spot tempSpot = FindKing(this->board, !isWhite);
    Spot *enemyKingsSpot = &this->board.boxes[tempSpot.getY()][tempSpot.getX()];
-
-   // No checkmate without being checked.
-   if (!enemyKingsSpot->getPiece()->isChecked())
-   {
-        return false;
-   }
 
    // Declaration.
    int directions[8][2] = {{-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}};
@@ -223,16 +217,16 @@ bool Game::seeCheckmate()
         Spot* tempSpot = &this->board.boxes[nextY][nextX];
 
         // Enemy King has valid move to avoid checkmate.
-        if (canReallyMove(*enemyKingsSpot, *tempSpot, !currentTurn.isWhiteSide()))
+        if (canReallyMove(*enemyKingsSpot, *tempSpot, !isWhite))
         {
             return false;
         }
    }
 
    // Initialise index variables.
-   int startIndex = (currentTurn.isWhiteSide()) ? 0 : 7;
-   int endIndex = (currentTurn.isWhiteSide()) ? 8 : -1;
-   int deltaIndex = (currentTurn.isWhiteSide()) ? 1 : -1;
+   int startIndex = (isWhite) ? 0 : 7;
+   int endIndex = (isWhite) ? 8 : -1;
+   int deltaIndex = (isWhite) ? 1 : -1;
 
    // No checkmate when enemy's piece can block checkmate.
    for (int row = startIndex; row != endIndex; row += deltaIndex)
@@ -245,7 +239,7 @@ bool Game::seeCheckmate()
 
             // Enemy found.
             if (enemySpot.havePiece() &&
-                (enemyPiece->isWhite() != currentTurn.isWhiteSide()))
+                (enemyPiece->isWhite() != isWhite))
             {
                 // See every move can enemy made.
                 for (int row2 = startIndex; row2 != endIndex; row2 += deltaIndex)
@@ -256,7 +250,7 @@ bool Game::seeCheckmate()
                         Spot tempSpot = board.getBox(row2, col2);
 
                         // Found way to block checkmate.
-                        if (canReallyMove(enemySpot, tempSpot, !currentTurn.isWhiteSide()))
+                        if (canReallyMove(enemySpot, tempSpot, !isWhite))
                         {
                             return false;
                         }
@@ -527,7 +521,7 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
     {
         // PLAY CHECK SOUND.
     }
-    if (seeCheckmate())
+    if (seeCheckmate(currentTurn.isWhiteSide()) || seeCheckmate(!currentTurn.isWhiteSide()))
     {
         status = CHECKMATE;
     }
@@ -536,18 +530,25 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
     {
         if (statusCheck)
         {
-//            (currentTurn.isWhiteSide ()) ? BLACK_WIN : WHITE_WIN;
-            cout << "WIN/LOSE" << endl;
-            return false;
+            string message = (currentTurn.isWhiteSide()) ? "WHITE_WIN/BLACK_LOSE" : "BLACK_WIN/WHITE_LOSE";
+            cout << message << endl;
         }
         else
         {
             status = STALEMATE;
             cout << "DRAW" << endl;
-            return false;
         }
     }
-// else if resignation.
+    else if (status == RESIGNATION)
+    {
+        string message = (currentTurn.isWhiteSide()) ? "BLACK_WIN/WHITE_LOSE" : "WHITE_WIN/BLACK_LOSE";
+        cout << message << endl;
+    }
+
+    if (status != ACTIVE)
+    {
+        return false;
+    }
 
 
     if (sourcePiece->getType() == Pawn &&(endY==0 || endY == 7) )

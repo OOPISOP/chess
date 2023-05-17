@@ -30,7 +30,7 @@ public:
         ACTIVE,
         CHECKMATE,
         STALEMATE,
-        RESIGNATTON,
+        RESIGNATION,
         FOREIT
     };
 
@@ -66,7 +66,7 @@ public:
     Q_INVOKABLE bool makeMove(int startX,int startY,int endX,int endY);
     Spot FindKing(Board board, bool isWhite);
     bool seeCheck(Spot enemyKingsSpot);
-    bool seeCheckmate();
+    bool seeCheckmate(bool isWhite);
     bool isCheckmateMove(Board tempBoard, bool isWhite);
     bool canReallyMove(Spot start, Spot end, bool isWhite);
     void makeMoveSimulator(Board &tempBoard, Spot start, Spot end);
