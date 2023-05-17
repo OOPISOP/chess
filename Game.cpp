@@ -311,6 +311,7 @@ bool Game::canReallyMove(Spot start, Spot end, bool isWhite)
         else
         {
             // PLAY KING DANGEROUS SOUND
+            playChessSound(kingThreatSound);
         }
    }
 
@@ -515,40 +516,64 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         this->enPassant = make_pair(-1,-1);
     }
 
-    bool statusCheck = seeCheck(FindKing(this->board, !currentTurn.isWhiteSide()));
 
-    if (statusCheck)
+
+    bool statusCheck = seeCheck(FindKing(this->board, !currentTurn.isWhiteSide()));
+    bool whoCheckmate;
+
+    if (status == RESIGNATION)
+    {
+        string message = (currentTurn.isWhiteSide()) ? "BLACK_WIN/WHITE_LOSE" : "WHITE_WIN/BLACK_LOSE";
+        cout << message << endl;
+
+        // PLAY RESIGN SOUND.
+        playChessSound(resignSound);
+    }
+    else if (seeCheckmate(currentTurn.isWhiteSide()))
+    {
+        whoCheckmate = currentTurn.isWhiteSide();
+        status = CHECKMATE;
+    }
+    else if (seeCheckmate(!currentTurn.isWhiteSide()))
+    {
+        whoCheckmate = !currentTurn.isWhiteSide();
+        status = CHECKMATE;
+    }
+    else if (statusCheck)
     {
         // PLAY CHECK SOUND.
-    }
-    if (seeCheckmate(currentTurn.isWhiteSide()) || seeCheckmate(!currentTurn.isWhiteSide()))
-    {
-        status = CHECKMATE;
+        playChessSound(checkSound);
     }
 
     if (status == CHECKMATE)
     {
         if (statusCheck)
         {
+            // PLAY CHECKMATE SOUND.
+            playChessSound(checkmateSound);
+
             string message = (currentTurn.isWhiteSide()) ? "WHITE_WIN/BLACK_LOSE" : "BLACK_WIN/WHITE_LOSE";
             cout << message << endl;
+
+            int soundType = (whoCheckmate) ? winSound : loseSound;
+            // PLAY WIN OR LOSE SOUND.
+            playChessSound(soundType);
         }
         else
         {
             status = STALEMATE;
             cout << "DRAW" << endl;
+
+            // PLAY DRAW SOUND.
+            playChessSound(drawSound);
         }
-    }
-    else if (status == RESIGNATION)
-    {
-        string message = (currentTurn.isWhiteSide()) ? "BLACK_WIN/WHITE_LOSE" : "WHITE_WIN/BLACK_LOSE";
-        cout << message << endl;
     }
 
     if (status != ACTIVE)
     {
         return false;
     }
+
 
 
     if (sourcePiece->getType() == Pawn &&(endY==0 || endY == 7) )
@@ -565,7 +590,8 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
     {
         this->currentTurn = players[0];
     }
-    playChessSound();
+    int moveSound = (currentTurn == players[1]) ? 1 : 0;
+    playChessSound(moveSound);
     resetAllMark();
     recordFEN();
     beginResetModel();
@@ -573,13 +599,41 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
     return true;
 }
 
-void Game::playChessSound()
+void Game::playChessSound(int soundType)
 {
-    QString soundSource = p1ChessSound;
-    if(currentTurn == players[1])
+    QString soundSource;
+
+    switch (soundType)
     {
+    case move1Sound:
+        soundSource = p1ChessSound;
+        break;
+    case move2Sound:
         soundSource = p2ChessSound;
+        break;
+    case checkSound:
+        soundSource = checkChessSound;
+        break;
+    case checkmateSound:
+        soundSource = checkmateChessSound;
+        break;
+    case kingThreatSound:
+        soundSource = kingThreatChessSound;
+        break;
+    case drawSound:
+        soundSource = drawChessSound;
+        break;
+    case winSound:
+        soundSource = winChessSound;
+        break;
+    case loseSound:
+        soundSource = loseChessSound;
+        break;
+    case resignSound:
+        soundSource = resignChessSound;
+        break;
     }
+
     effect.setSource(QUrl::fromLocalFile(soundSource));
     effect.play();
 }

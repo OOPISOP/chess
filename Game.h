@@ -52,6 +52,19 @@ public:
         King
     };
 
+    enum SoundTypes
+    {
+        move1Sound,
+        move2Sound,
+        checkSound,
+        checkmateSound,
+        kingThreatSound,
+        drawSound,
+        winSound,
+        loseSound,
+        resignSound
+    };
+
     struct  KingAndRookStatus
     {
         bool whiteKingMoved = false;
@@ -81,7 +94,7 @@ public:
     void setGame(string fen,KingAndRookStatus status);
     void setBoardFromFEN(string fen);
     bool isEnPassant(int startX,int startY,int endX,int endY);
-    void playChessSound();
+    void playChessSound(int soundType);
     bool isCastle(int startX,int startY,int endX,int endY);
     void setCastleFromFEN(KingAndRookStatus status);
     void updateKingRook(string fen);
@@ -108,6 +121,13 @@ private:
     int recordIndex;
     QString p1ChessSound = ":/sounds/move1.wav";
     QString p2ChessSound = ":/sounds/move2.wav";
+    QString checkChessSound = ":/sounds/check.mp3";
+    QString checkmateChessSound = ":/sounds/checkmate.mp3";
+    QString kingThreatChessSound = ":/sounds/kingThreat.mp3";
+    QString drawChessSound = ":/sounds/draw.mp3";
+    QString winChessSound = ":/sounds/win.mp3";
+    QString loseChessSound = ":/sounds/lose.mp3";
+    QString resignChessSound = ":/sounds/resign.mp3";
     //音效播放器
     QSoundEffect effect;
     pair<int,int> castleRook;
