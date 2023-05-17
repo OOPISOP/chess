@@ -220,10 +220,10 @@ bool Game::seeCheckmate()
         }
 
         // Initialise.
-        Spot tempSpot = board.getBox(nextX, nextY);
+        Spot* tempSpot = &this->board.boxes[nextY][nextX];
 
         // Enemy King has valid move to avoid checkmate.
-        if (canReallyMove(*enemyKingsSpot, tempSpot, !currentTurn.isWhiteSide()))
+        if (canReallyMove(*enemyKingsSpot, *tempSpot, !currentTurn.isWhiteSide()))
         {
             return false;
         }
@@ -253,21 +253,12 @@ bool Game::seeCheckmate()
                     for (int col2 = startIndex; col2 != endIndex; col2 += deltaIndex)
                     {
                         // Initialise.
-                        Spot tempSpot(row2, col2);
+                        Spot tempSpot = board.getBox(row2, col2);
 
-                        if (enemyPiece->canMove(board, enemySpot, tempSpot))
+                        // Found way to block checkmate.
+                        if (canReallyMove(enemySpot, tempSpot, !currentTurn.isWhiteSide()))
                         {
-                            // Declaration for variables.
-                            Board tempBoard(board);
-
-                            // Simulate next situation.
-                            makeMoveSimulator(tempBoard, enemySpot, tempSpot);
-
-                            // Found way to block checkmate.
-                            if (!isCheckmateMove(tempBoard, !currentTurn.isWhiteSide()))
-                            {
-                                return false;
-                            }
+                            return false;
                         }
                     }
                 }
