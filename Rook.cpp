@@ -41,3 +41,10 @@ bool Rook::canMove(Board board,Spot start,Spot end)
     }
     return true;
 }
+
+
+Piece* Rook::clone()const
+{
+    return new Rook(*this);
+}
+

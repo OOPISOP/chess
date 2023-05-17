@@ -18,3 +18,8 @@ bool Knight::canMove(Board board,Spot start,Spot end)
     // Can have L-shaped move.
     return (((abs(deltaX) == 1) && (abs(deltaY) == 2)) || ((abs(deltaX) == 2) && (abs(deltaY) == 1)));
 }
+
+Piece* Knight::clone()const
+{
+    return new Knight(*this);
+}

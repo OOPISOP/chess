@@ -30,7 +30,7 @@ public:
         ACTIVE,
         CHECKMATE,
         STALEMATE,
-        RESIGNATTON,
+        RESIGNATION,
         FOREIT
     };
 
@@ -52,6 +52,20 @@ public:
         King
     };
 
+    enum SoundTypes
+    {
+        move1Sound,
+        move2Sound,
+        checkSound,
+        checkmateSound,
+        kingThreatSound,
+        drawSound,
+        winSound,
+        loseSound,
+        resignSound
+    };
+
+
     struct  KingAndRookStatus
     {
         bool whiteKingMoved = false;
@@ -64,12 +78,14 @@ public:
 
     Q_INVOKABLE void newGame(bool white);
     Q_INVOKABLE bool makeMove(int startX,int startY,int endX,int endY);
-    Spot FindKing(bool isWhite);
+
+    Spot FindKing(Board board, bool isWhite);
     bool seeCheck(Spot enemyKingsSpot);
-    bool seeCheckmate();
-    bool isCheckmateMove(Spot start, Spot end);
-    bool canReallyMove(Spot start, Spot end);
-    void makeMoveSimulator(Board tempBoard, Spot start, Spot end);
+    bool seeCheckmate(bool isWhite);
+    bool isCheckmateMove(Board tempBoard, bool isWhite);
+    bool canReallyMove(Spot start, Spot end, bool isWhite);
+    void makeMoveSimulator(Board &tempBoard, Spot start, Spot end);
+
 
     Q_INVOKABLE void showNextMove(int x,int y);
     void resetAllMark();
@@ -81,10 +97,13 @@ public:
     void setGame(string fen,KingAndRookStatus status);
     void setBoardFromFEN(string fen);
     bool isEnPassant(int startX,int startY,int endX,int endY);
-    void playChessSound();
+
+    void playChessSound(int soundType);
     bool isCastle(int startX,int startY,int endX,int endY);
     void setCastleFromFEN(KingAndRookStatus status);
     void updateKingRook(string fen);
+    void showStatusMessage(string message);
+
 
 
 protected:
@@ -102,12 +121,23 @@ private:
     vector<Player> players;
     Board board;
     Player currentTurn;
-    GameStatus status;
+
+    GameStatus status = ACTIVE;
+
     pair<int,int> enPassant;
     vector<string> fenList;
     int recordIndex;
     QString p1ChessSound = ":/sounds/move1.wav";
     QString p2ChessSound = ":/sounds/move2.wav";
+
+    QString checkChessSound = ":/sounds/check.wav";
+    QString checkmateChessSound = ":/sounds/checkmate.wav";
+    QString kingThreatChessSound = ":/sounds/kingThreat.wav";
+    QString drawChessSound = ":/sounds/draw.wav";
+    QString winChessSound = ":/sounds/win.wav";
+    QString loseChessSound = ":/sounds/lose.wav";
+    QString resignChessSound = ":/sounds/resign.wav";
+
     //音效播放器
     QSoundEffect effect;
     pair<int,int> castleRook;

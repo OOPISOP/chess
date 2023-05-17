@@ -11,6 +11,7 @@ class Knight : public Piece
 public:
     Knight(bool white,int type);
     virtual bool canMove(Board board,Spot start,Spot end);
+    virtual Piece* clone()const override;
 };
 
 #endif // KNIGHT_H

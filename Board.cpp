@@ -10,16 +10,43 @@ Board::Board()
 {
     this->resetBoard();
 }
-Board::Board(const Board &sourceBoard)
+
+Board::Board(const Board  &sourceBoard)
 {
     this->x = sourceBoard.x;
     this->y = sourceBoard.y;
-    this->boxes = sourceBoard.boxes;
+    this->boxes.clear();
+    this->boxes.resize(8);
+    for(int i=0;i<8;i++)
+    {
+        for(int j=0;j<8;j++)
+        {
+            if(sourceBoard.getBox(i,j).havePiece())
+            {
+                Spot spot(i,j,sourceBoard.getBox(i,j).getPiece()->clone());
+                this->boxes[i].push_back(spot);
+            }
+            else
+            {
+                this->boxes[i].push_back(Spot(j,i));
+            }
+        }
+    }
+}
+Board::~Board()
+{
+    this->boxes.clear();
+    this->x = 0;
+    this->y = 0;
+    //delete this;
+
 }
 Spot Board::getBox(int y,int x) const
 {
 
-    if(x < 0 || x > 7 || y < 0 || y > 7)
+
+    if((x < 0) || (x > 7) || (y < 0) || (y > 7))
+
     {
         cout<<"Index out of bound"<<endl;
         return boxes[0][0];

@@ -104,4 +104,7 @@ bool King::seeCheck(Board board,bool white,Spot enemyKingsSpot)
     board.boxes[enemyKingsSpot.getY()][enemyKingsSpot.getX()].getPiece()->setChecked(false);
     return false;
 }
-
+Piece* King::clone()const
+{
+    return new King(*this);
+}

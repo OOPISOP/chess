@@ -1,23 +1,29 @@
-<!DOCTYPE RCC>
 <RCC>
-	<qresource prefix="/">
- 		<file>qml/main.qml</file>
- 		<file>images/black_pawn.svg</file>
-       		<file>images/white_pawn.svg</file>
-        	<file>images/chess_board.jpg</file>
-        	<file>images/black_bishop.svg</file>
-        	<file>images/black_king.svg</file>
-        	<file>images/black_knight.svg</file>
-        	<file>images/black_queen.svg</file>
-        	<file>images/black_rook.svg</file>
-        	<file>images/white_bishop.svg</file>
-        	<file>images/white_king.svg</file>
-        	<file>images/white_knight.svg</file>
-        	<file>images/white_queen.svg</file>
-        	<file>images/white_rook.svg</file>
-		<file>images/circles.png</file>
-		<file>images/square.png</file>
-		<file>sounds/move1.wav</file>
-		<file>sounds/move2.wav</file>
-	</qresource>
+    <qresource prefix="/">
+        <file>qml/main.qml</file>
+        <file>images/black_pawn.svg</file>
+        <file>images/white_pawn.svg</file>
+        <file>images/chess_board.jpg</file>
+        <file>images/black_bishop.svg</file>
+        <file>images/black_king.svg</file>
+        <file>images/black_knight.svg</file>
+        <file>images/black_queen.svg</file>
+        <file>images/black_rook.svg</file>
+        <file>images/white_bishop.svg</file>
+        <file>images/white_king.svg</file>
+        <file>images/white_knight.svg</file>
+        <file>images/white_queen.svg</file>
+        <file>images/white_rook.svg</file>
+        <file>images/circles.png</file>
+        <file>images/square.png</file>
+        <file>sounds/move1.wav</file>
+        <file>sounds/move2.wav</file>
+        <file>sounds/draw.wav</file>
+        <file>sounds/kingThreat.wav</file>
+        <file>sounds/resign.wav</file>
+        <file>sounds/check.wav</file>
+        <file>sounds/chekmate.wav</file>
+        <file>sounds/win.wav</file>
+        <file>sounds/lose.wav</file>
+    </qresource>
 </RCC>

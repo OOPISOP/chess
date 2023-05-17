@@ -11,6 +11,7 @@ class Bishop : public Piece
 public:
     Bishop(bool white,int type);
     virtual bool canMove(Board board,Spot start,Spot end) override;
+    virtual Piece *clone()const override;
 };
 
 #endif // BISHOP_H

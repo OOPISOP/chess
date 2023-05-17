@@ -10,7 +10,10 @@ class Rook : public Piece
 {
 public:
     Rook(bool white,int type);
-    virtual bool canMove(Board board,Spot start,Spot end);
+
+    virtual bool canMove(Board board,Spot start,Spot end)override;
+    virtual Piece* clone()const override;
+
 };
 
 #endif // ROOK_H

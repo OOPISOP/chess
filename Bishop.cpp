@@ -43,3 +43,9 @@ bool Bishop::canMove(Board board,Spot start,Spot end)
 
     return true;
 }
+
+
+Piece* Bishop::clone() const
+{
+    return new Bishop(*this);
+}

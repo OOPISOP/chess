@@ -42,3 +42,10 @@ bool Queen::canMove(Board board,Spot start,Spot end)
 
     return true;
 }
+
+Piece* Queen::clone()const
+{
+    return new Queen(*this);
+}
+
+

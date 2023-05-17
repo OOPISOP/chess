@@ -92,3 +92,9 @@ bool Pawn::canMove(Board board,Spot start,Spot end)
     }
     return true;
 }
+
+Piece* Pawn::clone()const
+{
+    return new Pawn(*this);
+}
+

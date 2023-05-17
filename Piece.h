@@ -35,6 +35,7 @@ public:
     void setType(int type);
     virtual bool canMove(Board board,Spot start,Spot end) = 0;
 
+    virtual Piece* clone()const = 0;
     bool isChecked()const;
     void setChecked(bool checked);
 

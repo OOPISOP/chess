@@ -22,6 +22,9 @@ public:
     };
     vector<vector<Spot>> boxes;
     Board();
+
+    ~ Board();
+
     Board(const Board &sourceBoard);
     Spot getBox(int y,int x)const;
     void resetBoard();
@@ -32,6 +35,9 @@ public:
     bool blackKingMoved = false;
     bool blackLeftRookMoved = false;
     bool blackRightRookMoved = false;
+
+
+
 };
 
 #endif // BOARD_H
