@@ -117,7 +117,7 @@ void Game::showNextMove(int x,int y )
             int nextY = y + dir[i][1];
             if((nextX>7)||(nextX<0)||(nextY>7)||(nextY<0))continue;
             Spot* endBox = &this->board.boxes[nextY][nextX];
-            if(canReallyMove(*startBox,*endBox) && !vis[nextX][nextY])
+            if(canReallyMove(*startBox,*endBox, currentTurn.isWhiteSide()) && !vis[nextX][nextY])
 
             {
                 endBox->setMark(true);
@@ -130,7 +130,7 @@ void Game::showNextMove(int x,int y )
 }
 
 
-Spot Game::FindKing(bool isWhite)
+Spot Game::FindKing(Board board, bool isWhite)
 {
    // Declaration for variables.
    // Initialise.
@@ -179,7 +179,7 @@ bool Game::seeCheck(Spot enemyKingsSpot)
             // Possible attack found.
             if (tempSpot.havePiece() &&
                 (tempPiece->isWhite() == currentTurn.isWhiteSide()) &&
-                (canReallyMove(tempSpot, enemyKingsSpot)))
+                (canReallyMove(tempSpot, enemyKingsSpot, currentTurn.isWhiteSide())))
             {
                 board.boxes[enemyKingsSpot.getY()][enemyKingsSpot.getX()].getPiece()->setChecked(true);
                 return true;
@@ -194,7 +194,7 @@ bool Game::seeCheck(Spot enemyKingsSpot)
 
 bool Game::seeCheckmate()
 {
-   Spot tempSpot = FindKing(!currentTurn.isWhiteSide());
+   Spot tempSpot = FindKing(this->board, !currentTurn.isWhiteSide());
    Spot *enemyKingsSpot = &this->board.boxes[tempSpot.getY()][tempSpot.getX()];
 
    // No checkmate without being checked.
@@ -220,10 +220,10 @@ bool Game::seeCheckmate()
         }
 
         // Initialise.
-        Spot tempSpot(nextX,nextY);
+        Spot tempSpot = board.getBox(nextX, nextY);
 
         // Enemy King has valid move to avoid checkmate.
-        if (canReallyMove(*enemyKingsSpot, tempSpot))
+        if (canReallyMove(*enemyKingsSpot, tempSpot, !currentTurn.isWhiteSide()))
         {
             return false;
         }
@@ -280,7 +280,7 @@ bool Game::seeCheckmate()
 
 bool Game::isCheckmateMove(Board tempBoard, bool isWhite)
 {
-   Spot kingsSpot = FindKing(isWhite);
+   Spot kingsSpot = FindKing(tempBoard, isWhite);
 
    // Initialise.
    int startIndex = (isWhite) ? 0 : 7;
@@ -309,7 +309,7 @@ bool Game::isCheckmateMove(Board tempBoard, bool isWhite)
    return false;
 }
 
-bool Game::canReallyMove(Spot start, Spot end)
+bool Game::canReallyMove(Spot start, Spot end, bool isWhite)
 {
    if (start.getPiece()->canMove(board, start, end))
    {
@@ -319,7 +319,7 @@ bool Game::canReallyMove(Spot start, Spot end)
         // Simulate next situation.
         makeMoveSimulator(tempBoard, start, end);
 
-        if (!isCheckmateMove(tempBoard, currentTurn.isWhiteSide()))
+        if (!isCheckmateMove(tempBoard, isWhite))
         {
             return true;
         }
@@ -440,7 +440,7 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         cout<<"not your turn"<<endl;
         return false;
     }
-    if(!canReallyMove(*startBox,*endBox))
+    if(!canReallyMove(*startBox,*endBox, currentTurn.isWhiteSide()))
     {
         cout<<"can't move"<<endl;
         return false;
@@ -530,13 +530,17 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         this->enPassant = make_pair(-1,-1);
     }
 
-    bool statusCheck = seeCheck(FindKing(!currentTurn.isWhiteSide()));
+    bool statusCheck = seeCheck(FindKing(this->board, !currentTurn.isWhiteSide()));
 
     if (statusCheck)
     {
         // PLAY CHECK SOUND.
     }
-    seeCheckmate();
+    if (seeCheckmate())
+    {
+        status = CHECKMATE;
+    }
+
     if (status == CHECKMATE)
     {
         if (statusCheck)

@@ -64,11 +64,11 @@ public:
 
     Q_INVOKABLE void newGame(bool white);
     Q_INVOKABLE bool makeMove(int startX,int startY,int endX,int endY);
-    Spot FindKing(bool isWhite);
+    Spot FindKing(Board board, bool isWhite);
     bool seeCheck(Spot enemyKingsSpot);
     bool seeCheckmate();
     bool isCheckmateMove(Board tempBoard, bool isWhite);
-    bool canReallyMove(Spot start, Spot end);
+    bool canReallyMove(Spot start, Spot end, bool isWhite);
     void makeMoveSimulator(Board &tempBoard, Spot start, Spot end);
 
     Q_INVOKABLE void showNextMove(int x,int y);
