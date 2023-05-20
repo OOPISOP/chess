@@ -2,15 +2,29 @@
 
 King::King(bool white,int type) : Piece(white,type)
 {
+<<<<<<< HEAD
 
 }
+=======
+}
+
+Piece* King::clone()const
+{
+    return new King(*this);
+}
+
+>>>>>>> 512f4a0 (f)
 bool King::canMove(Board board,Spot start,Spot end)
 {
     // Check checkmate.
     // isCheckMate();
 
     // Cannot kill ally.
+<<<<<<< HEAD
     if(end.havePiece() && end.getPiece()->isWhite() == this->isWhite())
+=======
+    if(end.havePiece() && end.getPiece()->getWhite() == this->getWhite())
+>>>>>>> 512f4a0 (f)
     {
         return false;
     }
@@ -28,21 +42,37 @@ bool King::canMove(Board board,Spot start,Spot end)
     return isValidCastling(board,start,end);
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 512f4a0 (f)
 bool King::isValidCastling(Board board,Spot start,Spot end)
 {
     Spot startBox = board.getBox(start.getY(),start.getX());
     Piece* startPiece = startBox.getPiece();
+<<<<<<< HEAD
     if(startPiece->getType()!=5||(startPiece->isWhite()&&board.whiteKingMoved)||((!startPiece->isWhite()&&board.blackKingMoved)))
     {
         return false;
     }
     int deltaY = end.getY() - start.getY();
     int deltaX = end.getX() - start.getX();
+=======
+
+    if(startPiece->getType()!=5||(startPiece->getWhite()&&board.whiteKingMoved)||((!startPiece->getWhite()&&board.blackKingMoved)))
+    {
+        return false;
+    }
+
+    int deltaY = end.getY() - start.getY();
+    int deltaX = end.getX() - start.getX();
+
+>>>>>>> 512f4a0 (f)
     if(deltaY!=0||abs(deltaX)!=2)
     {
         return false;
     }
+<<<<<<< HEAD
     int rookX = (deltaX>0)?7:0;
     bool rookMoved = false;
     if(startPiece->isWhite())
@@ -55,17 +85,40 @@ bool King::isValidCastling(Board board,Spot start,Spot end)
     }
 
     Spot rookStartBox =  board.getBox(end.getY(),rookX);
+=======
+
+    int rookX = (deltaX>0)?7:0;
+    bool rookMoved = false;
+
+    if(startPiece->getWhite())
+    {
+        rookMoved = (deltaX>0)?board.whiteRightRookMoved:board.whiteLeftRookMoved;
+    }
+    else
+    {
+        rookMoved = (deltaX>0)?board.blackRightRookMoved:board.blackLeftRookMoved;
+    }
+    Spot rookStartBox =  board.getBox(end.getY(),rookX);
+
+  // cout<<rookStartBox.getX()<<" "<<rookStartBox.getY()<<endl;
+
+>>>>>>> 512f4a0 (f)
     if(!rookStartBox.havePiece()||rookStartBox.getPiece()->getType()!=1||rookMoved)
     {
         return false;
     }
 
     Spot rookEndBox = board.getBox(end.getY(),end.getX() - ((deltaX>0)?1:-1));
+<<<<<<< HEAD
 
+=======
+    //cout<<rookEndBox.getX()<<" "<<rookEndBox.getY()<<endl;
+>>>>>>> 512f4a0 (f)
     if(!rookStartBox.getPiece()->canMove(board,rookStartBox,rookEndBox))
     {
         return false;
     }
+<<<<<<< HEAD
 //    if(seeCheck(board,start.getPiece()->isWhite(),board.findKing(start.getPiece()->isWhite())))
 //    {
 //        return false;
@@ -108,3 +161,10 @@ Piece* King::clone()const
 {
     return new King(*this);
 }
+=======
+
+    return true;
+}
+
+
+>>>>>>> 512f4a0 (f)

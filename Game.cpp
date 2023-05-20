@@ -30,8 +30,11 @@
 #include <QPushButton>
 #include <QApplication>
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 512f4a0 (f)
 //Intent:init the Game class
 //Pre:p1 p2 is Player respect player,and push back to players ,respect have two player,and set the current player
 //Pos:set two player and current turn
@@ -51,8 +54,13 @@ void Game::newGame(bool white)
 {
     board.resetBoard();
     Player p1,p2;
+<<<<<<< HEAD
     p1.setSide(white);
     p2.setSide(!white);
+=======
+    p1.setWhiteSide(white);
+    p2.setWhiteSide(!white);
+>>>>>>> 512f4a0 (f)
     this->players.clear();
     this->players.push_back(p1);
     this->players.push_back(p2);
@@ -65,6 +73,11 @@ void Game::newGame(bool white)
     recordFEN();
     castleStatusList.clear();
     this->status = ACTIVE;
+<<<<<<< HEAD
+=======
+    beginResetModel();
+    endResetModel();
+>>>>>>> 512f4a0 (f)
 }
 
 void Game::resetAllMark()
@@ -79,6 +92,7 @@ void Game::resetAllMark()
     }
 }
 
+<<<<<<< HEAD
 
 void Game::showNextMove(int x,int y )
 {
@@ -199,10 +213,29 @@ bool Game::seeCheck(Spot enemyKingsSpot)
         {
             // Initialise.
             Spot tempSpot = board.getBox(row, col);
+=======
+bool Game::seeCheck(Spot &enemyKingsSpot)
+{
+
+    // Initialise.
+    int startIndex = (currentTurn.getWhiteSide()) ? 7 : 0;
+    int endIndex = (currentTurn.getWhiteSide()) ? -1 : 8;
+    int deltaIndex = (currentTurn.getWhiteSide()) ? -1 : 1;
+
+    // Find possible attack to enemy's king.
+    for (int row = startIndex; row != endIndex; row += deltaIndex)
+    {
+        for (int col = startIndex; col != endIndex; col += deltaIndex)
+        {
+            // Initialise.
+            Spot tempSpot = this->board.getBox(row, col);
+
+>>>>>>> 512f4a0 (f)
             if(!tempSpot.havePiece())
             {
                 continue;
             }
+<<<<<<< HEAD
             Piece *tempPiece = tempSpot.getPiece()->clone();
             // Possible attack found.
             if (tempSpot.havePiece() &&
@@ -210,10 +243,21 @@ bool Game::seeCheck(Spot enemyKingsSpot)
                 (canReallyMove(tempSpot, enemyKingsSpot, currentTurn.isWhiteSide())))
             {
 
+=======
+
+            Piece *tempPiece = tempSpot.getPiece()->clone();
+
+            // Possible attack found.
+            if (tempSpot.havePiece() &&
+                (tempPiece->getWhite() == currentTurn.getWhiteSide()) &&
+                (canReallyMove(tempSpot, enemyKingsSpot, currentTurn.getWhiteSide())))
+            {
+>>>>>>> 512f4a0 (f)
                 board.boxes[enemyKingsSpot.getY()][enemyKingsSpot.getX()].getPiece()->setChecked(true);
                 return true;
             }
         }
+<<<<<<< HEAD
    }
    // If there is no any available attack to the enemy's king, cancel check.
    board.boxes[enemyKingsSpot.getY()][enemyKingsSpot.getX()].getPiece()->setChecked(false);
@@ -342,10 +386,17 @@ bool Game::canReallyMove(Spot start, Spot end, bool isWhite)
         }
    }
    return false;
+=======
+    }
+    // If there is no any available attack to the enemy's king, cancel check.
+    board.boxes[enemyKingsSpot.getY()][enemyKingsSpot.getX()].getPiece()->setChecked(false);
+    return false;
+>>>>>>> 512f4a0 (f)
 }
 
 void Game::makeMoveSimulator(Board &tempBoard, Spot start, Spot end)
 {
+<<<<<<< HEAD
 
    Spot* startBox = &tempBoard.boxes[start.getY()][start.getX()];
    Spot* endBox = &tempBoard.boxes[end.getY()][end.getX()];
@@ -353,12 +404,21 @@ void Game::makeMoveSimulator(Board &tempBoard, Spot start, Spot end)
 
    if(isCastle(start.getX(),start.getY(),end.getX(),end.getY()))
    {
+=======
+    Spot* startBox = &tempBoard.boxes[start.getY()][start.getX()];
+    Spot* endBox = &tempBoard.boxes[end.getY()][end.getX()];
+    Piece* sourcePiece = startBox->getPiece()->clone();
+
+    if(isCastle(start.getX(),start.getY(),end.getX(),end.getY()))
+    {
+>>>>>>> 512f4a0 (f)
         Spot* rookSpot = &tempBoard.boxes[castleRook.second][castleRook.first];
         Piece* rookPiece = rookSpot->getPiece();
         int rookTargetX = (end.getX()-start.getX())>0?end.getX() - 1  : end.getX() + 1;
         Spot* targetSpot = &tempBoard.boxes[end.getY()][rookTargetX];
         targetSpot->setPiece(rookPiece);
         rookSpot->setPiece();
+<<<<<<< HEAD
    }
 
    if(!endBox->havePiece())
@@ -375,6 +435,24 @@ void Game::makeMoveSimulator(Board &tempBoard, Spot start, Spot end)
    if(endBox->getPiece()->getType()==King)
    {
         if(currentTurn.isWhiteSide())
+=======
+    }
+
+    if(!endBox->havePiece())
+    {
+        endBox->setPiece(sourcePiece);
+        startBox->setPiece();
+    }
+    else
+    {
+        endBox->setPiece(sourcePiece);
+        startBox->setPiece();
+    }
+
+    if(endBox->getPiece()->getType()==King)
+    {
+        if(currentTurn.getWhiteSide())
+>>>>>>> 512f4a0 (f)
         {
             tempBoard.whiteKingMoved = true;
         }
@@ -382,11 +460,19 @@ void Game::makeMoveSimulator(Board &tempBoard, Spot start, Spot end)
         {
             tempBoard.blackKingMoved = true;
         }
+<<<<<<< HEAD
    }
 
    if(endBox->getPiece()->getType()==Rook)
    {
         if(currentTurn.isWhiteSide())
+=======
+    }
+
+    if(endBox->getPiece()->getType()==Rook)
+    {
+        if(currentTurn.getWhiteSide())
+>>>>>>> 512f4a0 (f)
         {
             if(start.getX() == 0)
             {
@@ -408,6 +494,7 @@ void Game::makeMoveSimulator(Board &tempBoard, Spot start, Spot end)
                 tempBoard.blackRightRookMoved = true;
             }
         }
+<<<<<<< HEAD
    }
 
    Spot* near = &tempBoard.boxes[start.getY()][start.getX()+ (end.getX() - start.getX())];
@@ -418,6 +505,18 @@ void Game::makeMoveSimulator(Board &tempBoard, Spot start, Spot end)
    }
    else
    {
+=======
+    }
+
+    Spot* near = &tempBoard.boxes[start.getY()][start.getX()+ (end.getX() - start.getX())];
+
+    if(near->havePiece()&&near->getPiece()->getEnPassant())
+    {
+        near->setPiece();
+    }
+    else
+    {
+>>>>>>> 512f4a0 (f)
 
         if(this->enPassant.first > 0 && this->enPassant.second > 0)
         {
@@ -428,6 +527,7 @@ void Game::makeMoveSimulator(Board &tempBoard, Spot start, Spot end)
                 enPassantPiece->setEnPassant(false);
             }
         }
+<<<<<<< HEAD
    }
    if(isEnPassant(start.getX(),start.getY(),end.getX(),end.getY()))
    {
@@ -435,6 +535,187 @@ void Game::makeMoveSimulator(Board &tempBoard, Spot start, Spot end)
    }
 }
 
+=======
+    }
+    if(isEnPassant(start.getX(),start.getY(),end.getX(),end.getY()))
+    {
+        sourcePiece->setEnPassant(true);
+    }
+}
+
+bool Game::isCheckmateMove(Board tempBoard, bool isWhite)
+{
+    Spot *kingsSpot = this->board.findKing(isWhite);
+    if (tempBoard.boxes[kingsSpot->getY()][kingsSpot->getX()].getPiece()->getType() != King)
+    {
+        Spot* tempSpot = tempBoard.findKing(isWhite);
+        kingsSpot = tempSpot;
+    }
+
+    // Initialise.
+    int startIndex = (isWhite) ? 0 : 7;
+    int endIndex = (isWhite) ? 8 : -1;
+    int deltaIndex = (isWhite) ? 1 : -1;
+
+    // Find possible attack from enemy.
+    for (int y = startIndex; y != endIndex; y += deltaIndex)
+    {
+        for (int x = startIndex; x != endIndex; x += deltaIndex)
+        {
+            // Initialise.
+            Spot *tempSpot = tempBoard.getBoxPointer(y, x);
+
+            if (!tempSpot->havePiece())
+            {
+                continue;
+            }
+
+            Piece *tempPiece = tempSpot->getPiece();
+
+            Spot tempSpot2(x, y, tempPiece);
+
+            // Enemy found way to attack King.
+            if ((tempPiece->getWhite() != isWhite) &&
+                tempPiece->canMove(tempBoard, tempSpot2, *kingsSpot))
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+bool Game::canReallyMove(Spot start, Spot end, bool isWhite)
+{
+    if (start.getPiece()->canMove(board, start, end))
+    {
+        // Declaration for variables.
+        Board tempBoard(board);
+        if(abs(start.getX()-end.getX())==2&&start.getPiece()->getType()==King)
+        {
+            cout<<"a"<<endl;
+            if(!isCastleCheck(start.getX(),start.getY(),end.getX(),end.getY()))
+            {
+                return false;
+            }
+        }
+        // Simulate next situation.
+        makeMoveSimulator(tempBoard, start, end);
+        if (!isCheckmateMove(tempBoard, isWhite))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Game::seeCheckmate(bool isWhite)
+{
+    Spot *enemyKingsSpot = this->board.findKing(!isWhite);
+
+    // Declaration.
+    int directions[8][2] = {{-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}};
+
+    // No checkmate when enemy King has valid move.
+    for (int i = 0; i < 8; i++)
+    {
+        // Initialise.
+        int nextX = enemyKingsSpot->getX() + directions[i][0];
+        int nextY = enemyKingsSpot->getY() + directions[i][1];
+
+        // Skip if out of range.
+        if ((nextX > 7) || (nextX < 0) || (nextY > 7) || (nextY < 0))
+        {
+            continue;
+        }
+
+        // Initialise.
+        Spot tempSpot = this->board.getBox(nextY,nextX);
+        // Enemy King has valid move to avoid checkmate.
+
+        if (canReallyMove(*enemyKingsSpot, tempSpot, !isWhite))
+        {
+            return false;
+        }
+    }
+
+    // Initialise index variables.
+    int startIndex = (isWhite) ? 0 : 7;
+    int endIndex = (isWhite) ? 8 : -1;
+    int deltaIndex = (isWhite) ? 1 : -1;
+
+    // No checkmate when enemy's piece can block checkmate.
+    for (int row = startIndex; row != endIndex; row += deltaIndex)
+    {
+        for (int col = startIndex; col != endIndex; col += deltaIndex)
+        {
+            // Initialise.
+            Spot enemySpot = board.getBox(row, col);
+            Piece *enemyPiece = enemySpot.getPiece();
+
+            // Enemy found.
+            if (enemySpot.havePiece() &&
+                (enemyPiece->getWhite() != isWhite))
+            {
+                // See every move can enemy made.
+                for (int row2 = startIndex; row2 != endIndex; row2 += deltaIndex)
+                {
+                    for (int col2 = startIndex; col2 != endIndex; col2 += deltaIndex)
+                    {
+                        // Initialise.
+                        Spot tempSpot = board.getBox(row2, col2);
+
+                        // Found way to block checkmate.
+                        if (canReallyMove(enemySpot, tempSpot, !isWhite))
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return true;
+}
+
+void Game::showNextMove(int x,int y )
+{
+    emit dataChanged(index(0),index(63));
+    resetAllMark();
+
+    Spot* startBox = &this->board.boxes[y][x];
+
+    if(!startBox->havePiece())
+    {
+        cout<<"not Piece"<<endl;
+        return ;
+    }
+
+    Piece* sourcePiece = startBox->getPiece();
+
+    if(sourcePiece->getWhite() != currentTurn.getWhiteSide())
+    {
+        cout<<"not your turn"<<endl;
+        return;
+    }
+
+    for(int row=0;row<8;row++)
+    {
+        for(int col=0;col<8;col++)
+        {
+            Spot* endBox = &this->board.boxes[row][col];
+
+            if(canReallyMove(*startBox,*endBox, currentTurn.getWhiteSide()))
+            {
+                endBox->setMark(true);
+            }
+        }
+    }
+    emit dataChanged(index(0),index(63));
+}
+>>>>>>> 512f4a0 (f)
 
 //Intent:make move
 //Pre:startX and startY represent start X and Y,and endX and endY represent end X and Y
@@ -451,11 +732,16 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
 
     Piece* sourcePiece = startBox->getPiece();
 
+<<<<<<< HEAD
     if(sourcePiece->isWhite() != currentTurn.isWhiteSide())
+=======
+    if(sourcePiece->getWhite() != currentTurn.getWhiteSide())
+>>>>>>> 512f4a0 (f)
     {
         cout<<"not your turn"<<endl;
         return false;
     }
+<<<<<<< HEAD
     //sourcePiece->canMove(board,*startBox,*endBox)
     if(!canReallyMove(*startBox,*endBox, currentTurn.isWhiteSide()))
     {
@@ -467,6 +753,16 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
 //        cout<<"can't move"<<endl;
 //        return false;
 //    }
+=======
+
+    if(!canReallyMove(*startBox,*endBox, currentTurn.getWhiteSide()))
+    {
+        cout<<"can't move"<<endl;
+        return false;
+    }
+
+    int finalSound = -1;
+>>>>>>> 512f4a0 (f)
 
     if(isCastle(startX,startY,endX,endY))
     {
@@ -477,6 +773,12 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         targetSpot->setPiece(rookPiece);
         rookSpot->setPiece();
         castleRook = make_pair(-1,-1);
+<<<<<<< HEAD
+=======
+
+        // PLAY CASTLING SOUND.
+        finalSound = castleSound;
+>>>>>>> 512f4a0 (f)
     }
 
     if(!endBox->havePiece())
@@ -492,7 +794,11 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
 
     if(endBox->getPiece()->getType()==King)
     {
+<<<<<<< HEAD
         if(currentTurn.isWhiteSide())
+=======
+        if(currentTurn.getWhiteSide())
+>>>>>>> 512f4a0 (f)
         {
             board.whiteKingMoved = true;
         }
@@ -503,7 +809,11 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
     }
     if(endBox->getPiece()->getType()==Rook)
     {
+<<<<<<< HEAD
         if(currentTurn.isWhiteSide())
+=======
+        if(currentTurn.getWhiteSide())
+>>>>>>> 512f4a0 (f)
         {
             if(startX == 0)
             {
@@ -528,9 +838,18 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
     }
 
     Spot* near = &this->board.boxes[startY][startX+ (endX - startX)];
+<<<<<<< HEAD
     if(near->havePiece()&&near->getPiece()->isEnPassant())
     {
         near->setPiece();
+=======
+    if(near->havePiece()&&near->getPiece()->getEnPassant())
+    {
+        near->setPiece();
+
+        // PLAY ENPASSANT SOUND.
+        finalSound = passantSound;
+>>>>>>> 512f4a0 (f)
     }
     else
     {
@@ -551,11 +870,19 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         this->enPassant = make_pair(-1,-1);
     }
 
+<<<<<<< HEAD
     bool statusCheck = seeCheck(FindKing(this->board, !currentTurn.isWhiteSide()));
     bool whoCheckmate;
     if (status == RESIGNATION)
     {
         string message = (currentTurn.isWhiteSide()) ? "BLACK_WIN/WHITE_LOSE" : "WHITE_WIN/BLACK_LOSE";
+=======
+    bool statusCheck = seeCheck(*this->board.findKing(!currentTurn.getWhiteSide()));
+    bool whoCheckmate;
+    if (status == RESIGNATION)
+    {
+        string message = (currentTurn.getWhiteSide()) ? "BLACK_WIN/WHITE_LOSE" : "WHITE_WIN/BLACK_LOSE";
+>>>>>>> 512f4a0 (f)
         cout << message << endl;
         resetAllMark();
         beginResetModel();
@@ -564,6 +891,7 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         playChessSound(resignSound);
         showStatusMessage(message);
     }
+<<<<<<< HEAD
     else if (seeCheckmate(currentTurn.isWhiteSide()))
     {
         whoCheckmate = currentTurn.isWhiteSide();
@@ -572,12 +900,26 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
     else if (seeCheckmate(!currentTurn.isWhiteSide()))
     {
         whoCheckmate = !currentTurn.isWhiteSide();
+=======
+    else if (seeCheckmate(currentTurn.getWhiteSide()))
+    {
+        whoCheckmate = currentTurn.getWhiteSide();
+        status = CHECKMATE;
+    }
+    else if (seeCheckmate(!currentTurn.getWhiteSide()))
+    {
+        whoCheckmate = !currentTurn.getWhiteSide();
+>>>>>>> 512f4a0 (f)
         status = CHECKMATE;
     }
     else if (statusCheck)
     {
         // PLAY CHECK SOUND.
+<<<<<<< HEAD
         playChessSound(checkSound);
+=======
+        finalSound = checkSound;
+>>>>>>> 512f4a0 (f)
     }
     cout<<statusCheck<<endl;
     if (status == CHECKMATE)
@@ -587,12 +929,20 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
             // PLAY CHECKMATE SOUND.
             playChessSound(checkmateSound);
 
+<<<<<<< HEAD
             string message = (currentTurn.isWhiteSide()) ? "WHITE_WIN/BLACK_LOSE" : "BLACK_WIN/WHITE_LOSE";
+=======
+            string message = (currentTurn.getWhiteSide()) ? "WHITE_WIN/BLACK_LOSE" : "BLACK_WIN/WHITE_LOSE";
+>>>>>>> 512f4a0 (f)
             cout << message << endl;
             int soundType = (whoCheckmate) ? winSound : loseSound;
             resetAllMark();
             beginResetModel();
             endResetModel();
+<<<<<<< HEAD
+=======
+
+>>>>>>> 512f4a0 (f)
             // PLAY WIN OR LOSE SOUND.
             playChessSound(soundType);
             showStatusMessage(message);
@@ -604,6 +954,10 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
             resetAllMark();
             beginResetModel();
             endResetModel();
+<<<<<<< HEAD
+=======
+
+>>>>>>> 512f4a0 (f)
             // PLAY DRAW SOUND.
             playChessSound(drawSound);
             showStatusMessage("DRAW");
@@ -618,7 +972,11 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
     if (sourcePiece->getType() == Pawn &&(endY==0 || endY == 7) )
     {
         //promotion
+<<<<<<< HEAD
         emit showPopup(endX,endY,sourcePiece->isWhite());
+=======
+        emit showPopup(endX,endY,sourcePiece->getWhite());
+>>>>>>> 512f4a0 (f)
     }
 
     if(this->currentTurn == players[0])
@@ -630,13 +988,29 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         this->currentTurn = players[0];
     }
 
+<<<<<<< HEAD
     int moveSound = (currentTurn == players[1]) ? 1 : 0;
     playChessSound(moveSound);
+=======
+    if (finalSound == -1)
+    {
+        int moveSound = (currentTurn == players[1]) ? 1 : 0;
+        playChessSound(moveSound);
+    }
+    else
+    {
+        playChessSound(finalSound);
+    }
+>>>>>>> 512f4a0 (f)
 
     resetAllMark();
     recordFEN();
     beginResetModel();
     endResetModel();
+<<<<<<< HEAD
+=======
+
+>>>>>>> 512f4a0 (f)
     return true;
 }
 
@@ -686,9 +1060,12 @@ void Game::playChessSound(int soundType)
     case checkmateSound:
         soundSource = checkmateChessSound;
         break;
+<<<<<<< HEAD
     case kingThreatSound:
         soundSource = kingThreatChessSound;
         break;
+=======
+>>>>>>> 512f4a0 (f)
     case drawSound:
         soundSource = drawChessSound;
         break;
@@ -701,31 +1078,87 @@ void Game::playChessSound(int soundType)
     case resignSound:
         soundSource = resignChessSound;
         break;
+<<<<<<< HEAD
+=======
+    case passantSound:
+        soundSource = passantChessSound;
+        break;
+    case castleSound:
+        soundSource = castleChessSound;
+        break;
+>>>>>>> 512f4a0 (f)
     }
 
     effect.setSource(QUrl::fromLocalFile(soundSource));
     effect.play();
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 512f4a0 (f)
 bool Game::isCastle(int startX,int startY,int endX,int endY)
 {
     Spot* startBox = &this->board.boxes[startY][startX];
     Piece* startPiece = startBox->getPiece();
+<<<<<<< HEAD
     if(startPiece->getType()!=King||(startPiece->isWhite()&&board.whiteKingMoved)||((!startPiece->isWhite()&&board.blackKingMoved)))
     {
          return false;
+=======
+    if(startPiece->getType()!=King||(startPiece->getWhite()&&board.whiteKingMoved)||((!startPiece->getWhite()&&board.blackKingMoved)))
+    {
+        return false;
+>>>>>>> 512f4a0 (f)
     }
     int deltaY = endY - startY;
     int deltaX = endX - startX;
     if(deltaY!=0||abs(deltaX)<2)
     {
+<<<<<<< HEAD
          return false;
+=======
+        return false;
+    }
+    if(!isCastleCheck(startX,startY,endX,endY))
+    {
+        return false;
+>>>>>>> 512f4a0 (f)
     }
     castleRook = make_pair((deltaX>0)?7:0,endY);
     return true;
 }
 
+<<<<<<< HEAD
+=======
+bool Game::isCastleCheck(int startX,int startY,int endX,int endY)
+{
+    Spot* startBox = &this->board.boxes[startY][startX];
+    Piece* startPiece = startBox->getPiece();
+    if(startPiece->getType()!=King||(startPiece->getWhite()&&board.whiteKingMoved)||((!startPiece->getWhite()&&board.blackKingMoved)))
+    {
+        return false;
+    }
+    int deltaY = endY - startY;
+    int deltaX = endX - startX;
+    if(deltaY!=0||abs(deltaX)<2)
+    {
+        return false;
+    }
+
+    for(int i=startX+((deltaX>0)?1:-1);i!=endX;i+=(deltaX>0)?1:-1)
+    {
+        Spot* endBox = &this->board.boxes[startY][i];
+        if(!canReallyMove(*startBox,*endBox,currentTurn.getWhiteSide()))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+>>>>>>> 512f4a0 (f)
 bool Game::isEnPassant(int startX,int startY,int endX,int endY)
 {
     if(abs(endY - startY) != 2 || endX != startX)
@@ -742,7 +1175,11 @@ void Game::promotion(int x,int y,int type)
 {
     Spot* spot = &this->board.boxes[y][x];
     Piece* piece = spot->getPiece();
+<<<<<<< HEAD
     bool white = piece->isWhite();
+=======
+    bool white = piece->getWhite();
+>>>>>>> 512f4a0 (f)
     if(type==0)
     {
         spot->setPiece(new class Rook(white,1));
@@ -763,7 +1200,10 @@ void Game::promotion(int x,int y,int type)
     endResetModel();
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 512f4a0 (f)
 void Game::recordFEN()
 {
     //FEN:k7/pppppppp/8/8/8/8/PPPPPPPP/K7 b - - 0 1
@@ -785,7 +1225,11 @@ void Game::recordFEN()
                 fen += to_string(emptyCount);
                 emptyCount = 0;
             }
+<<<<<<< HEAD
             if(PIECE->isWhite())
+=======
+            if(PIECE->getWhite())
+>>>>>>> 512f4a0 (f)
             {
                 fen += "PRBNQK"[PIECE->getType()];
             }
@@ -804,7 +1248,11 @@ void Game::recordFEN()
         }
     }
     fen += " ";
+<<<<<<< HEAD
     if(currentTurn.isWhiteSide())
+=======
+    if(currentTurn.getWhiteSide())
+>>>>>>> 512f4a0 (f)
     {
         fen += "w";
     }
@@ -873,7 +1321,10 @@ bool Game::setFEN(QString fen)
     return true;
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 512f4a0 (f)
 void Game::setBoardFromFEN(string fen)
 {
     int i=0,j=0;
@@ -960,7 +1411,11 @@ void Game::updateKingRook(string fen)
         }
         if(fen.find('k')!=string::npos&&fen.find('q')!=string::npos)
         {
+<<<<<<< HEAD
              this->board.blackKingMoved = false;
+=======
+            this->board.blackKingMoved = false;
+>>>>>>> 512f4a0 (f)
         }
         this->board.whiteRightRookMoved = !(fen.find("K") != string::npos);
         this->board.whiteLeftRookMoved = !(fen.find("Q") != string::npos);
@@ -985,8 +1440,13 @@ void Game::setGame(string fen,KingAndRookStatus status)
     }
     setBoardFromFEN(parts[0]);
     Player p1,p2;
+<<<<<<< HEAD
     p1.setSide(true);
     p2.setSide(false);
+=======
+    p1.setWhiteSide(true);
+    p2.setWhiteSide(false);
+>>>>>>> 512f4a0 (f)
     this->players.push_back(p1);
     this->players.push_back(p2);
     currentTurn = (parts[1] == "w") ? p1 : p2;
@@ -1008,7 +1468,10 @@ void Game::setGame(string fen,KingAndRookStatus status)
         Piece* piece = spot->getPiece();
         piece->setEnPassant(true);
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 512f4a0 (f)
     beginResetModel();
     endResetModel();
 }
@@ -1045,7 +1508,10 @@ void Game::undo()
     setGame(fenList[recordIndex],castleStatusList[recordIndex]);
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 512f4a0 (f)
 int Game::rowCount(const QModelIndex & ) const {
     return (board.boxes.size()*board.boxes[0].size());
 }
@@ -1072,16 +1538,28 @@ QVariant Game::data(const QModelIndex & modelIndex, int role) const
     if(spot.havePiece())
     {
         type = piece->getType();
+<<<<<<< HEAD
         white = piece->isWhite();
+=======
+        white = piece->getWhite();
+>>>>>>> 512f4a0 (f)
     }
     switch (role)
     {
 
+<<<<<<< HEAD
         case Roles::Side     : return white;
         case Roles::Type     : return type;
         case Roles::PositionX: return spot.getX();
         case Roles::PositionY: return spot.getY();
         case Roles::Mark     : return spot.getMark();
+=======
+    case Roles::Side     : return white;
+    case Roles::Type     : return type;
+    case Roles::PositionX: return spot.getX();
+    case Roles::PositionY: return spot.getY();
+    case Roles::Mark     : return spot.getMark();
+>>>>>>> 512f4a0 (f)
     }
     return (QVariant());
 }
@@ -1095,5 +1573,8 @@ QHash<int, QByteArray> Game::roleNames(void) const {
     names.insert(Roles::Mark      , "mark");
     return (names);
 }
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 512f4a0 (f)

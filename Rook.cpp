@@ -2,12 +2,26 @@
 
 Rook::Rook(bool white,int type) :Piece(white,type)
 {
+<<<<<<< HEAD
 
 }
 bool Rook::canMove(Board board,Spot start,Spot end)
 {
     // Cannot kill ally.
     if(end.havePiece() && end.getPiece()->isWhite() == this->isWhite())
+=======
+}
+
+Piece* Rook::clone()const
+{
+    return new Rook(*this);
+}
+
+bool Rook::canMove(Board board,Spot start,Spot end)
+{
+    // Cannot kill ally.
+    if(end.havePiece() && end.getPiece()->getWhite() == this->getWhite())
+>>>>>>> 512f4a0 (f)
     {
         return false;
     }
@@ -41,6 +55,7 @@ bool Rook::canMove(Board board,Spot start,Spot end)
     }
     return true;
 }
+<<<<<<< HEAD
 
 
 Piece* Rook::clone()const
@@ -48,3 +63,5 @@ Piece* Rook::clone()const
     return new Rook(*this);
 }
 
+=======
+>>>>>>> 512f4a0 (f)

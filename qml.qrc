@@ -19,11 +19,21 @@
         <file>sounds/move1.wav</file>
         <file>sounds/move2.wav</file>
         <file>sounds/draw.wav</file>
+<<<<<<< HEAD
         <file>sounds/kingThreat.wav</file>
+=======
+>>>>>>> 512f4a0 (f)
         <file>sounds/resign.wav</file>
         <file>sounds/check.wav</file>
         <file>sounds/chekmate.wav</file>
         <file>sounds/win.wav</file>
         <file>sounds/lose.wav</file>
+<<<<<<< HEAD
     </qresource>
 </RCC>
+=======
+        <file>sounds/passant.wav</file>
+        <file>sounds/castle.wav</file>
+    </qresource>
+</RCC>
+>>>>>>> 512f4a0 (f)
