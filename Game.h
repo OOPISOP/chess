@@ -91,7 +91,7 @@ public:
     void recordFEN();
     Q_INVOKABLE void undo();
     Q_INVOKABLE void redo();
-    void setGame(string fen,KingAndRookStatus status);
+    bool setGame(string fen,KingAndRookStatus status);
     void setBoardFromFEN(string fen);
     bool isEnPassant(int startX,int startY,int endX,int endY);
     void playChessSound(int soundType);

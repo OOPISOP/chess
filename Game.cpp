@@ -869,14 +869,17 @@ void Game::recordFEN()
 
 bool Game::setFEN(QString fen)
 {
+    KingAndRookStatus status;
+    if(!setGame(fen.toStdString(),status))
+    {
+        return false;
+    }
     this->enPassant = make_pair(-1,-1);
     this->castleRook = make_pair(-1,-1);
     this->fenList.clear();
     this->recordIndex = -1;
     this->effect.setVolume(1.f);
     castleStatusList.clear();
-    KingAndRookStatus status;
-    setGame(fen.toStdString(),status);
     recordFEN();
     return true;
 }
@@ -981,7 +984,7 @@ void Game::updateKingRook(string fen)
     }
 }
 
-void Game::setGame(string fen,KingAndRookStatus status)
+bool Game::setGame(string fen,KingAndRookStatus status)
 {
     vector<std::string> parts;
     stringstream ss(fen);
@@ -1010,6 +1013,7 @@ void Game::setGame(string fen,KingAndRookStatus status)
         if(file>7||file<0||rank>7||rank<0)
         {
             cout<<"en Passant error pos"<<endl;
+            return false;
         }
         Spot* spot = &this->board.boxes[rank][file];
         Piece* piece = spot->getPiece();
@@ -1017,6 +1021,7 @@ void Game::setGame(string fen,KingAndRookStatus status)
     }
     beginResetModel();
     endResetModel();
+    return true;
 }
 
 void Game::setCastleFromFEN(KingAndRookStatus status)
