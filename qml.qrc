@@ -24,5 +24,7 @@
         <file>sounds/chekmate.wav</file>
         <file>sounds/win.wav</file>
         <file>sounds/lose.wav</file>
+        <file>sounds/passant.wav</file>
+        <file>sounds/castle.wav</file>
     </qresource>
 </RCC>

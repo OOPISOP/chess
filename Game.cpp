@@ -419,6 +419,9 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         targetSpot->setPiece(rookPiece);
         rookSpot->setPiece();
         castleRook = make_pair(-1,-1);
+
+        // PLAY CASTLING SOUND.
+        playChessSound(castleSound);
     }
 
     if(!endBox->havePiece())
@@ -473,6 +476,9 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
     if(near->havePiece()&&near->getPiece()->getEnPassant())
     {
         near->setPiece();
+
+        // PLAY ENPASSANT SOUND.
+        playChessSound(passantSound);
     }
     else
     {
@@ -639,6 +645,12 @@ void Game::playChessSound(int soundType)
         break;
     case resignSound:
         soundSource = resignChessSound;
+        break;
+    case passantSound:
+        soundSource = passantChessSound;
+        break;
+    case castleSound:
+        soundSource = castleChessSound;
         break;
     }
 

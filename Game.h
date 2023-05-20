@@ -60,7 +60,9 @@ public:
         drawSound,
         winSound,
         loseSound,
-        resignSound
+        resignSound,
+        passantSound,
+        castleSound
     };
 
     struct  KingAndRookStatus
@@ -130,6 +132,8 @@ private:
     QString winChessSound = ":/sounds/win.wav";
     QString loseChessSound = ":/sounds/lose.wav";
     QString resignChessSound = ":/sounds/resign.wav";
+    QString passantChessSound = ":/sounds/passant.wav";
+    QString castleChessSound = ":/sounds/castle.wav";
 
     //音效播放器
     QSoundEffect effect;
