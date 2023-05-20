@@ -410,6 +410,8 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
     //        return false;
     //    }
 
+    int finalSound = -1;
+
     if(isCastle(startX,startY,endX,endY))
     {
         Spot* rookSpot = &this->board.boxes[castleRook.second][castleRook.first];
@@ -421,7 +423,7 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         castleRook = make_pair(-1,-1);
 
         // PLAY CASTLING SOUND.
-        playChessSound(castleSound);
+        finalSound = castleSound;
     }
 
     if(!endBox->havePiece())
@@ -478,7 +480,7 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         near->setPiece();
 
         // PLAY ENPASSANT SOUND.
-        playChessSound(passantSound);
+        finalSound = passantSound;
     }
     else
     {
@@ -525,7 +527,7 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
     else if (statusCheck)
     {
         // PLAY CHECK SOUND.
-        playChessSound(checkSound);
+        finalSound = checkSound;
     }
     cout<<statusCheck<<endl;
     if (status == CHECKMATE)
@@ -541,6 +543,7 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
             resetAllMark();
             beginResetModel();
             endResetModel();
+
             // PLAY WIN OR LOSE SOUND.
             playChessSound(soundType);
             showStatusMessage(message);
@@ -552,6 +555,7 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
             resetAllMark();
             beginResetModel();
             endResetModel();
+
             // PLAY DRAW SOUND.
             playChessSound(drawSound);
             showStatusMessage("DRAW");
@@ -578,8 +582,15 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         this->currentTurn = players[0];
     }
 
-    int moveSound = (currentTurn == players[1]) ? 1 : 0;
-    playChessSound(moveSound);
+    if (finalSound == -1)
+    {
+        int moveSound = (currentTurn == players[1]) ? 1 : 0;
+        playChessSound(moveSound);
+    }
+    else
+    {
+        playChessSound(finalSound);
+    }
 
     resetAllMark();
     recordFEN();
