@@ -16,6 +16,7 @@ Board::Board(const Board  &sourceBoard)
     this->x = sourceBoard.x;
     this->y = sourceBoard.y;
     this->boxes.clear();
+
     this->boxes.resize(8);
     for(int i=0;i<8;i++)
     {
@@ -33,26 +34,33 @@ Board::Board(const Board  &sourceBoard)
         }
     }
 }
+
 Board::~Board()
 {
     this->boxes.clear();
     this->x = 0;
     this->y = 0;
     //delete this;
-
 }
+
 Spot Board::getBox(int y,int x) const
 {
-
-
     if((x < 0) || (x > 7) || (y < 0) || (y > 7))
-
     {
         cout<<"Index out of bound"<<endl;
-        return boxes[0][0];
     }
     return boxes[y][x];
 }
+
+Spot* Board::getBoxPointer(int y,int x)
+{
+    if((x < 0) || (x > 7) || (y < 0) || (y > 7))
+    {
+        cout<<"Index out of bound"<<endl;
+    }
+    return &boxes[y][x];
+}
+
 void Board::resetBoard()
 {
     //clear the boxes
@@ -92,15 +100,14 @@ void Board::resetBoard()
     boxes[7].push_back(Spot(7,7,new Rook(true,A_Rook)));
 }
 
-
-Spot Board::findKing(bool isWhite)
+Spot* Board::findKing(bool isWhite)
 {
     // Declaration for variables.
     // Initialise.
     int startIndex = (isWhite) ? 7 : 0;
     int endIndex = (isWhite) ? -1 : 8;
     int deltaIndex = (isWhite) ? -1 : 1;
-    Spot kingsSpot(0,0);
+    Spot* kingsSpot;
     Piece* kingsPiece;
 
     // Find King.
@@ -109,12 +116,12 @@ Spot Board::findKing(bool isWhite)
         for (int col = startIndex; col != endIndex; col += deltaIndex)
         {
             // Initialise.
-            kingsSpot = getBox(row, col);
-            kingsPiece = kingsSpot.getPiece();
+            kingsSpot = &boxes[row][col];
+            kingsPiece = kingsSpot->getPiece();
 
             // King found.
-            if (kingsSpot.havePiece() &&
-                (kingsPiece->isWhite() == isWhite) &&
+            if (kingsSpot->havePiece() &&
+                (kingsPiece->getWhite() == isWhite) &&
                 (kingsPiece->getType() == A_King))
             {
                 return kingsSpot;

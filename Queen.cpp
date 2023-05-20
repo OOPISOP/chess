@@ -2,12 +2,17 @@
 
 Queen::Queen(bool white,int type) : Piece(white,type)
 {
-
 }
+
+Piece* Queen::clone()const
+{
+    return new Queen(*this);
+}
+
 bool Queen::canMove(Board board,Spot start,Spot end)
 {
     // Cannot kill ally.
-    if(end.havePiece() && end.getPiece()->isWhite() == this->isWhite())
+    if(end.havePiece() && end.getPiece()->getWhite() == this->getWhite())
     {
         return false;
     }
@@ -42,10 +47,3 @@ bool Queen::canMove(Board board,Spot start,Spot end)
 
     return true;
 }
-
-Piece* Queen::clone()const
-{
-    return new Queen(*this);
-}
-
-

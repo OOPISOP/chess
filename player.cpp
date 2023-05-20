@@ -3,18 +3,16 @@
 Player::Player()
 {
     this->whiteSide = true;
-
 }
 
-
-bool Player::isWhiteSide()
-{
-    return this->whiteSide;
-}
-
-void Player::setSide(bool whiteSide)
+void Player::setWhiteSide(bool whiteSide)
 {
     this->whiteSide = whiteSide;
+}
+
+bool Player::getWhiteSide()
+{
+    return this->whiteSide;
 }
 
 bool Player::operator==(const Player& rhs)

@@ -4,6 +4,7 @@
 #include "Spot.h"
 #include <vector>
 #include <iostream>
+
 using namespace std;
 
 class Board
@@ -11,8 +12,10 @@ class Board
 private :
     int x;
     int y;
+
 public:
-    enum Types {
+    enum Types
+    {
         A_Pawn,
         A_Rook,
         A_Bishop,
@@ -21,14 +24,6 @@ public:
         A_King
     };
     vector<vector<Spot>> boxes;
-    Board();
-
-    ~ Board();
-
-    Board(const Board &sourceBoard);
-    Spot getBox(int y,int x)const;
-    void resetBoard();
-    Spot findKing(bool isWhite);
     bool whiteKingMoved = false;
     bool whiteLeftRookMoved = false;
     bool whiteRightRookMoved = false;
@@ -36,8 +31,14 @@ public:
     bool blackLeftRookMoved = false;
     bool blackRightRookMoved = false;
 
+    Board();
+    Board(const Board &sourceBoard);
+    ~Board();
 
-
+    Spot getBox(int y,int x) const;
+    Spot* getBoxPointer(int y,int x);
+    void resetBoard();
+    Spot* findKing(bool isWhite);
 };
 
 #endif // BOARD_H

@@ -2,15 +2,20 @@
 
 King::King(bool white,int type) : Piece(white,type)
 {
-
 }
+
+Piece* King::clone()const
+{
+    return new King(*this);
+}
+
 bool King::canMove(Board board,Spot start,Spot end)
 {
     // Check checkmate.
     // isCheckMate();
 
     // Cannot kill ally.
-    if(end.havePiece() && end.getPiece()->isWhite() == this->isWhite())
+    if(end.havePiece() && end.getPiece()->getWhite() == this->getWhite())
     {
         return false;
     }
@@ -28,24 +33,28 @@ bool King::canMove(Board board,Spot start,Spot end)
     return isValidCastling(board,start,end);
 }
 
-
 bool King::isValidCastling(Board board,Spot start,Spot end)
 {
     Spot startBox = board.getBox(start.getY(),start.getX());
     Piece* startPiece = startBox.getPiece();
-    if(startPiece->getType()!=5||(startPiece->isWhite()&&board.whiteKingMoved)||((!startPiece->isWhite()&&board.blackKingMoved)))
+
+    if(startPiece->getType()!=5||(startPiece->getWhite()&&board.whiteKingMoved)||((!startPiece->getWhite()&&board.blackKingMoved)))
     {
         return false;
     }
+
     int deltaY = end.getY() - start.getY();
     int deltaX = end.getX() - start.getX();
+
     if(deltaY!=0||abs(deltaX)!=2)
     {
         return false;
     }
+
     int rookX = (deltaX>0)?7:0;
     bool rookMoved = false;
-    if(startPiece->isWhite())
+
+    if(startPiece->getWhite())
     {
         rookMoved = (deltaX>0)?board.whiteRightRookMoved:board.blackRightRookMoved;
     }
@@ -55,6 +64,7 @@ bool King::isValidCastling(Board board,Spot start,Spot end)
     }
 
     Spot rookStartBox =  board.getBox(end.getY(),rookX);
+
     if(!rookStartBox.havePiece()||rookStartBox.getPiece()->getType()!=1||rookMoved)
     {
         return false;
@@ -66,45 +76,9 @@ bool King::isValidCastling(Board board,Spot start,Spot end)
     {
         return false;
     }
-//    if(seeCheck(board,start.getPiece()->isWhite(),board.findKing(start.getPiece()->isWhite())))
-//    {
-//        return false;
-//    }
+    //    if(seeCheck(board,start.getPiece()->isWhite(),board.findKing(start.getPiece()->isWhite())))
+    //    {
+    //        return false;
+    //    }
     return true;
-}
-
-bool King::seeCheck(Board board,bool white,Spot enemyKingsSpot)
-{
-    // Initialise.
-    int startIndex = (white) ? 7 : 0;
-    int endIndex = (white) ? -1 : 8;
-    int deltaIndex = (white) ? -1 : 1;
-
-    // Find possible attck to enemy's king.
-    for (int row = startIndex; row != endIndex; row += deltaIndex)
-    {
-        for (int col = startIndex; col != endIndex; col += deltaIndex)
-        {
-            // Initialise.
-            Spot tempSpot = board.getBox(row, col);
-            Piece *tempPiece = tempSpot.getPiece();
-
-            // Possible attack found.
-            if (tempSpot.havePiece() &&
-                (tempPiece->isWhite() == white) /*&&
-                (canReallyMove(tempSpot, enemyKingsSpot))*/)
-            {
-                board.boxes[enemyKingsSpot.getY()][enemyKingsSpot.getX()].getPiece()->setChecked(true);
-                return true;
-            }
-        }
-    }
-
-    // If there is no any available attack to the enemy's king, cancel check.
-    board.boxes[enemyKingsSpot.getY()][enemyKingsSpot.getX()].getPiece()->setChecked(false);
-    return false;
-}
-Piece* King::clone()const
-{
-    return new King(*this);
 }

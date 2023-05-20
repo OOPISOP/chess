@@ -12,67 +12,60 @@ Piece::Piece()
     this->setType(6);
 }
 
-bool Piece::isWhite() const
-{
-    return this->white;
-}
 void Piece::setWhite(bool white)
 {
     this->white = white;
 }
-
-bool Piece::isMoved() const
-{
-    return this->moved;
-}
-void Piece::setMoved(bool moved)
-{
-    this->moved = moved;
-
-}
-
-int Piece::getType() const
-{
-    return this->type;
-}
-
 void Piece::setType(int type)
 {
     this->type = type;
 }
-
-bool Piece::isChecked()const
+void Piece::setMoved(bool moved)
 {
-    return this->checked;
-
+    this->moved = moved;
 }
 void Piece::setChecked(bool checked)
 {
     this->checked = checked;
 }
-
 void Piece::setPromoting(bool promoting)
 {
     this->promoting = promoting;
-}
-bool Piece::isPromoting() const
-{
-    return this->promoting;
 }
 void Piece::setEnPassant(bool enPassant)
 {
     this->enPassant = enPassant;
 }
-bool Piece::isEnPassant()const
-{
-    return this->enPassant;
-}
 void Piece::setCastling(bool castling)
 {
     this->castling = castling;
 }
-bool Piece::isCastling()const
+
+bool Piece::getWhite() const
+{
+    return this->white;
+}
+int Piece::getType() const
+{
+    return this->type;
+}
+bool Piece::getMoved() const
+{
+    return this->moved;
+}
+bool Piece::getChecked()const
+{
+    return this->checked;
+}
+bool Piece::getPromoting() const
+{
+    return this->promoting;
+}
+bool Piece::getEnPassant()const
+{
+    return this->enPassant;
+}
+bool Piece::getCastling()const
 {
     return this->castling;
 }
-

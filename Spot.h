@@ -10,19 +10,22 @@ private:
     int x;
     int y;
     bool isPiece;
-    bool mark;
+    bool marked;
+
 public:
     Spot(int x,int y,Piece* piece);
     Spot(int x,int y);
-    Piece* getPiece()const;
+
     void setPiece(Piece* p);
     void setPiece();
-    int getX()const;
     void setX(int x);
-    int getY()const;
     void setY(int y);
-    bool havePiece()const;
     void setMark(bool mark);
+
+    Piece* getPiece()const;
+    int getX()const;
+    int getY()const;
+    bool havePiece()const;
     bool getMark();
 };
 

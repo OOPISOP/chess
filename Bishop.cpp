@@ -2,13 +2,17 @@
 
 Bishop::Bishop(bool white,int type) : Piece(white,type)
 {
+}
 
+Piece* Bishop::clone() const
+{
+    return new Bishop(*this);
 }
 
 bool Bishop::canMove(Board board,Spot start,Spot end)
 {
     // Cannot kill ally.
-    if(end.havePiece() && end.getPiece()->isWhite() == this->isWhite())
+    if(end.havePiece() && end.getPiece()->getWhite() == this->getWhite())
     {
         return false;
     }
@@ -42,10 +46,4 @@ bool Bishop::canMove(Board board,Spot start,Spot end)
     }
 
     return true;
-}
-
-
-Piece* Bishop::clone() const
-{
-    return new Bishop(*this);
 }

@@ -1,22 +1,21 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "QtMultimedia/qsoundeffect.h"
 #define _HAS_STD_BYTE 0
 
+#include "QtMultimedia/qsoundeffect.h"
 #include <QMainWindow>
-# include <QAbstractListModel>
-# include <QDebug>
-# include <QList>
-# include <QByteArray>
-# include <QHash>
+#include <QAbstractListModel>
+#include <QDebug>
+#include <QList>
+#include <QByteArray>
+#include <QHash>
 #include <vector>
 #include <iostream>
-
 #include "Player.h"
 #include "Board.h"
-using namespace std;
 
+using namespace std;
 
 class Game : public QAbstractListModel
 {
@@ -58,13 +57,11 @@ public:
         move2Sound,
         checkSound,
         checkmateSound,
-        kingThreatSound,
         drawSound,
         winSound,
         loseSound,
         resignSound
     };
-
 
     struct  KingAndRookStatus
     {
@@ -77,18 +74,17 @@ public:
     };
 
     Q_INVOKABLE void newGame(bool white);
-    Q_INVOKABLE bool makeMove(int startX,int startY,int endX,int endY);
+    void resetAllMark();
 
-    Spot FindKing(Board board, bool isWhite);
-    bool seeCheck(Spot enemyKingsSpot);
+    bool seeCheck(Spot &enemyKingsSpot);
     bool seeCheckmate(bool isWhite);
     bool isCheckmateMove(Board tempBoard, bool isWhite);
     bool canReallyMove(Spot start, Spot end, bool isWhite);
     void makeMoveSimulator(Board &tempBoard, Spot start, Spot end);
 
-
     Q_INVOKABLE void showNextMove(int x,int y);
-    void resetAllMark();
+    Q_INVOKABLE bool makeMove(int startX,int startY,int endX,int endY);
+
     Q_INVOKABLE void promotion(int x,int y,int i);
     Q_INVOKABLE bool setFEN(QString fen);
     void recordFEN();
@@ -97,14 +93,11 @@ public:
     void setGame(string fen,KingAndRookStatus status);
     void setBoardFromFEN(string fen);
     bool isEnPassant(int startX,int startY,int endX,int endY);
-
     void playChessSound(int soundType);
     bool isCastle(int startX,int startY,int endX,int endY);
     void setCastleFromFEN(KingAndRookStatus status);
     void updateKingRook(string fen);
     void showStatusMessage(string message);
-
-
 
 protected:
     //board row count
@@ -113,26 +106,26 @@ protected:
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole)const override;
     //set role name to qml
     QHash<int, QByteArray> roleNames() const override;
-signals:
- void showPopup(int x,int y,bool white);
 
+signals:
+    void showPopup(int x,int y,bool white);
 
 private:
     vector<Player> players;
     Board board;
     Player currentTurn;
-
     GameStatus status = ACTIVE;
 
     pair<int,int> enPassant;
+    pair<int,int> castleRook;
+    vector<KingAndRookStatus> castleStatusList;
     vector<string> fenList;
     int recordIndex;
+
     QString p1ChessSound = ":/sounds/move1.wav";
     QString p2ChessSound = ":/sounds/move2.wav";
-
     QString checkChessSound = ":/sounds/check.wav";
     QString checkmateChessSound = ":/sounds/checkmate.wav";
-    QString kingThreatChessSound = ":/sounds/kingThreat.wav";
     QString drawChessSound = ":/sounds/draw.wav";
     QString winChessSound = ":/sounds/win.wav";
     QString loseChessSound = ":/sounds/lose.wav";
@@ -140,8 +133,6 @@ private:
 
     //音效播放器
     QSoundEffect effect;
-    pair<int,int> castleRook;
-    vector<KingAndRookStatus> castleStatusList;
-
 };
+
 #endif // GAME_H

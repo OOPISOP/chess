@@ -19,7 +19,6 @@
         <file>sounds/move1.wav</file>
         <file>sounds/move2.wav</file>
         <file>sounds/draw.wav</file>
-        <file>sounds/kingThreat.wav</file>
         <file>sounds/resign.wav</file>
         <file>sounds/check.wav</file>
         <file>sounds/chekmate.wav</file>
