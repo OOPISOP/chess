@@ -233,9 +233,11 @@ bool Game::isCheckmateMove(Board tempBoard, bool isWhite)
 
             Piece *tempPiece = tempSpot->getPiece();
 
+            Spot tempSpot2(x, y, tempPiece);
+
             // Enemy found way to attack King.
             if ((tempPiece->getWhite() != isWhite) &&
-                tempPiece->canMove(tempBoard, *tempSpot, *kingsSpot))
+                tempPiece->canMove(tempBoard, tempSpot2, *kingsSpot))
             {
                 return true;
             }
