@@ -2,15 +2,11 @@
 
 Pawn::Pawn(bool white,int type) : Piece(white,type)
 {
-<<<<<<< HEAD
-
-=======
 }
 
 Piece* Pawn::clone()const
 {
     return new Pawn(*this);
->>>>>>> 512f4a0 (f)
 }
 
 bool Pawn::canMove(Board board,Spot start,Spot end)
@@ -20,16 +16,6 @@ bool Pawn::canMove(Board board,Spot start,Spot end)
     {
         return false;
     }
-<<<<<<< HEAD
-    // Cannot kill ally.
-    if(end.havePiece() && end.getPiece()->isWhite() == this->isWhite())
-    {
-        return false;
-    }
-    // Normally move 1 forward unit.
-    int delta = start.getPiece()->isWhite() ? -1 : 1 ;
-=======
-
     // Cannot kill ally.
     if(end.havePiece() && end.getPiece()->getWhite() == this->getWhite())
     {
@@ -39,7 +25,6 @@ bool Pawn::canMove(Board board,Spot start,Spot end)
     // Normally move 1 forward unit.
     int delta = start.getPiece()->getWhite() ? -1 : 1;
 
->>>>>>> 512f4a0 (f)
     // Cannot move 1 forward unit when the front is blocked.
     if (abs(end.getX() - start.getX()) == 0)
     {
@@ -47,13 +32,9 @@ bool Pawn::canMove(Board board,Spot start,Spot end)
         {
             return false;
         }
-<<<<<<< HEAD
-        Spot frontSpot = board.getBox(start.getY()+delta,start.getX());
-=======
 
         Spot frontSpot = board.getBox(start.getY()+delta,start.getX());
 
->>>>>>> 512f4a0 (f)
         if(frontSpot.havePiece())
         {
             return false;
@@ -63,17 +44,6 @@ bool Pawn::canMove(Board board,Spot start,Spot end)
     else if ((abs(end.getX() - start.getX()) == 1))
     {
         Spot near = board.getBox(start.getY(),start.getX() + (end.getX() - start.getX()));
-<<<<<<< HEAD
-        if(near.havePiece())
-        {
-            if(!(end.havePiece())&&near.getPiece()->isEnPassant()&&((end.getY() - start.getY()) == delta))
-            {
-                cout<<near.getX()<<" "<<near.getY()<<endl;
-                return true;
-            }
-        }
-=======
-
         if(near.havePiece())
         {
             if(!(end.havePiece())&&near.getPiece()->getEnPassant()&&((end.getY() - start.getY()) == delta))
@@ -84,7 +54,6 @@ bool Pawn::canMove(Board board,Spot start,Spot end)
             }
         }
 
->>>>>>> 512f4a0 (f)
         if (!(end.havePiece())||(((abs(end.getY() - start.getY()) > 1))))
         {
             return false;
@@ -96,19 +65,11 @@ bool Pawn::canMove(Board board,Spot start,Spot end)
         return false;
     }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 512f4a0 (f)
     // First move can forward 2 units.
     // Only available on row 2 or 7.
     if ((start.getY() == 1) || (start.getY() == 6))
     {
-<<<<<<< HEAD
-        int delta2 = start.getPiece()->isWhite() ? -2 : 2 ;
-=======
         int delta2 = start.getPiece()->getWhite() ? -2 : 2 ;
->>>>>>> 512f4a0 (f)
 
         //when 2 forward units cannot have piece
         if((end.getY() - start.getY()) == delta2)
@@ -117,13 +78,8 @@ bool Pawn::canMove(Board board,Spot start,Spot end)
             {
                 return false;
             }
-<<<<<<< HEAD
-            Spot frontTwoSpot = board.getBox(start.getY()+delta2,start.getX());
-=======
 
             Spot frontTwoSpot = board.getBox(start.getY()+delta2,start.getX());
-
->>>>>>> 512f4a0 (f)
             if(frontTwoSpot.havePiece())
             {
                 return false;
@@ -136,10 +92,6 @@ bool Pawn::canMove(Board board,Spot start,Spot end)
         {
             return false;
         }
-<<<<<<< HEAD
-=======
-
->>>>>>> 512f4a0 (f)
         return true;
     }
 
@@ -150,12 +102,3 @@ bool Pawn::canMove(Board board,Spot start,Spot end)
     }
     return true;
 }
-<<<<<<< HEAD
-
-Piece* Pawn::clone()const
-{
-    return new Pawn(*this);
-}
-
-=======
->>>>>>> 512f4a0 (f)

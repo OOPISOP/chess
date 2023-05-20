@@ -16,10 +16,7 @@ Board::Board(const Board  &sourceBoard)
     this->x = sourceBoard.x;
     this->y = sourceBoard.y;
     this->boxes.clear();
-<<<<<<< HEAD
-=======
 
->>>>>>> 512f4a0 (f)
     this->boxes.resize(8);
     for(int i=0;i<8;i++)
     {
@@ -27,11 +24,7 @@ Board::Board(const Board  &sourceBoard)
         {
             if(sourceBoard.getBox(i,j).havePiece())
             {
-<<<<<<< HEAD
-                Spot spot(i,j,sourceBoard.getBox(i,j).getPiece()->clone());
-=======
                 Spot spot(j,i,sourceBoard.getBox(i,j).getPiece()->clone());
->>>>>>> 512f4a0 (f)
                 this->boxes[i].push_back(spot);
             }
             else
@@ -41,32 +34,13 @@ Board::Board(const Board  &sourceBoard)
         }
     }
 }
-<<<<<<< HEAD
-=======
 
->>>>>>> 512f4a0 (f)
 Board::~Board()
 {
     this->boxes.clear();
     this->x = 0;
     this->y = 0;
     //delete this;
-<<<<<<< HEAD
-
-}
-Spot Board::getBox(int y,int x) const
-{
-
-
-    if((x < 0) || (x > 7) || (y < 0) || (y > 7))
-
-    {
-        cout<<"Index out of bound"<<endl;
-        return boxes[0][0];
-    }
-    return boxes[y][x];
-}
-=======
 }
 
 Spot Board::getBox(int y,int x) const
@@ -87,7 +61,6 @@ Spot* Board::getBoxPointer(int y,int x)
     return &boxes[y][x];
 }
 
->>>>>>> 512f4a0 (f)
 void Board::resetBoard()
 {
     //clear the boxes
@@ -97,13 +70,8 @@ void Board::resetBoard()
     boxes[0].push_back(Spot(0,0,new Rook(false,A_Rook)));
     boxes[0].push_back(Spot(1,0,new Knight(false,A_Knight)));
     boxes[0].push_back(Spot(2,0,new Bishop(false,A_Bishop)));
-<<<<<<< HEAD
-    boxes[0].push_back(Spot(3,0,new King(false,A_King)));
-    boxes[0].push_back(Spot(4,0,new Queen(false,A_Queen)));
-=======
     boxes[0].push_back(Spot(3,0,new Queen(false,A_Queen)));
     boxes[0].push_back(Spot(4,0,new King(false,A_King)));
->>>>>>> 512f4a0 (f)
     boxes[0].push_back(Spot(5,0,new Bishop(false,A_Bishop)));
     boxes[0].push_back(Spot(6,0,new Knight(false,A_Knight)));
     boxes[0].push_back(Spot(7,0,new Rook(false,A_Rook)));
@@ -125,35 +93,21 @@ void Board::resetBoard()
     boxes[7].push_back(Spot(0,7,new Rook(true,A_Rook)));
     boxes[7].push_back(Spot(1,7,new Knight(true,A_Knight)));
     boxes[7].push_back(Spot(2,7,new Bishop(true,A_Bishop)));
-<<<<<<< HEAD
-    boxes[7].push_back(Spot(3,7,new King(true,A_King)));
-    boxes[7].push_back(Spot(4,7,new Queen(true,A_Queen)));
-=======
     boxes[7].push_back(Spot(3,7,new Queen(true,A_Queen)));
     boxes[7].push_back(Spot(4,7,new King(true,A_King)));
->>>>>>> 512f4a0 (f)
     boxes[7].push_back(Spot(5,7,new Bishop(true,A_Bishop)));
     boxes[7].push_back(Spot(6,7,new Knight(true,A_Knight)));
     boxes[7].push_back(Spot(7,7,new Rook(true,A_Rook)));
 }
 
-<<<<<<< HEAD
-
-Spot Board::findKing(bool isWhite)
-=======
 Spot* Board::findKing(bool isWhite)
->>>>>>> 512f4a0 (f)
 {
     // Declaration for variables.
     // Initialise.
     int startIndex = (isWhite) ? 7 : 0;
     int endIndex = (isWhite) ? -1 : 8;
     int deltaIndex = (isWhite) ? -1 : 1;
-<<<<<<< HEAD
-    Spot kingsSpot(0,0);
-=======
     Spot* kingsSpot;
->>>>>>> 512f4a0 (f)
     Piece* kingsPiece;
 
     // Find King.
@@ -162,21 +116,12 @@ Spot* Board::findKing(bool isWhite)
         for (int col = startIndex; col != endIndex; col += deltaIndex)
         {
             // Initialise.
-<<<<<<< HEAD
-            kingsSpot = getBox(row, col);
-            kingsPiece = kingsSpot.getPiece();
-
-            // King found.
-            if (kingsSpot.havePiece() &&
-                (kingsPiece->isWhite() == isWhite) &&
-=======
             kingsSpot = &boxes[row][col];
             kingsPiece = kingsSpot->getPiece();
 
 //            // King found.
             if (kingsSpot->havePiece() &&
                 (kingsPiece->getWhite() == isWhite) &&
->>>>>>> 512f4a0 (f)
                 (kingsPiece->getType() == A_King))
             {
                 return kingsSpot;
