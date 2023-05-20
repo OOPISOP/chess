@@ -212,6 +212,12 @@ void Game::makeMoveSimulator(Board &tempBoard, Spot start, Spot end)
 bool Game::isCheckmateMove(Board tempBoard, bool isWhite)
 {
     Spot *kingsSpot = this->board.findKing(isWhite);
+    if (tempBoard.boxes[kingsSpot->getY()][kingsSpot->getX()].getPiece()->getType() != King)
+    {
+        Spot* tempSpot = tempBoard.findKing(isWhite);
+        Spot tempSpot2(tempSpot->getY(), tempSpot->getX(), tempSpot->getPiece());
+        kingsSpot = &tempSpot2;
+    }
 
     // Initialise.
     int startIndex = (isWhite) ? 0 : 7;
