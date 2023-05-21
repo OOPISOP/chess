@@ -555,15 +555,16 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         if (statusCheck)
         {
             // PLAY CHECKMATE SOUND.
-            playChessSound(checkmateSound);
+            finalSound = checkmateSound;
+//            playChessSound(finalSound);
             string message = (currentTurn.getWhiteSide()) ? "WHITE_WIN/BLACK_LOSE" : "BLACK_WIN/WHITE_LOSE";
             cout << message << endl;
-            int soundType = (whoCheckmate) ? winSound : loseSound;
+//            finalSound = (whoCheckmate) ? winSound : loseSound;
             resetAllMark();
             beginResetModel();
             endResetModel();
             // PLAY WIN OR LOSE SOUND.
-            playChessSound(soundType);
+            playChessSound(finalSound);
             showStatusMessage(message);
         }
         else
