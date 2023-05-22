@@ -1,14 +1,26 @@
+/***********************************************************************
+ * File: Bishop.cpp
+ * Author: B11115033
+ * Create Date: 2023/05/10
+ * Editor: B11115033
+ * Update Date: 2023/05/10
+ * Description: Bisghop piece imp
+***********************************************************************/
 #include "Bishop.h"
 
 Bishop::Bishop(bool white,int type) : Piece(white,type)
 {
 }
-
+//Intent:clone piece
+//Pre:Bishop
+//Pos:return Piece pointer
 Piece* Bishop::clone() const
 {
     return new Bishop(*this);
 }
-
+//Intent:can move
+//Pre:board ,start end spot
+//Pos:return bool
 bool Bishop::canMove(Board board,Spot start,Spot end)
 {
     // Cannot kill ally.

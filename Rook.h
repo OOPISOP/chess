@@ -6,7 +6,7 @@
  * Update Date: 2023/05/10
  * Description: Rook class define
 ***********************************************************************/
-ifndef ROOK_H
+#ifndef ROOK_H
 #define ROOK_H
 
 #include "Piece.h"
