@@ -2,7 +2,7 @@
  * File: Game.cpp
  * Author: B11115033
  * Create Date: 2023/05/10
- * Editor: Brendon
+ * Editor: B11115033
  * Update Date: 2023/05/10
  * Description: Game
 ***********************************************************************/
@@ -69,7 +69,9 @@ void Game::newGame(bool white)
     beginResetModel();
     endResetModel();
 }
-
+//Intent:reset all mark
+//Pre:no need
+//Pos:reset all mark
 void Game::resetAllMark()
 {
     for(int i=0;i<8;i++)
@@ -82,7 +84,9 @@ void Game::resetAllMark()
     }
 }
 
-
+//Intent:see chceck
+//Pre:enemy king spot
+//Pos:return bool
 bool Game::seeCheck(Spot &enemyKingsSpot)
 {
 
@@ -119,7 +123,9 @@ bool Game::seeCheck(Spot &enemyKingsSpot)
     board.boxes[enemyKingsSpot.getY()][enemyKingsSpot.getX()].getPiece()->setChecked(false);
     return false;
 }
-
+//Intent:make move simulator
+//Pre:temp board ,start and end spot
+//Pos:no return just simlator,and change temp baord
 void Game::makeMoveSimulator(Board &tempBoard, Spot start, Spot end)
 {
 
@@ -216,7 +222,9 @@ void Game::makeMoveSimulator(Board &tempBoard, Spot start, Spot end)
         sourcePiece->setEnPassant(true);
     }
 }
-
+//Intent:check mate move
+//Pre:temp board , white side
+//Pos:return bool
 bool Game::isCheckmateMove(Board tempBoard, bool isWhite)
 {
     Spot *kingsSpot = this->board.findKing(isWhite);
@@ -259,7 +267,9 @@ bool Game::isCheckmateMove(Board tempBoard, bool isWhite)
 
     return false;
 }
-
+//Intent:can really move
+//Pre:start end spot and white side
+//Pos:return bool
 bool Game::canReallyMove(Spot start, Spot end, bool isWhite)
 {
     if (start.getPiece()->canMove(board, start, end))
@@ -283,7 +293,9 @@ bool Game::canReallyMove(Spot start, Spot end, bool isWhite)
     return false;
 }
 
-
+//Intent:see check mate
+//Pre:white side
+//Pos:return bool
 bool Game::seeCheckmate(bool isWhite)
 {
     Spot *enemyKingsSpot = this->board.findKing(!isWhite);
@@ -353,7 +365,9 @@ bool Game::seeCheckmate(bool isWhite)
     }
     return true;
 }
-
+//Intent:time up
+//Pre:white
+//Pos:set time up and show
 void Game::timeUp(bool white)
 {
 
@@ -366,7 +380,9 @@ void Game::timeUp(bool white)
     playChessSound(resignSound);
     showStatusMessage(message);
 }
-
+//Intent:show next move
+//Pre:x y
+//Pos:show next move
 void Game::showNextMove(int x,int y )
 {
     emit dataChanged(index(0),index(63));
@@ -567,14 +583,13 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         playChessSound(finalSound);
     }
 
-//    resetAllMark();
     recordFEN();
-//    beginResetModel();
-//    endResetModel();
     return true;
 }
 
-
+//Intent:game status update
+//Pre:final sound
+//Pos:return bool and change final sound
 bool Game::gameStatusUpdate(int& finalSound)
 {
     bool statusCheck = seeCheck(*this->board.findKing(!currentTurn.getWhiteSide()));
@@ -642,7 +657,9 @@ bool Game::gameStatusUpdate(int& finalSound)
 
     return true;
 }
-
+//Intent:show status message
+//Pre:message
+//Pos:show status message
 void Game::showStatusMessage(string message)
 {
     QDialog dialog;
@@ -670,7 +687,9 @@ void Game::showStatusMessage(string message)
     layout.addLayout(&buttonLayout);
     dialog.exec();
 }
-
+//Intent:play chess sound effect
+//Pre:sound type
+//Pos:play chess sound effect
 void Game::playChessSound(int soundType)
 {
     QString soundSource;
@@ -712,7 +731,9 @@ void Game::playChessSound(int soundType)
     effect.setSource(QUrl::fromLocalFile(soundSource));
     effect.play();
 }
-
+//Intent:castle
+//Pre:startX startY endX endY
+//Pos::return bool
 bool Game::isCastle(int startX,int startY,int endX,int endY)
 {
     Spot* startBox = &this->board.boxes[startY][startX];
@@ -760,7 +781,9 @@ bool Game::isCastleCheck(int startX,int startY,int endX,int endY)
     }
     return true;
 }
-
+//Intent:en passant
+//Pre:startX startY endX endY
+//Pos:return bool
 bool Game::isEnPassant(int startX,int startY,int endX,int endY)
 {
     if(abs(endY - startY) != 2 || endX != startX)
@@ -818,7 +841,9 @@ void Game::promotion(int x,int y,int type)
     emit clockStart(currentTurn.getWhiteSide());
     recordFEN();
 }
-
+//Intent:record FEN
+//Pre:fen
+//Pos:record fen
 void Game::recordFEN()
 {
     //FEN:k7/pppppppp/8/8/8/8/PPPPPPPP/K7 b - - 0 1
@@ -913,7 +938,9 @@ void Game::recordFEN()
     cout<<fen<<endl;
     this->recordIndex++;
 }
-
+//Intent:set fen
+//Pre:fen
+//Pos:set fen and return bool
 bool Game::setFEN(QString fen)
 {
     KingAndRookStatus status;
@@ -930,7 +957,9 @@ bool Game::setFEN(QString fen)
     recordFEN();
     return true;
 }
-
+//Intent:set board from fen
+//Pre:fen
+//Pos:set bard from fen
 void Game::setBoardFromFEN(string fen)
 {
     int i=0,j=0;
@@ -1005,7 +1034,9 @@ void Game::setBoardFromFEN(string fen)
     beginResetModel();
     endResetModel();
 }
-
+//Intent:upadaste king rook
+//Pre:fen
+//Posupdate king rook
 void Game::updateKingRook(string fen)
 {
     cout<<fen<<endl;
@@ -1030,7 +1061,9 @@ void Game::updateKingRook(string fen)
         this->board.blackKingMoved = true;
     }
 }
-
+//Intent:set game
+//Pre:fen status
+//Pos:return bool and set game
 bool Game::setGame(string fen,KingAndRookStatus status)
 {
     vector<std::string> parts;
@@ -1076,7 +1109,9 @@ bool Game::setGame(string fen,KingAndRookStatus status)
     endResetModel();
     return true;
 }
-
+//Intent:set castle from fen
+//Pre:status
+//Pos:set castle from fen
 void Game::setCastleFromFEN(KingAndRookStatus status)
 {
     board.whiteKingMoved = status.whiteKingMoved;
@@ -1086,7 +1121,9 @@ void Game::setCastleFromFEN(KingAndRookStatus status)
     board.blackLeftRookMoved = status.blackLeftRookMoved;
     board.blackRightRookMoved = status.blackRightRookMoved;
 }
-
+//Intent:redo
+//Pre:record index and fen list
+//Pos:redo
 void Game::redo()
 {
     if(recordIndex >= (int)fenList.size() - 1)
@@ -1097,7 +1134,9 @@ void Game::redo()
     cout<<fenList[recordIndex]<<endl;
     setGame(fenList[recordIndex],castleStatusList[recordIndex]);
 }
-
+//Intent:undo
+//Pre:record index and fen list
+//Pos:undo
 void Game::undo()
 {
     if(recordIndex <= 0)
@@ -1108,11 +1147,11 @@ void Game::undo()
     cout<<fenList[recordIndex]<<endl;
     setGame(fenList[recordIndex],castleStatusList[recordIndex]);
 }
-
+//model row count
 int Game::rowCount(const QModelIndex & ) const {
     return (board.boxes.size()*board.boxes[0].size());
 }
-
+//model data
 QVariant Game::data(const QModelIndex & modelIndex, int role) const
 {
     if (!modelIndex.isValid()) {
@@ -1148,7 +1187,7 @@ QVariant Game::data(const QModelIndex & modelIndex, int role) const
     }
     return (QVariant());
 }
-
+//model role name
 QHash<int, QByteArray> Game::roleNames(void) const {
     QHash<int, QByteArray> names;
     names.insert(Roles::Side      , "side");

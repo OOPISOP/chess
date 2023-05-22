@@ -19,7 +19,7 @@ public:
     void setWhiteSide(bool whiteSide);//set white side
     bool getWhiteSide();//get white side
 
-    bool operator==(const Player& rhs);//
+    bool operator==(const Player& rhs);//player == operator
 };
 
 #endif // PLAYER_H
