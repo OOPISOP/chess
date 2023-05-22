@@ -1,3 +1,11 @@
+/***********************************************************************
+ * File: Player.h
+ * Author: B11115033
+ * Create Date: 2023/05/10
+ * Editor: B11115033
+ * Update Date: 2023/05/10
+ * Description: Player class define
+***********************************************************************/
 #ifndef PLAYER_H
 #define PLAYER_H
 
@@ -8,10 +16,8 @@ public:
 
     Player();
 
-    void setWhiteSide(bool whiteSide);
-    bool getWhiteSide();
-
-    bool operator==(const Player& rhs);
+    void setWhiteSide(bool whiteSide);//set white side
+    bool getWhiteSide();//get white side
 };
 
 #endif // PLAYER_H

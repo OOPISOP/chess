@@ -1,3 +1,11 @@
+/***********************************************************************
+ * File: Spot.h
+ * Author: B11115033
+ * Create Date: 2023/05/10
+ * Editor: B11115033
+ * Update Date: 2023/05/10
+ * Description: Spot define
+***********************************************************************/
 #ifndef SPOT_H
 #define SPOT_H
 
@@ -16,17 +24,17 @@ public:
     Spot(int x,int y,Piece* piece);
     Spot(int x,int y);
 
-    void setPiece(Piece* p);
-    void setPiece();
-    void setX(int x);
-    void setY(int y);
-    void setMark(bool mark);
+    void setPiece(Piece* p);//set piece
+    void setPiece();//set piece
+    void setX(int x);//set x
+    void setY(int y);//set y
+    void setMark(bool mark);//set spot mark
 
-    Piece* getPiece()const;
-    int getX()const;
-    int getY()const;
-    bool havePiece()const;
-    bool getMark();
+    Piece* getPiece()const;//get piece
+    int getX()const;//get x
+    int getY()const;//get y
+    bool havePiece()const;//have piece
+    bool getMark();//get mark
 };
 
 #endif // SPOT_H

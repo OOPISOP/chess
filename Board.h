@@ -1,3 +1,11 @@
+/***********************************************************************
+ * File: Board.h
+ * Author: B11115033
+ * Create Date: 2023/05/10
+ * Editor: B11115033
+ * Update Date: 2023/05/10
+ * Description: Chess Board define
+***********************************************************************/
 #ifndef BOARD_H
 #define BOARD_H
 
@@ -37,10 +45,10 @@ public:
     Board(const Board &sourceBoard);
     ~Board();
 
-    Spot getBox(int y,int x) const;
-    Spot* getBoxPointer(int y,int x);
-    void resetBoard();
-    Spot* findKing(bool isWhite);
+    Spot getBox(int y,int x) const;//get board spot
+    Spot* getBoxPointer(int y,int x);//get board spot pointer
+    void resetBoard();//reset chess board
+    Spot* findKing(bool isWhite);//find king
 };
 
 #endif // BOARD_H

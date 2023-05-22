@@ -282,7 +282,7 @@ ApplicationWindow
     {
         id: myPopup
         objectName: "myPopup"
-        height: 4*squareSize
+        height: 4*squareSize + fenInputHeight
         width : squareSize
         modal: true
         focus: true
@@ -303,8 +303,8 @@ ApplicationWindow
                            anchors.fill: parent
                            onClicked:
                            {
-                                game.promotion(promotionX,promotionY,index);
                                 myPopup.close()
+                                game.promotion(promotionX,promotionY,index);
                            }
                        }
                    }

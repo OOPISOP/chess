@@ -15,8 +15,3 @@ bool Player::getWhiteSide()
     return this->whiteSide;
 }
 
-bool Player::operator==(const Player& rhs)
-{
-    if(this->whiteSide != rhs.whiteSide)return false;
-    return true;
-}

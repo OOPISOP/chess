@@ -1,3 +1,11 @@
+/***********************************************************************
+ * File: Game.h
+ * Author: B11115033
+ * Create Date: 2023/05/10
+ * Editor: B11115033
+ * Update Date: 2023/05/10
+ * Description: Game define
+***********************************************************************/
 #ifndef GAME_H
 #define GAME_H
 
@@ -23,7 +31,7 @@ class Game : public QAbstractListModel
 public:
     explicit Game(QObject *parent = 0);
     ~Game();
-
+    //game status
     enum GameStatus
     {
         ACTIVE,
@@ -32,7 +40,7 @@ public:
         RESIGNATION,
         FOREIT
     };
-
+    //game model roles
     enum Roles
     {
         Side = Qt::UserRole,
@@ -41,7 +49,7 @@ public:
         PositionY,
         Mark,
     };
-
+    //piece types
     enum Types {
         Pawn,
         Rook,
@@ -50,7 +58,7 @@ public:
         Queen,
         King
     };
-
+    //sound effect types
     enum SoundTypes
     {
         move1Sound,
@@ -64,7 +72,7 @@ public:
         passantSound,
         castleSound
     };
-
+    //castle status
     struct  KingAndRookStatus
     {
         bool whiteKingMoved = false;
@@ -75,33 +83,33 @@ public:
         bool blackRightRookMoved = false;
     };
 
-    Q_INVOKABLE void newGame(bool white);
-    void resetAllMark();
+    Q_INVOKABLE void newGame(bool white);//new game
+    void resetAllMark();//reset mark
 
-    bool seeCheck(Spot &enemyKingsSpot);
-    bool seeCheckmate(bool isWhite);
-    bool isCheckmateMove(Board tempBoard, bool isWhite);
-    bool canReallyMove(Spot start, Spot end, bool isWhite);
-    void makeMoveSimulator(Board &tempBoard, Spot start, Spot end);
-    Q_INVOKABLE void showNextMove(int x,int y);
-    Q_INVOKABLE bool makeMove(int startX,int startY,int endX,int endY);
+    bool seeCheck(Spot &enemyKingsSpot);//see check
+    bool seeCheckmate(bool isWhite);//see check mate
+    bool isCheckmateMove(Board tempBoard, bool isWhite);//is check mate move
+    bool canReallyMove(Spot start, Spot end, bool isWhite);//can really move
+    void makeMoveSimulator(Board &tempBoard, Spot start, Spot end);//move simular
+    Q_INVOKABLE void showNextMove(int x,int y);//show next move
+    Q_INVOKABLE bool makeMove(int startX,int startY,int endX,int endY);//make move
 
-    Q_INVOKABLE void promotion(int x,int y,int i);
-    Q_INVOKABLE bool setFEN(QString fen);
-    void recordFEN();
-    Q_INVOKABLE void undo();
-    Q_INVOKABLE void redo();
-    bool setGame(string fen,KingAndRookStatus status);
-    void setBoardFromFEN(string fen);
-    bool isEnPassant(int startX,int startY,int endX,int endY);
-    void playChessSound(int soundType);
-    bool isCastle(int startX,int startY,int endX,int endY);
-    void setCastleFromFEN(KingAndRookStatus status);
-    void updateKingRook(string fen);
-    void showStatusMessage(string message);
-    bool isCastleCheck(int startX,int startY,int endX,int endY);
-    bool gameStatusUpdate(int &finalSound);
-    Q_INVOKABLE void timeUp(bool white);
+    Q_INVOKABLE void promotion(int x,int y,int i);//promotion
+    Q_INVOKABLE bool setFEN(QString fen);//set fen
+    void recordFEN();//fen record
+    Q_INVOKABLE void undo();//undo
+    Q_INVOKABLE void redo();//redo
+    bool setGame(string fen,KingAndRookStatus status);//set game
+    void setBoardFromFEN(string fen);//set board from fen
+    bool isEnPassant(int startX,int startY,int endX,int endY);//en passant
+    void playChessSound(int soundType);//sound effect play
+    bool isCastle(int startX,int startY,int endX,int endY);//castle
+    void setCastleFromFEN(KingAndRookStatus status);//fen castle set
+    void updateKingRook(string fen);//update king rook
+    void showStatusMessage(string message);//show status message
+    bool isCastleCheck(int startX,int startY,int endX,int endY);//castle check
+    bool gameStatusUpdate(int &finalSound);//game status update
+    Q_INVOKABLE void timeUp(bool white);//time up
 
 protected:
     //board row count
@@ -112,9 +120,9 @@ protected:
     QHash<int, QByteArray> roleNames() const override;
 
 signals:
-    void showPopup(int x,int y,bool white);
-    void clockStart(bool white);
-    void resetClockTime();
+    void showPopup(int x,int y,bool white);//show promotion popup
+    void clockStart(bool white);//clock start
+    void resetClockTime();//reset clock time
 
 private:
     vector<Player> players;
