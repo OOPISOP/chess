@@ -100,7 +100,7 @@ public:
     void updateKingRook(string fen);
     void showStatusMessage(string message);
     bool isCastleCheck(int startX,int startY,int endX,int endY);
-    void gameStatusUpdate(int &finalSound);
+    bool gameStatusUpdate(int &finalSound);
     Q_INVOKABLE void timeUp(bool white);
 
 protected:

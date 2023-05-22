@@ -53,7 +53,6 @@ void Game::newGame(bool white)
 
     p1.setWhiteSide(white);
     p2.setWhiteSide(!white);
-
     this->players.clear();
     this->players.push_back(p1);
     this->players.push_back(p2);
@@ -128,6 +127,7 @@ void Game::makeMoveSimulator(Board &tempBoard, Spot start, Spot end)
     Spot* endBox = &tempBoard.boxes[end.getY()][end.getX()];
     Piece* sourcePiece = startBox->getPiece()->clone();
 
+    pair<int,int> temp = make_pair(castleRook.first,castleRook.second);
     if(isCastle(start.getX(),start.getY(),end.getX(),end.getY()))
     {
         Spot* rookSpot = &tempBoard.boxes[castleRook.second][castleRook.first];
@@ -137,7 +137,8 @@ void Game::makeMoveSimulator(Board &tempBoard, Spot start, Spot end)
         targetSpot->setPiece(rookPiece);
         rookSpot->setPiece();
     }
-
+    castleRook.first = temp.first;
+    castleRook.second = temp.second;
     if(!endBox->havePiece())
     {
         endBox->setPiece(sourcePiece);
@@ -263,16 +264,15 @@ bool Game::canReallyMove(Spot start, Spot end, bool isWhite)
 {
     if (start.getPiece()->canMove(board, start, end))
     {
-        // Declaration for variables.
-        Board tempBoard(board);
         if(abs(start.getX()-end.getX())==2&&start.getPiece()->getType()==King)
         {
-            cout<<"a"<<endl;
             if(!isCastleCheck(start.getX(),start.getY(),end.getX(),end.getY()))
             {
                 return false;
             }
         }
+        // Declaration for variables.
+        Board tempBoard(board);
         // Simulate next situation.
         makeMoveSimulator(tempBoard, start, end);
         if (!isCheckmateMove(tempBoard, isWhite))
@@ -343,6 +343,7 @@ bool Game::seeCheckmate(bool isWhite)
                         // Found way to block checkmate.
                         if (canReallyMove(enemySpot, tempSpot, !isWhite))
                         {
+                            cout<<"abc"<<enemySpot.getPiece()->getType()<<endl;
                             return false;
                         }
                     }
@@ -350,7 +351,6 @@ bool Game::seeCheckmate(bool isWhite)
             }
         }
     }
-
     return true;
 }
 
@@ -461,6 +461,9 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         endBox->setPiece(sourcePiece);
         startBox->setPiece();
     }
+    resetAllMark();
+    beginResetModel();
+    endResetModel();
 
     if(endBox->getPiece()->getType()==King)
     {
@@ -531,7 +534,11 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
     }
 
 
-    gameStatusUpdate(finalSound);
+    if(!gameStatusUpdate(finalSound))
+    {
+        return false;
+    }
+
 
     if (sourcePiece->getType() == Pawn &&(endY==0 || endY == 7) )
     {
@@ -559,15 +566,15 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         playChessSound(finalSound);
     }
 
-    resetAllMark();
+//    resetAllMark();
     recordFEN();
-    beginResetModel();
-    endResetModel();
+//    beginResetModel();
+//    endResetModel();
     return true;
 }
 
 
-void Game::gameStatusUpdate(int& finalSound)
+bool Game::gameStatusUpdate(int& finalSound)
 {
     bool statusCheck = seeCheck(*this->board.findKing(!currentTurn.getWhiteSide()));
     bool whoCheckmate;
@@ -576,13 +583,13 @@ void Game::gameStatusUpdate(int& finalSound)
         string message = (currentTurn.getWhiteSide()) ? "BLACK_WIN/WHITE_LOSE" : "WHITE_WIN/BLACK_LOSE";
         cout << message << endl;
         resetAllMark();
-        beginResetModel();
-        endResetModel();
         // PLAY RESIGN SOUND.
         playChessSound(resignSound);
         showStatusMessage(message);
+        beginResetModel();
+        endResetModel();
+        return false;
     }
-
     else if (seeCheckmate(currentTurn.getWhiteSide()))
     {
         whoCheckmate = currentTurn.getWhiteSide();
@@ -601,7 +608,6 @@ void Game::gameStatusUpdate(int& finalSound)
         finalSound = checkSound;
 
     }
-    cout<<statusCheck<<endl;
     if (status == CHECKMATE)
     {
         if (statusCheck)
@@ -612,29 +618,28 @@ void Game::gameStatusUpdate(int& finalSound)
             cout << message << endl;
             int soundType = (whoCheckmate) ? winSound : loseSound;
             resetAllMark();
-            beginResetModel();
-            endResetModel();
             // PLAY WIN OR LOSE SOUND.
             playChessSound(soundType);
             showStatusMessage(message);
+            beginResetModel();
+            endResetModel();
+            return false;
         }
         else
         {
             status = STALEMATE;
             cout << "DRAW" << endl;
             resetAllMark();
-            beginResetModel();
-            endResetModel();
             // PLAY DRAW SOUND.
             playChessSound(drawSound);
             showStatusMessage("DRAW");
+            beginResetModel();
+            endResetModel();
+            return false;
         }
     }
 
-    if (status != ACTIVE)
-    {
-        return ;
-    }
+    return true;
 }
 
 void Game::showStatusMessage(string message)
@@ -747,12 +752,11 @@ bool Game::isCastleCheck(int startX,int startY,int endX,int endY)
     for(int i=startX+((deltaX>0)?1:-1);i!=endX;i+=(deltaX>0)?1:-1)
     {
         Spot* endBox = &this->board.boxes[startY][i];
-        if(!canReallyMove(*startBox,*endBox,currentTurn.getWhiteSide()))
+        if(!canReallyMove(*startBox,*endBox,startBox->getPiece()->getWhite()))
         {
             return false;
         }
     }
-
     return true;
 }
 
@@ -789,6 +793,8 @@ void Game::promotion(int x,int y,int type)
     {
         spot->setPiece(new class Queen(white,4));
     }
+    beginResetModel();
+    endResetModel();
     int finalSound = -1;
     gameStatusUpdate(finalSound);
     if(this->currentTurn == players[0])
@@ -810,8 +816,6 @@ void Game::promotion(int x,int y,int type)
     }
     emit clockStart(currentTurn.getWhiteSide());
     recordFEN();
-    beginResetModel();
-    endResetModel();
 }
 
 void Game::recordFEN()
