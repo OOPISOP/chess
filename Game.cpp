@@ -694,6 +694,7 @@ void Game::showStatusMessage(string message)
     layout.addLayout(&buttonLayout);
     dialog.exec();
 }
+
 //Intent:play chess sound effect
 //Pre:sound type
 //Pos:play chess sound effect
