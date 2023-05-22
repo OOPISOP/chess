@@ -18,6 +18,8 @@ public:
 
     void setWhiteSide(bool whiteSide);//set white side
     bool getWhiteSide();//get white side
+
+    bool operator==(const Player& rhs);//
 };
 
 #endif // PLAYER_H
