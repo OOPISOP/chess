@@ -461,9 +461,7 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         endBox->setPiece(sourcePiece);
         startBox->setPiece();
     }
-    resetAllMark();
-    beginResetModel();
-    endResetModel();
+
 
     if(endBox->getPiece()->getType()==King)
     {
@@ -533,6 +531,9 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         this->enPassant = make_pair(-1,-1);
     }
 
+    resetAllMark();
+    beginResetModel();
+    endResetModel();
 
     if(!gameStatusUpdate(finalSound))
     {
@@ -916,7 +917,7 @@ void Game::recordFEN()
 bool Game::setFEN(QString fen)
 {
     KingAndRookStatus status;
-    if(!setGame(fen.toStdString(),status))
+    if(fen.isEmpty()||!setGame(fen.toStdString(),status))
     {
         return false;
     }
@@ -1045,6 +1046,11 @@ bool Game::setGame(string fen,KingAndRookStatus status)
     p2.setWhiteSide(false);
     this->players.push_back(p1);
     this->players.push_back(p2);
+    if(parts[1]!="w"&&parts[1]!="b")
+    {
+        setGame(fenList[recordIndex],castleStatusList[recordIndex]);
+        return false;
+    }
     currentTurn = (parts[1] == "w") ? p1 : p2;
     updateKingRook(parts[2]);
     if(recordIndex>=0)
@@ -1058,6 +1064,7 @@ bool Game::setGame(string fen,KingAndRookStatus status)
         this->enPassant = make_pair(file, rank);
         if(file>7||file<0||rank>7||rank<0)
         {
+            setGame(fenList[recordIndex],castleStatusList[recordIndex]);
             cout<<"en Passant error pos"<<endl;
             return false;
         }
