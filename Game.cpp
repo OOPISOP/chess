@@ -64,6 +64,7 @@ void Game::newGame(bool white)
     this->effect.setVolume(1.f);
     recordFEN();
     castleStatusList.clear();
+    playerTimeList.clear();
     this->status = ACTIVE;
     emit resetClockTime();
     beginResetModel();
@@ -572,7 +573,7 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
     {
         this->currentTurn = players[0];
     }
-    emit clockStart(currentTurn.getWhiteSide());
+    //emit clockStart(currentTurn.getWhiteSide());
     if (finalSound == -1)
     {
         int moveSound = (currentTurn == players[1]) ? 1 : 0;
@@ -838,7 +839,7 @@ void Game::promotion(int x,int y,int type)
     {
         playChessSound(finalSound);
     }
-    emit clockStart(currentTurn.getWhiteSide());
+    //emit clockStart(currentTurn.getWhiteSide());
     recordFEN();
 }
 //Intent:record FEN
@@ -933,10 +934,17 @@ void Game::recordFEN()
         this->fenList.resize(recordIndex+1);
         this->castleStatusList.resize(recordIndex+1);
     }
+    emit getClockTime();
+    emit clockStart(currentTurn.getWhiteSide());
     this->fenList.push_back(fen);
     this->castleStatusList.push_back(castleStatus);
     cout<<fen<<endl;
     this->recordIndex++;
+}
+void Game::updateClockTime(int timeOne,int timeTwo)
+{
+    pair<int,int> time = make_pair(timeOne,timeTwo);
+    playerTimeList.push_back(time);
 }
 //Intent:set fen
 //Pre:fen
@@ -955,6 +963,7 @@ bool Game::setFEN(QString fen)
     this->effect.setVolume(1.f);
     castleStatusList.clear();
     recordFEN();
+    emit resetClockTime();
     return true;
 }
 //Intent:set board from fen
@@ -1105,7 +1114,6 @@ bool Game::setGame(string fen,KingAndRookStatus status)
         Piece* piece = spot->getPiece();
         piece->setEnPassant(true);
     }
-    emit resetClockTime();
     beginResetModel();
     endResetModel();
     return true;
@@ -1134,6 +1142,8 @@ void Game::redo()
     recordIndex++;
     cout<<fenList[recordIndex]<<endl;
     setGame(fenList[recordIndex],castleStatusList[recordIndex]);
+    emit setClockTime(playerTimeList[recordIndex].first,playerTimeList[recordIndex].second);
+    emit clockStart(currentTurn.getWhiteSide());
 }
 //Intent:undo
 //Pre:record index and fen list
@@ -1147,6 +1157,8 @@ void Game::undo()
     recordIndex--;
     cout<<fenList[recordIndex]<<endl;
     setGame(fenList[recordIndex],castleStatusList[recordIndex]);
+    emit setClockTime(playerTimeList[recordIndex].first,playerTimeList[recordIndex].second);
+    emit clockStart(currentTurn.getWhiteSide());
 }
 //model row count
 int Game::rowCount(const QModelIndex & ) const {

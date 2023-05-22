@@ -110,6 +110,7 @@ public:
     bool isCastleCheck(int startX,int startY,int endX,int endY);//castle check
     bool gameStatusUpdate(int &finalSound);//game status update
     Q_INVOKABLE void timeUp(bool white);//time up
+    Q_INVOKABLE void updateClockTime(int timeOne,int timeTwo);
 
 protected:
     //board row count
@@ -123,6 +124,8 @@ signals:
     void showPopup(int x,int y,bool white);//show promotion popup
     void clockStart(bool white);//clock start
     void resetClockTime();//reset clock time
+    int getClockTime();
+    void setClockTime(int timeOne,int timeTwo);
 
 private:
     vector<Player> players;
@@ -135,6 +138,7 @@ private:
     vector<KingAndRookStatus> castleStatusList;
     vector<string> fenList;
     int recordIndex;
+    vector<pair<int,int>>playerTimeList;
 
     QString p1ChessSound = ":/sounds/move1.wav";
     QString p2ChessSound = ":/sounds/move2.wav";

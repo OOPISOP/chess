@@ -278,6 +278,15 @@ ApplicationWindow
                 remainingTimeOne = 600
                 remainingTimeTwo = 600
             }
+            function onGetClockTime()
+            {
+                game.updateClockTime(remainingTimeOne,remainingTimeTwo)
+            }
+            function onSetClockTime(timeOne,timeTwo)
+            {
+                remainingTimeOne = timeOne
+                remainingTimeTwo = timeTwo
+            }
         }
 
     property var promotionImage:
