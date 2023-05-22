@@ -48,6 +48,7 @@ Game::~Game()
 //Pos:set two player and current turn
 void Game::newGame(bool white)
 {
+    emit resetClockTime();
     board.resetBoard();
     Player p1,p2;
 
@@ -62,11 +63,10 @@ void Game::newGame(bool white)
     this->fenList.clear();
     this->recordIndex = -1;
     this->effect.setVolume(1.f);
-    recordFEN();
     castleStatusList.clear();
     playerTimeList.clear();
     this->status = ACTIVE;
-    emit resetClockTime();
+    recordFEN();
     beginResetModel();
     endResetModel();
 }
@@ -479,7 +479,6 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         startBox->setPiece();
     }
 
-
     if(endBox->getPiece()->getType()==King)
     {
         if(currentTurn.getWhiteSide())
@@ -518,8 +517,8 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
             }
         }
     }
-
-    Spot* near = &this->board.boxes[startY][startX+ (endX - startX)];
+    cout<<"aaa"<<endl;
+    Spot* near = &this->board.boxes[startY][endX];
 
     if(near->havePiece()&&near->getPiece()->getEnPassant())
     {
@@ -533,11 +532,16 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
     {
         if(this->enPassant.first > 0 && this->enPassant.second > 0)
         {
+            cout<<"bbb"<<endl;
             Spot* enPassantSpot = &this->board.boxes[8 - this->enPassant.second][this->enPassant.first];
-            Piece* enPassantPiece = enPassantSpot->getPiece();
-            enPassantPiece->setEnPassant(false);
+            if(enPassantSpot->havePiece())
+            {
+                Piece* enPassantPiece = enPassantSpot->getPiece();
+                enPassantPiece->setEnPassant(false);
+            }
         }
     }
+
     if(isEnPassant(startX,startY,endX,endY))
     {
         sourcePiece->setEnPassant(true);
@@ -583,7 +587,6 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
     {
         playChessSound(finalSound);
     }
-
     recordFEN();
     return true;
 }
@@ -956,12 +959,6 @@ bool Game::setFEN(QString fen)
     {
         return false;
     }
-    this->enPassant = make_pair(-1,-1);
-    this->castleRook = make_pair(-1,-1);
-    this->fenList.clear();
-    this->recordIndex = -1;
-    this->effect.setVolume(1.f);
-    castleStatusList.clear();
     recordFEN();
     emit resetClockTime();
     return true;
@@ -1141,8 +1138,8 @@ void Game::redo()
     }
     recordIndex++;
     cout<<fenList[recordIndex]<<endl;
-    setGame(fenList[recordIndex],castleStatusList[recordIndex]);
     emit setClockTime(playerTimeList[recordIndex].first,playerTimeList[recordIndex].second);
+    setGame(fenList[recordIndex],castleStatusList[recordIndex]);
     emit clockStart(currentTurn.getWhiteSide());
 }
 //Intent:undo
@@ -1156,8 +1153,8 @@ void Game::undo()
     }
     recordIndex--;
     cout<<fenList[recordIndex]<<endl;
-    setGame(fenList[recordIndex],castleStatusList[recordIndex]);
     emit setClockTime(playerTimeList[recordIndex].first,playerTimeList[recordIndex].second);
+    setGame(fenList[recordIndex],castleStatusList[recordIndex]);
     emit clockStart(currentTurn.getWhiteSide());
 }
 //model row count
