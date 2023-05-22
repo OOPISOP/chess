@@ -1105,6 +1105,7 @@ bool Game::setGame(string fen,KingAndRookStatus status)
         Piece* piece = spot->getPiece();
         piece->setEnPassant(true);
     }
+    emit resetClockTime();
     beginResetModel();
     endResetModel();
     return true;

@@ -1,3 +1,11 @@
+/***********************************************************************
+ * File: main.qml
+ * Author: B11115033
+ * Create Date: 2023/05/10
+ * Editor: B11115033
+ * Update Date: 2023/05/10
+ * Description: this is main view manager
+***********************************************************************/
 import QtQuick 2
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.3
@@ -15,9 +23,11 @@ ApplicationWindow
     property int menuBarHeight:30
     property  int fenInputHeight: 20
 
-    menuBar:MenuBar {
+    menuBar:MenuBar
+    {
         height: menuBarHeight
-           Menu {
+           Menu
+           {
                title: "Game"
                Action
                {
@@ -32,7 +42,8 @@ ApplicationWindow
 
            }
 
-           Menu {
+           Menu
+           {
                title: "Edit"
                Action
                {
@@ -48,32 +59,33 @@ ApplicationWindow
                }
            }
        }
-    property var images: [
+    property var images:
         [
-            "/images/white_pawn.svg",
-            "/images/white_rook.svg",
-            "/images/white_bishop.svg",
-            "/images/white_knight.svg",
-            "/images/white_queen.svg",
-            "/images/white_king.svg",
-            ""
-        ],
+            [
+                "/images/white_pawn.svg",
+                "/images/white_rook.svg",
+                "/images/white_bishop.svg",
+                "/images/white_knight.svg",
+                "/images/white_queen.svg",
+                "/images/white_king.svg",
+                ""
+            ],
 
-        [
-            "/images/black_pawn.svg",
-            "/images/black_rook.svg",
-            "/images/black_bishop.svg",
-            "/images/black_knight.svg",
-            "/images/black_queen.svg",
-            "/images/black_king.svg",
-            ""
-        ],
+            [
+                "/images/black_pawn.svg",
+                "/images/black_rook.svg",
+                "/images/black_bishop.svg",
+                "/images/black_knight.svg",
+                "/images/black_queen.svg",
+                "/images/black_king.svg",
+                ""
+            ],
 
-        [
-            "/images/square.png",
-            ""
+            [
+                "/images/square.png",
+                ""
+            ]
         ]
-    ]
     property int countdownTimeOne: 600 // 設定倒計時時間（以秒為單位）
     property int remainingTimeOne: countdownTimeOne // 剩餘時間
 
@@ -86,9 +98,11 @@ ApplicationWindow
         interval: 1000 // 每秒更新一次
         running: false // 初始狀態停止計時器
         repeat: true
-        onTriggered: {
+        onTriggered:
+        {
             remainingTimeOne -= 1 // 每次觸發減少1秒
-            if (remainingTimeOne <= 0) {
+            if (remainingTimeOne <= 0)
+            {
                 countdownTimerOne.stop() // 時間到停止計時器
                 game.timeUp(false)
             }
@@ -101,9 +115,11 @@ ApplicationWindow
         interval: 1000 // 每秒更新一次
         running: false // 初始狀態停止計時器
         repeat: true
-        onTriggered: {
+        onTriggered:
+        {
             remainingTimeTwo -= 1 // 每次觸發減少1秒
-            if (remainingTimeTwo <= 0) {
+            if (remainingTimeTwo <= 0)
+            {
                 countdownTimerTwo.stop() // 時間到停止計時器
                 game.timeUp(true)
             }
@@ -140,11 +156,13 @@ ApplicationWindow
         }
     }
 
-    Component {
+    Component
+    {
         // First screen
         id: gameBoard
         Item {
-            Image {
+            Image
+            {
                 id: board
                 y:fenInputHeight
                 source: "/images/chess_board.jpg"
@@ -156,7 +174,8 @@ ApplicationWindow
     Component
     {
         id: chessPlacement
-        Item {
+        Item
+        {
             Repeater
             {
                 model: game
@@ -222,7 +241,8 @@ ApplicationWindow
     property int promotionY
     property  bool promotionWhite
 
-    Connections {
+    Connections
+    {
             target: game
             function onShowPopup(x,y,w)
             {
@@ -260,22 +280,23 @@ ApplicationWindow
             }
         }
 
-    property var promotionImage: [
+    property var promotionImage:
         [
-            "/images/white_rook.svg",
-            "/images/white_bishop.svg",
-            "/images/white_knight.svg",
-            "/images/white_queen.svg",
-        ],
+            [
+                "/images/white_rook.svg",
+                "/images/white_bishop.svg",
+                "/images/white_knight.svg",
+                "/images/white_queen.svg",
+            ],
 
-        [
-            "/images/black_rook.svg",
-            "/images/black_bishop.svg",
-            "/images/black_knight.svg",
-            "/images/black_queen.svg",
-        ],
+            [
+                "/images/black_rook.svg",
+                "/images/black_bishop.svg",
+                "/images/black_knight.svg",
+                "/images/black_queen.svg",
+            ],
 
-    ]
+        ]
 
 
     Popup
@@ -291,7 +312,8 @@ ApplicationWindow
         Column
         {
                anchors.centerIn: parent
-               Repeater {
+               Repeater
+               {
                    model: 4
                    Image
                    {
@@ -313,13 +335,15 @@ ApplicationWindow
     }
     Component {
         id: mainScreen
-        Item {
+        Item
+        {
 
             Loader {sourceComponent: gameBoard}
             Loader {sourceComponent: chessPlacement}
         }
     }
-    StackView {
+    StackView
+    {
         id: screen
         anchors.fill: parent
         initialItem: mainScreen
