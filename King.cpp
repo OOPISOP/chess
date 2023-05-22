@@ -1,3 +1,11 @@
+/***********************************************************************
+ * File: King.cpp
+ * Author: B11115033
+ * Create Date: 2023/05/10
+ * Editor: B11115033
+ * Update Date: 2023/05/10
+ * Description: King piece imp
+***********************************************************************/
 #include "King.h"
 
 King::King(bool white,int type) : Piece(white,type)
@@ -8,11 +16,11 @@ Piece* King::clone()const
 {
     return new King(*this);
 }
-
+//Intent:can move
+//Pre:board start end spot
+//Pos:return bool
 bool King::canMove(Board board,Spot start,Spot end)
 {
-    // Check checkmate.
-    // isCheckMate();
 
     // Cannot kill ally.
     if(end.havePiece() && end.getPiece()->getWhite() == this->getWhite())
@@ -32,7 +40,9 @@ bool King::canMove(Board board,Spot start,Spot end)
 
     return isValidCastling(board,start,end);
 }
-
+//Intent:castle
+//Pre:board start end spot
+//Pos:return bool if can castle
 bool King::isValidCastling(Board board,Spot start,Spot end)
 {
     Spot startBox = board.getBox(start.getY(),start.getX());
@@ -64,15 +74,13 @@ bool King::isValidCastling(Board board,Spot start,Spot end)
     }
     Spot rookStartBox =  board.getBox(end.getY(),rookX);
 
-  // cout<<rookStartBox.getX()<<" "<<rookStartBox.getY()<<endl;
-
     if(!rookStartBox.havePiece()||rookStartBox.getPiece()->getType()!=1||rookMoved)
     {
         return false;
     }
 
     Spot rookEndBox = board.getBox(end.getY(),end.getX() - ((deltaX>0)?1:-1));
-    //cout<<rookEndBox.getX()<<" "<<rookEndBox.getY()<<endl;
+
     if(!rookStartBox.getPiece()->canMove(board,rookStartBox,rookEndBox))
     {
         return false;

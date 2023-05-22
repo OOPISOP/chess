@@ -1,14 +1,26 @@
+/***********************************************************************
+ * File: Queen.cpp
+ * Author: B11115033
+ * Create Date: 2023/05/10
+ * Editor: B11115033
+ * Update Date: 2023/05/10
+ * Description: Queen piece imp
+***********************************************************************/
 #include "Queen.h"
 
 Queen::Queen(bool white,int type) : Piece(white,type)
 {
 }
-
+//Intent:clone
+//Pre:Queen
+//Pos:return piece point
 Piece* Queen::clone()const
 {
     return new Queen(*this);
 }
-
+//Intent:can move
+//Pre:board start end spot
+//Pos:return bool
 bool Queen::canMove(Board board,Spot start,Spot end)
 {
     // Cannot kill ally.

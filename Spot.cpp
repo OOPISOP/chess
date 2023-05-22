@@ -1,3 +1,11 @@
+/***********************************************************************
+ * File: Spot.cpp
+ * Author: B11115033
+ * Create Date: 2023/05/10
+ * Editor: B11115033
+ * Update Date: 2023/05/10
+ * Description: Spot imp
+***********************************************************************/
 #include "Spot.h"
 
 Spot::Spot(int x,int y,Piece* piece) : piece(piece),x(x),y(y)

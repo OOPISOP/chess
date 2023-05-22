@@ -1,14 +1,26 @@
+/***********************************************************************
+ * File: Pawn.cpp
+ * Author: B11115033
+ * Create Date: 2023/05/10
+ * Editor: B11115033
+ * Update Date: 2023/05/10
+ * Description: Pawn piece imp
+***********************************************************************/
 #include "Pawn.h"
 
 Pawn::Pawn(bool white,int type) : Piece(white,type)
 {
 }
-
+//Intent:clone
+//Pre:Pawn
+//Pos:return piece point
 Piece* Pawn::clone()const
 {
     return new Pawn(*this);
 }
-
+//Intent:can move
+//Pre:board start end spot
+//Pos:return bool
 bool Pawn::canMove(Board board,Spot start,Spot end)
 {
     //Cannot out of range

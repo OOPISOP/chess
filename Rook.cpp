@@ -1,14 +1,26 @@
+/***********************************************************************
+ * File: Rook.cpp
+ * Author: B11115033
+ * Create Date: 2023/05/10
+ * Editor: B11115033
+ * Update Date: 2023/05/10
+ * Description: Rook piece imp
+***********************************************************************/
 #include "Rook.h"
 
 Rook::Rook(bool white,int type) :Piece(white,type)
 {
 }
-
+//Intent:clone
+//Pre:Rook
+//Pos:return piece point
 Piece* Rook::clone()const
 {
     return new Rook(*this);
 }
-
+//Intent:can move
+//Pre:board start end spot
+//Pos:return bool
 bool Rook::canMove(Board board,Spot start,Spot end)
 {
     // Cannot kill ally.
