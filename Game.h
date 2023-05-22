@@ -100,6 +100,8 @@ public:
     void updateKingRook(string fen);
     void showStatusMessage(string message);
     bool isCastleCheck(int startX,int startY,int endX,int endY);
+    void gameStatusUpdate(int &finalSound);
+    Q_INVOKABLE void timeUp(bool white);
 
 protected:
     //board row count
@@ -111,6 +113,8 @@ protected:
 
 signals:
     void showPopup(int x,int y,bool white);
+    void clockStart(bool white);
+    void resetClockTime();
 
 private:
     vector<Player> players;

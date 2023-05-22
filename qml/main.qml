@@ -8,7 +8,7 @@ ApplicationWindow
     id: root
     title: qsTr("Chess")
     visible: true
-    minimumWidth: 8 * squareSize
+    minimumWidth: 8 * squareSize + 200
     minimumHeight: 8 * squareSize + menuBarHeight + 20
 
     property int squareSize: 80
@@ -74,6 +74,57 @@ ApplicationWindow
             ""
         ]
     ]
+    property int countdownTimeOne: 600 // 設定倒計時時間（以秒為單位）
+    property int remainingTimeOne: countdownTimeOne // 剩餘時間
+
+    property int countdownTimeTwo: 600 // 設定倒計時時間（以秒為單位）
+    property int remainingTimeTwo: countdownTimeTwo // 剩餘時間
+
+    Timer
+    {
+        id: countdownTimerOne
+        interval: 1000 // 每秒更新一次
+        running: false // 初始狀態停止計時器
+        repeat: true
+        onTriggered: {
+            remainingTimeOne -= 1 // 每次觸發減少1秒
+            if (remainingTimeOne <= 0) {
+                countdownTimerOne.stop() // 時間到停止計時器
+                game.timeUp(false)
+            }
+        }
+    }
+
+    Timer
+    {
+        id: countdownTimerTwo
+        interval: 1000 // 每秒更新一次
+        running: false // 初始狀態停止計時器
+        repeat: true
+        onTriggered: {
+            remainingTimeTwo -= 1 // 每次觸發減少1秒
+            if (remainingTimeTwo <= 0) {
+                countdownTimerTwo.stop() // 時間到停止計時器
+                game.timeUp(true)
+            }
+        }
+    }
+
+
+    Text
+    {
+      x: 8 * squareSize + 100
+      text: Math.floor(Math.abs(remainingTimeOne/60)).toString() + ":" + (remainingTimeOne%60).toString() // 顯示剩餘時間
+      font.pixelSize: 32
+    }
+
+    Text
+    {
+      x: 8 * squareSize + 100
+      y: 500
+      text: Math.floor(Math.abs(remainingTimeTwo/60)).toString() + ":" + (remainingTimeTwo%60).toString() // 顯示剩餘時間
+      font.pixelSize: 32
+    }
     TextField
     {
         height: fenInputHeight
@@ -133,15 +184,15 @@ ApplicationWindow
                                 startX = parent.x;
                                 startY = parent.y;
                                 var  fromX = startX / squareSize;
-                                var fromY = startY / squareSize;
+                                var fromY = (startY - fenInputHeight) / squareSize;
                                 game.showNextMove(fromX,fromY)
                             }
                             onReleased:
                             {
                                 var fromX = startX / squareSize;
-                                var fromY = startY / squareSize;
+                                var fromY = (startY - fenInputHeight) / squareSize;
                                 var toX   = (parent.x + mouseX) / squareSize;
-                                var toY   = (parent.y + mouseY) / squareSize;
+                                var toY   = (parent.y + mouseY - fenInputHeight) / squareSize;
                                 console.log("On press: ", toX, toY);
                                 if(toX>8||toX<0||toY>8||toY<0||!game.makeMove(fromX,fromY,toX,toY))
                                 {
@@ -186,6 +237,26 @@ ApplicationWindow
                         promotionY = y
                         promotionWhite = w
 
+            }
+            function onClockStart(white)
+            {
+                if(!white)
+                {
+                    countdownTimerOne.start()
+                    countdownTimerTwo.stop()
+                }
+                else
+                {
+                    countdownTimerTwo.start()
+                    countdownTimerOne.stop()
+                }
+            }
+            function onResetClockTime()
+            {
+                countdownTimerOne.stop()
+                countdownTimerTwo.stop()
+                remainingTimeOne = 600
+                remainingTimeTwo = 600
             }
         }
 

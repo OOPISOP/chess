@@ -66,7 +66,7 @@ void Game::newGame(bool white)
     recordFEN();
     castleStatusList.clear();
     this->status = ACTIVE;
-
+    emit resetClockTime();
     beginResetModel();
     endResetModel();
 }
@@ -283,6 +283,7 @@ bool Game::canReallyMove(Spot start, Spot end, bool isWhite)
     return false;
 }
 
+
 bool Game::seeCheckmate(bool isWhite)
 {
     Spot *enemyKingsSpot = this->board.findKing(!isWhite);
@@ -351,6 +352,19 @@ bool Game::seeCheckmate(bool isWhite)
     }
 
     return true;
+}
+
+void Game::timeUp(bool white)
+{
+
+    string message = "Time Up! " ;
+    message += ((white) ? "BLACK_WIN/WHITE_LOSE" : "WHITE_WIN/BLACK_LOSE");
+    resetAllMark();
+    beginResetModel();
+    endResetModel();
+    // PLAY RESIGN SOUND.
+    playChessSound(resignSound);
+    showStatusMessage(message);
 }
 
 void Game::showNextMove(int x,int y )
@@ -517,6 +531,44 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
     }
 
 
+    gameStatusUpdate(finalSound);
+
+    if (sourcePiece->getType() == Pawn &&(endY==0 || endY == 7) )
+    {
+        //promotion
+        emit showPopup(endX,endY,sourcePiece->getWhite());
+        return true;
+    }
+
+    if(this->currentTurn == players[0])
+    {
+        this->currentTurn = players[1];
+    }
+    else
+    {
+        this->currentTurn = players[0];
+    }
+    emit clockStart(currentTurn.getWhiteSide());
+    if (finalSound == -1)
+    {
+        int moveSound = (currentTurn == players[1]) ? 1 : 0;
+        playChessSound(moveSound);
+    }
+    else
+    {
+        playChessSound(finalSound);
+    }
+
+    resetAllMark();
+    recordFEN();
+    beginResetModel();
+    endResetModel();
+    return true;
+}
+
+
+void Game::gameStatusUpdate(int& finalSound)
+{
     bool statusCheck = seeCheck(*this->board.findKing(!currentTurn.getWhiteSide()));
     bool whoCheckmate;
     if (status == RESIGNATION)
@@ -581,39 +633,8 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
 
     if (status != ACTIVE)
     {
-        return false;
+        return ;
     }
-
-    if (sourcePiece->getType() == Pawn &&(endY==0 || endY == 7) )
-    {
-        //promotion
-        emit showPopup(endX,endY,sourcePiece->getWhite());
-    }
-
-    if(this->currentTurn == players[0])
-    {
-        this->currentTurn = players[1];
-    }
-    else
-    {
-        this->currentTurn = players[0];
-    }
-
-    if (finalSound == -1)
-    {
-        int moveSound = (currentTurn == players[1]) ? 1 : 0;
-        playChessSound(moveSound);
-    }
-    else
-    {
-        playChessSound(finalSound);
-    }
-
-    resetAllMark();
-    recordFEN();
-    beginResetModel();
-    endResetModel();
-    return true;
 }
 
 void Game::showStatusMessage(string message)
@@ -768,6 +789,27 @@ void Game::promotion(int x,int y,int type)
     {
         spot->setPiece(new class Queen(white,4));
     }
+    int finalSound = -1;
+    gameStatusUpdate(finalSound);
+    if(this->currentTurn == players[0])
+    {
+        this->currentTurn = players[1];
+    }
+    else
+    {
+        this->currentTurn = players[0];
+    }
+    if (finalSound == -1)
+    {
+        int moveSound = (currentTurn == players[1]) ? 1 : 0;
+        playChessSound(moveSound);
+    }
+    else
+    {
+        playChessSound(finalSound);
+    }
+    emit clockStart(currentTurn.getWhiteSide());
+    recordFEN();
     beginResetModel();
     endResetModel();
 }
