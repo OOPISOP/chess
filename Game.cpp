@@ -228,12 +228,8 @@ void Game::makeMoveSimulator(Board &tempBoard, Spot start, Spot end)
 //Pos:return bool
 bool Game::isCheckmateMove(Board tempBoard, bool isWhite)
 {
-    Spot *kingsSpot = this->board.findKing(isWhite);
-    if (tempBoard.boxes[kingsSpot->getY()][kingsSpot->getX()].getPiece()->getType() != King)
-    {
-        Spot* tempSpot = tempBoard.findKing(isWhite);
-        kingsSpot = tempSpot;
-    }
+
+    Spot* kingsSpot = tempBoard.findKing(isWhite);
 
     // Initialise.
     int startIndex = (isWhite) ? 0 : 7;
@@ -273,7 +269,8 @@ bool Game::isCheckmateMove(Board tempBoard, bool isWhite)
 //Pos:return bool
 bool Game::canReallyMove(Spot start, Spot end, bool isWhite)
 {
-    if (start.getPiece()->canMove(board, start, end))
+
+    if (start.havePiece()&&start.getPiece()->canMove(board, start, end))
     {
         if(abs(start.getX()-end.getX())==2&&start.getPiece()->getType()==King)
         {
@@ -339,6 +336,12 @@ bool Game::seeCheckmate(bool isWhite)
         {
             // Initialise.
             Spot enemySpot = board.getBox(row, col);
+
+            if(!enemySpot.havePiece())
+            {
+                continue;
+            }
+
             Piece *enemyPiece = enemySpot.getPiece();
 
             // Enemy found.
@@ -356,7 +359,6 @@ bool Game::seeCheckmate(bool isWhite)
                         // Found way to block checkmate.
                         if (canReallyMove(enemySpot, tempSpot, !isWhite))
                         {
-                            cout<<"abc"<<enemySpot.getPiece()->getType()<<endl;
                             return false;
                         }
                     }
@@ -598,7 +600,7 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
 bool Game::gameStatusUpdate(int& finalSound)
 {
     bool statusCheck = seeCheck(*this->board.findKing(!currentTurn.getWhiteSide()));
-    bool whoCheckmate;
+    bool whoCheckmate = 0;
     if (status == RESIGNATION)
     {
         string message = (currentTurn.getWhiteSide()) ? "BLACK_WIN/WHITE_LOSE" : "WHITE_WIN/BLACK_LOSE";
