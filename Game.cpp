@@ -383,6 +383,23 @@ void Game::timeUp(bool white)
     playChessSound(resignSound);
     showStatusMessage(message);
 }
+//Intent:surrender
+//Pre:white
+//Pos:surrend and show
+void Game::surrender(int white)
+{
+    emit clockStop();
+    string message = "Surrender! " ;
+    message += ((white) ? "BLACK_WIN/WHITE_LOSE" : "WHITE_WIN/BLACK_LOSE");
+    resetAllMark();
+    beginResetModel();
+    endResetModel();
+    // PLAY RESIGN SOUND.
+    playChessSound(resignSound);
+    showStatusMessage(message);
+}
+
+
 //Intent:show next move
 //Pre:x y
 //Pos:show next move
@@ -421,6 +438,7 @@ void Game::showNextMove(int x,int y )
     }
     emit dataChanged(index(0),index(63));
 }
+
 
 //Intent:make move
 //Pre:startX and startY represent start X and Y,and endX and endY represent end X and Y

@@ -111,6 +111,7 @@ public:
     bool gameStatusUpdate(int &finalSound);//game status update
     Q_INVOKABLE void timeUp(bool white);//time up
     Q_INVOKABLE void updateClockTime(int timeOne,int timeTwo);
+    Q_INVOKABLE void surrender(int white);
 
 protected:
     //board row count
@@ -126,7 +127,7 @@ signals:
     void resetClockTime();//reset clock time
     int getClockTime();
     void setClockTime(int timeOne,int timeTwo);
-
+    void clockStop();
 private:
     vector<Player> players;
     Board board;

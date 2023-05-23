@@ -141,6 +141,33 @@ ApplicationWindow
       text: Math.floor(Math.abs(remainingTimeTwo/60)).toString() + ":" + (remainingTimeTwo%60).toString() // 顯示剩餘時間
       font.pixelSize: 32
     }
+
+    Button
+    {
+        x: 8 * squareSize + 100
+        y: 100
+        id:blackSurrend
+        text: "黑方投降"
+        onClicked:
+        {
+            game.surrender(false)
+            console.log("Button clicked!")
+        }
+    }
+
+    Button
+    {
+        x: 8 * squareSize + 100
+        y: 600
+        id:whiteSurrend
+        text: "白方投降"
+        onClicked:
+        {
+            game.surrender(true)
+            console.log("Button clicked!")
+        }
+    }
+
     TextField
     {
         height: fenInputHeight
@@ -271,6 +298,12 @@ ApplicationWindow
                     countdownTimerOne.stop()
                 }
             }
+            function onClockStop()
+            {
+                countdownTimerOne.stop()
+                countdownTimerTwo.stop()
+            }
+
             function onResetClockTime()
             {
                 countdownTimerOne.stop()
