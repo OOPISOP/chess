@@ -132,6 +132,7 @@ void Game::makeMoveSimulator(Board &tempBoard, Spot start, Spot end)
 
     Spot* startBox = &tempBoard.boxes[start.getY()][start.getX()];
     Spot* endBox = &tempBoard.boxes[end.getY()][end.getX()];
+    if(!startBox->havePiece())return;
     Piece* sourcePiece = startBox->getPiece()->clone();
 
     pair<int,int> temp = make_pair(castleRook.first,castleRook.second);
@@ -197,10 +198,9 @@ void Game::makeMoveSimulator(Board &tempBoard, Spot start, Spot end)
         }
 
     }
-
     Spot* near = &tempBoard.boxes[start.getY()][start.getX()+ (end.getX() - start.getX())];
 
-    if(sourcePiece->getType() == Pawn && near->havePiece()&&endBox->getEnPassant())
+    if(sourcePiece->getType() == Pawn && near->havePiece() && near->getPiece()->getType()==Pawn&&endBox->getEnPassant())
     {
         near->setPiece();
     }
@@ -214,12 +214,12 @@ void Game::makeMoveSimulator(Board &tempBoard, Spot start, Spot end)
     }
     if(isEnPassant(start.getX(),start.getY(),end.getX(),end.getY()))
     {
-        if(sourcePiece->getWhite())
+        if(sourcePiece->getWhite()&&start.getY()-1==5)
         {
             Spot* enPassantSpot = &tempBoard.boxes[start.getY()-1][start.getX()];
             enPassantSpot->setEnPassant(true);
         }
-        else
+        else if(!sourcePiece->getWhite()&&start.getY()+1==2)
         {
             Spot* enPassantSpot = &tempBoard.boxes[start.getY()+1][start.getX()];
             enPassantSpot->setEnPassant(true);
@@ -272,7 +272,6 @@ bool Game::isCheckmateMove(Board tempBoard, bool isWhite)
 //Pos:return bool
 bool Game::canReallyMove(Spot start, Spot end, bool isWhite)
 {
-
     if (start.havePiece()&&start.getPiece()->canMove(board, start, end))
     {
         if(abs(start.getX()-end.getX())==2&&start.getPiece()->getType()==King)
@@ -432,13 +431,13 @@ void Game::showNextMove(int x,int y )
         for(int col=0;col<8;col++)
         {
             Spot* endBox = &this->board.boxes[row][col];
-
             if(canReallyMove(*startBox,*endBox, currentTurn.getWhiteSide()))
             {
                 endBox->setMark(true);
             }
         }
     }
+
     emit dataChanged(index(0),index(63));
 }
 
@@ -448,6 +447,7 @@ void Game::showNextMove(int x,int y )
 //Pos:can move return true,or false
 bool Game::makeMove(int startX,int startY,int endX,int endY)
 {
+
     Spot* startBox = &this->board.boxes[startY][startX];
     Spot* endBox = &this->board.boxes[endY][endX];
     if(!startBox->havePiece())
@@ -466,7 +466,6 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         return false;
     }
 
-
     if(!canReallyMove(*startBox,*endBox, currentTurn.getWhiteSide()))
     {
         cout<<"can't move"<<endl;
@@ -474,7 +473,6 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
     }
 
     int finalSound = -1;
-
 
     if(isCastle(startX,startY,endX,endY))
     {
@@ -501,7 +499,6 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         endBox->setPiece(sourcePiece);
         startBox->setPiece();
     }
-
     if(endBox->getPiece()->getType()==King)
     {
         if(currentTurn.getWhiteSide())
@@ -540,16 +537,14 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
             }
         }
     }
-
     Spot* near = &this->board.boxes[startY][endX];
-
     if(sourcePiece->getType() == Pawn && near->havePiece()&&endBox->getEnPassant())
     {
         near->setPiece();
-
+        endBox->setEnPassant(false);
+        this->enPassant = make_pair(-1,-1);
         // PLAY ENPASSANT SOUND.
         finalSound = passantSound;
-
     }
     else
     {
@@ -563,17 +558,17 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
 
     if(isEnPassant(startX,startY,endX,endY))
     {
-        if(sourcePiece->getWhite())
+        if(sourcePiece->getWhite()&&startY-1==5)
         {
-            Spot* enPassantSpot = &this->board.boxes[startY-1][startX];
-            enPassantSpot->setEnPassant(true);
-            this->enPassant = make_pair(startX,8 - (startY-1));
+                Spot* enPassantSpot = &this->board.boxes[startY-1][startX];
+                enPassantSpot->setEnPassant(true);
+                this->enPassant = make_pair(startX,8 - (startY-1));
         }
-        else
+        else if(!sourcePiece->getWhite()&&startY+1==2)
         {
-            Spot* enPassantSpot = &this->board.boxes[startY+1][startX];
-            enPassantSpot->setEnPassant(true);
-            this->enPassant = make_pair(startX,8 - (startY+1));
+                Spot* enPassantSpot = &this->board.boxes[startY+1][startX];
+                enPassantSpot->setEnPassant(true);
+                this->enPassant = make_pair(startX,8 - (startY+1));
         }
     }
     else
@@ -620,6 +615,17 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
     else
     {
         playChessSound(finalSound);
+    }
+    for(int i=0;i<8;i++)
+    {
+        for(int j=0;j<8;j++)
+        {
+            Spot* en = &this->board.boxes[i][j];
+            if(en->getEnPassant())
+            {
+                cout<<j<<" "<<i<<endl;
+            }
+        }
     }
     recordFEN();
     return true;
@@ -1160,8 +1166,11 @@ bool Game::setGame(string fen,KingAndRookStatus status)
     }
     else
     {
-        Spot* spot = &this->board.boxes[8 - this->enPassant.second][this->enPassant.first];
-        spot->setEnPassant(false);
+        if(this->enPassant.first>0&&this->enPassant.second>0)
+        {
+            Spot* spot = &this->board.boxes[8 - this->enPassant.second][this->enPassant.first];
+            spot->setEnPassant(false);
+        }
     }
     for(int i=0;i<8;i++)
     {
