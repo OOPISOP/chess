@@ -1101,22 +1101,35 @@ bool Game::setGame(string fen,KingAndRookStatus status)
     {
         parts.push_back(part);
     }
+    if(parts.size()<4)
+    {
+        return false;
+    }
     setBoardFromFEN(parts[0]);
     Player p1,p2;
     p1.setWhiteSide(true);
     p2.setWhiteSide(false);
     this->players.push_back(p1);
     this->players.push_back(p2);
-    if(parts[1]!="w"&&parts[1]!="b")
+    if(parts[1].empty()||(parts[1]!="w"&&parts[1]!="b"))
     {
         setGame(fenList[recordIndex],castleStatusList[recordIndex]);
         return false;
     }
     currentTurn = (parts[1] == "w") ? p1 : p2;
+    if(parts[2].empty()||parts[2]==" "||parts[2] == "")
+    {
+        return false;
+    }
     updateKingRook(parts[2]);
     if(recordIndex>=0)
     {
         setCastleFromFEN(status);
+    }
+    if(parts[3].empty()||parts[3] == " "||parts[3]=="")
+    {
+        cout<<"en Passant error pos"<<endl;
+        return false;
     }
     if (parts[3] != "-")
     {
