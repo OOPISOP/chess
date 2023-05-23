@@ -200,7 +200,7 @@ void Game::makeMoveSimulator(Board &tempBoard, Spot start, Spot end)
 
     Spot* near = &tempBoard.boxes[start.getY()][start.getX()+ (end.getX() - start.getX())];
 
-    if(near->havePiece()&&near->getPiece()->getEnPassant())
+    if(sourcePiece->getType() == Pawn && near->havePiece()&&near->getPiece()->getEnPassant())
     {
         near->setPiece();
     }
@@ -540,7 +540,7 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
 
     Spot* near = &this->board.boxes[startY][endX];
 
-    if(near->havePiece()&&near->getPiece()->getEnPassant())
+    if(sourcePiece->getType() == Pawn && near->havePiece()&&near->getPiece()->getEnPassant())
     {
         near->setPiece();
 
@@ -552,7 +552,6 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
     {
         if(this->enPassant.first > 0 && this->enPassant.second > 0)
         {
-            cout<<"bbb"<<endl;
             Spot* enPassantSpot = &this->board.boxes[8 - this->enPassant.second][this->enPassant.first];
             if(enPassantSpot->havePiece())
             {
