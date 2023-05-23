@@ -12,12 +12,14 @@ Spot::Spot(int x,int y,Piece* piece) : piece(piece),x(x),y(y)
 {
     this->isPiece = true;
     this->marked = false;
+    this->enPassant = false;
 }
 
 Spot::Spot(int x,int y) :x(x),y(y)
 {
     this->isPiece = false;
     this->marked = false;
+    this->enPassant = false;
 }
 //Intent:set piece
 //Pre:piece pointer
@@ -93,4 +95,18 @@ bool Spot::havePiece()const
 bool Spot::getMark()
 {
     return this->marked;
+}
+//Intent:set en passant
+//Pre:en passant
+//Pos:set en passant
+void Spot::setEnPassant(bool enPassant)
+{
+    this->enPassant = enPassant;
+}
+//Intent:get en passant
+//Pre:en passant
+//return bool
+bool Spot::getEnPassant()const
+{
+    return this->enPassant;
 }

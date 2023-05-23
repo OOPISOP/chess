@@ -200,27 +200,30 @@ void Game::makeMoveSimulator(Board &tempBoard, Spot start, Spot end)
 
     Spot* near = &tempBoard.boxes[start.getY()][start.getX()+ (end.getX() - start.getX())];
 
-    if(sourcePiece->getType() == Pawn && near->havePiece()&&near->getPiece()->getEnPassant())
+    if(sourcePiece->getType() == Pawn && near->havePiece()&&endBox->getEnPassant())
     {
         near->setPiece();
     }
     else
     {
-
-
         if(this->enPassant.first > 0 && this->enPassant.second > 0)
         {
             Spot* enPassantSpot = &tempBoard.boxes[8 - this->enPassant.second][this->enPassant.first];
-            if(enPassantSpot->havePiece())
-            {
-                Piece* enPassantPiece = enPassantSpot->getPiece()->clone();
-                enPassantPiece->setEnPassant(false);
-            }
+            enPassantSpot->setEnPassant(false);
         }
     }
     if(isEnPassant(start.getX(),start.getY(),end.getX(),end.getY()))
     {
-        sourcePiece->setEnPassant(true);
+        if(sourcePiece->getWhite())
+        {
+            Spot* enPassantSpot = &tempBoard.boxes[start.getY()-1][start.getX()];
+            enPassantSpot->setEnPassant(true);
+        }
+        else
+        {
+            Spot* enPassantSpot = &tempBoard.boxes[start.getY()+1][start.getX()];
+            enPassantSpot->setEnPassant(true);
+        }
     }
 }
 //Intent:check mate move
@@ -540,7 +543,7 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
 
     Spot* near = &this->board.boxes[startY][endX];
 
-    if(sourcePiece->getType() == Pawn && near->havePiece()&&near->getPiece()->getEnPassant())
+    if(sourcePiece->getType() == Pawn && near->havePiece()&&endBox->getEnPassant())
     {
         near->setPiece();
 
@@ -553,22 +556,33 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
         if(this->enPassant.first > 0 && this->enPassant.second > 0)
         {
             Spot* enPassantSpot = &this->board.boxes[8 - this->enPassant.second][this->enPassant.first];
-            if(enPassantSpot->havePiece())
-            {
-                Piece* enPassantPiece = enPassantSpot->getPiece();
-                enPassantPiece->setEnPassant(false);
-            }
+            enPassantSpot->setEnPassant(false);
         }
     }
 
 
     if(isEnPassant(startX,startY,endX,endY))
     {
-        sourcePiece->setEnPassant(true);
-        this->enPassant = make_pair(endX,8 - endY);
+        if(sourcePiece->getWhite())
+        {
+            Spot* enPassantSpot = &this->board.boxes[startY-1][startX];
+            enPassantSpot->setEnPassant(true);
+            this->enPassant = make_pair(startX,8 - (startY-1));
+        }
+        else
+        {
+            Spot* enPassantSpot = &this->board.boxes[startY+1][startX];
+            enPassantSpot->setEnPassant(true);
+            this->enPassant = make_pair(startX,8 - (startY+1));
+        }
     }
     else
     {
+        if(this->enPassant.first > 0 && this->enPassant.second > 0)
+        {
+            Spot* enPassantSpot = &this->board.boxes[8 - this->enPassant.second][this->enPassant.first];
+            enPassantSpot->setEnPassant(false);
+        }
         this->enPassant = make_pair(-1,-1);
     }
 
@@ -1142,8 +1156,23 @@ bool Game::setGame(string fen,KingAndRookStatus status)
             return false;
         }
         Spot* spot = &this->board.boxes[rank][file];
-        Piece* piece = spot->getPiece();
-        piece->setEnPassant(true);
+        spot->setEnPassant(true);
+    }
+    else
+    {
+        Spot* spot = &this->board.boxes[8 - this->enPassant.second][this->enPassant.first];
+        spot->setEnPassant(false);
+    }
+    for(int i=0;i<8;i++)
+    {
+        for(int j=0;j<8;j++)
+        {
+            Spot* spot = &this->board.boxes[i][j];
+            if(spot->getEnPassant())
+            {
+                cout<<j<<" "<<i<<endl;
+            }
+        }
     }
     beginResetModel();
     endResetModel();

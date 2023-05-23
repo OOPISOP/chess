@@ -21,10 +21,8 @@ class Piece
 private:
     bool white = false;
     int type;
-    bool moved = false;
     bool checked = false;
     bool promoting = false;
-    bool enPassant = false;
     bool castling = false;
 public:
     Piece(bool white,int type);
@@ -36,7 +34,6 @@ public:
     void setMoved(bool moved);//set moved
     void setChecked(bool checked);//set checked
     void setPromoting(bool promoting);//set promoting
-    void setEnPassant(bool enPassant);//set en passant
     void setCastling(bool castling);//set castling
 
     bool getWhite()const;//get white
@@ -44,7 +41,6 @@ public:
     bool getMoved()const;//get moved
     bool getChecked()const;//get checked
     bool getPromoting()const;//get promoting
-    bool getEnPassant()const;//get en passant
     bool getCastling()const;//get castling
 
     virtual bool canMove(Board board,Spot start,Spot end) = 0;//virtual function can  move

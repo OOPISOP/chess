@@ -19,6 +19,7 @@ private:
     int y;
     bool isPiece;
     bool marked;
+    bool enPassant;
 
 public:
     Spot(int x,int y,Piece* piece);
@@ -29,12 +30,14 @@ public:
     void setX(int x);//set x
     void setY(int y);//set y
     void setMark(bool mark);//set spot mark
+    void setEnPassant(bool enPassnat);
 
     Piece* getPiece()const;//get piece
     int getX()const;//get x
     int getY()const;//get y
     bool havePiece()const;//have piece
     bool getMark();//get mark
+    bool getEnPassant()const;
 };
 
 #endif // SPOT_H

@@ -34,13 +34,6 @@ void Piece::setType(int type)
 {
     this->type = type;
 }
-//Intent:set move
-//Pre:move
-//Pos:move
-void Piece::setMoved(bool moved)
-{
-    this->moved = moved;
-}
 //Intent:set check
 //Pre:check
 //Pos:set check
@@ -55,13 +48,7 @@ void Piece::setPromoting(bool promoting)
 {
     this->promoting = promoting;
 }
-//Intent:set en passant
-//Pre:en passant
-//Pos:set en passant
-void Piece::setEnPassant(bool enPassant)
-{
-    this->enPassant = enPassant;
-}
+
 //Intent: set castling
 //Pre:castling
 //Pos:se castling
@@ -83,13 +70,6 @@ int Piece::getType() const
 {
     return this->type;
 }
-//Intent:get move
-//Pre:move
-//Pos:return bool
-bool Piece::getMoved() const
-{
-    return this->moved;
-}
 //Intent:get check
 //Pre:check
 //Pos:return bool
@@ -105,13 +85,6 @@ bool Piece::getPromoting() const
     return this->promoting;
 }
 
-//Intent:get en passant
-//Pre:en passant
-//return bool
-bool Piece::getEnPassant()const
-{
-    return this->enPassant;
-}
 //Intent:get castling
 //Pre:castling
 //Pos:return bool
