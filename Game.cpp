@@ -1173,7 +1173,10 @@ void Game::redo()
     }
     recordIndex++;
     cout<<fenList[recordIndex]<<endl;
-    emit setClockTime(playerTimeList[recordIndex].first,playerTimeList[recordIndex].second);
+    if(playerTimeList.size()>recordIndex)
+    {
+       emit setClockTime(playerTimeList[recordIndex].first,playerTimeList[recordIndex].second);
+    }
     setGame(fenList[recordIndex],castleStatusList[recordIndex]);
     emit clockStart(currentTurn.getWhiteSide());
 }
@@ -1188,7 +1191,10 @@ void Game::undo()
     }
     recordIndex--;
     cout<<fenList[recordIndex]<<endl;
-    emit setClockTime(playerTimeList[recordIndex].first,playerTimeList[recordIndex].second);
+    if(!playerTimeList.empty())
+    {
+         emit setClockTime(playerTimeList[recordIndex].first,playerTimeList[recordIndex].second);
+    }
     setGame(fenList[recordIndex],castleStatusList[recordIndex]);
     emit clockStart(currentTurn.getWhiteSide());
 }
