@@ -537,22 +537,26 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
             }
         }
     }
+    this->enPassant = make_pair(-1,-1);
     Spot* near = &this->board.boxes[startY][endX];
     if(sourcePiece->getType() == Pawn && near->havePiece()&&endBox->getEnPassant())
     {
         near->setPiece();
         endBox->setEnPassant(false);
-        this->enPassant = make_pair(-1,-1);
+
         // PLAY ENPASSANT SOUND.
         finalSound = passantSound;
     }
     else
     {
-        if(this->enPassant.first > 0 && this->enPassant.second > 0)
+        for(int i=0;i<8;i++)
         {
-            Spot* enPassantSpot = &this->board.boxes[8 - this->enPassant.second][this->enPassant.first];
-            enPassantSpot->setEnPassant(false);
-        }
+            for(int j=0;j<8;j++)
+            {
+                Spot* enPassantSpot = &this->board.boxes[i][j];
+                enPassantSpot->setEnPassant(false);
+            }
+        };
     }
 
 
@@ -1150,6 +1154,17 @@ bool Game::setGame(string fen,KingAndRookStatus status)
         cout<<"en Passant error pos"<<endl;
         return false;
     }
+    for(int i=0;i<8;i++)
+    {
+        for(int j=0;j<8;j++)
+        {
+            Spot* en = &this->board.boxes[i][j];
+            if(en->getEnPassant())
+            {
+                en->setEnPassant(false);
+            }
+        }
+    }
     if (parts[3] != "-")
     {
         int file = parts[3][0] - 'a';
@@ -1163,14 +1178,6 @@ bool Game::setGame(string fen,KingAndRookStatus status)
         }
         Spot* spot = &this->board.boxes[rank][file];
         spot->setEnPassant(true);
-    }
-    else
-    {
-        if(this->enPassant.first>0&&this->enPassant.second>0)
-        {
-            Spot* spot = &this->board.boxes[8 - this->enPassant.second][this->enPassant.first];
-            spot->setEnPassant(false);
-        }
     }
     for(int i=0;i<8;i++)
     {
