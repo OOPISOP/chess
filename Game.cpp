@@ -206,10 +206,13 @@ void Game::makeMoveSimulator(Board &tempBoard, Spot start, Spot end)
     }
     else
     {
-        if(this->enPassant.first > 0 && this->enPassant.second > 0)
+        for(int i=0;i<8;i++)
         {
-            Spot* enPassantSpot = &tempBoard.boxes[8 - this->enPassant.second][this->enPassant.first];
-            enPassantSpot->setEnPassant(false);
+            for(int j=0;j<8;j++)
+            {
+                Spot* enPassantSpot = &tempBoard.boxes[i][j];
+                enPassantSpot->setEnPassant(false);
+            }
         }
     }
     if(isEnPassant(start.getX(),start.getY(),end.getX(),end.getY()))
@@ -556,7 +559,7 @@ bool Game::makeMove(int startX,int startY,int endX,int endY)
                 Spot* enPassantSpot = &this->board.boxes[i][j];
                 enPassantSpot->setEnPassant(false);
             }
-        };
+        }
     }
 
 
